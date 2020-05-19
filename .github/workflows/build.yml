@@ -6,15 +6,12 @@ on:
   schedule:
     - cron: "0 4,11 * * *"
 
-env:
-  DART_VERSION: 2.7
-
 jobs:
   install:
     name: Install dependencies
     runs-on: ubuntu-latest
     container:
-      image: google/dart:${{ env.DART_VERSION }}
+      image: google/dart:2.7
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -33,7 +30,7 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     container:
-      image: google/dart:${{ env.DART_VERSION }}
+      image: google/dart:2.7
     steps:
       - name: Checkout source
         uses: actions/download-artifact@v2
@@ -51,7 +48,7 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     container:
-      image: google/dart:${{ env.DART_VERSION }}
+      image: google/dart:2.7
     steps:
       - name: Checkout source
         uses: actions/download-artifact@v2
@@ -89,7 +86,7 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     container:
-      image: google/dart:${{ env.DART_VERSION }}
+      image: google/dart:2.7
     steps:
       - name: Checkout source
         uses: actions/download-artifact@v2
