@@ -1,0 +1,15 @@
+name: rrule
+description: "🔁 Recurrence rule parsing & calculation as defined in the iCalendar RFC"
+version: 0.0.1
+homepage: https://github.com/JonasWanke/rrule
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  meta: ^1.1.8
+  pedantic: ^1.8.0+1
+  time_machine: ^0.9.12
+
+dev_dependencies:
+  test: ^1.14.3
