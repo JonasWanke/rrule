@@ -21,8 +21,8 @@ class RecurrenceRuleToStringOptions {
 }
 
 @immutable
-class RecurrenceRuleEncoder extends Converter<RecurrenceRule, String> {
-  const RecurrenceRuleEncoder({
+class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
+  const RecurrenceRuleToStringEncoder({
     this.options = const RecurrenceRuleToStringOptions(),
   }) : assert(options != null);
 
@@ -31,7 +31,7 @@ class RecurrenceRuleEncoder extends Converter<RecurrenceRule, String> {
   @override
   String convert(RecurrenceRule input) {
     final output = StringBuffer('RRULE:')
-      ..write('FREQ=${_convertFrequency(input.frequency)}');
+      ..write('FREQ=${_frequencyToString(input.frequency)}');
 
     if (input.until != null) {
       output
@@ -48,38 +48,33 @@ class RecurrenceRuleEncoder extends Converter<RecurrenceRule, String> {
       ..writeList(
         'BYDAY',
         input.byWeekDays
-            .map((e) => '${e.occurrence ?? ''}${weekDayToString(e.day)}'),
+            .map((e) => '${e.occurrence ?? ''}${_weekDayToString(e.day)}'),
       )
       ..writeList('BYMONTHDAY', input.byMonthDays)
       ..writeList('BYYEARDAY', input.byYearDays)
       ..writeList('BYWEEKNO', input.byWeeks)
       ..writeList('BYMONTH', input.byMonths)
       ..writeList('BYSETPOS', input.bySetPositions)
-      ..writeSingle('WKST', weekDayToString(input.weekStart));
+      ..writeSingle('WKST', _weekDayToString(input.weekStart));
 
     return output.toString();
   }
+}
 
-  String _convertFrequency(RecurrenceFrequency input) {
-    switch (input) {
-      case RecurrenceFrequency.secondly:
-        return 'SECONDLY';
-      case RecurrenceFrequency.minutely:
-        return 'MINUTELY';
-      case RecurrenceFrequency.hourly:
-        return 'HOURLY';
-      case RecurrenceFrequency.daily:
-        return 'DAILY';
-      case RecurrenceFrequency.weekly:
-        return 'WEEKLY';
-      case RecurrenceFrequency.monthly:
-        return 'MONTHLY';
-      case RecurrenceFrequency.yearly:
-        return 'YEARLY';
-    }
-    assert(false);
+String _frequencyToString(RecurrenceFrequency input) {
+  if (input == null) {
     return null;
   }
+
+  return frequencyStrings.entries.singleWhere((e) => e.value == input).key;
+}
+
+String _weekDayToString(DayOfWeek day) {
+  if (day == null) {
+    return null;
+  }
+
+  return weekDayStrings.entries.singleWhere((e) => e.value == day).key;
 }
 
 extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {

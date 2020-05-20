@@ -20,7 +20,7 @@ class RecurrenceRuleStringCodec extends Codec<RecurrenceRule, String> {
 
   @override
   Converter<RecurrenceRule, String> get encoder =>
-      RecurrenceRuleEncoder(options: toStringOptions);
+      RecurrenceRuleToStringEncoder(options: toStringOptions);
 
   @override
   // TODO: implement decoder
@@ -40,6 +40,16 @@ final timePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
 final dateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
     '${datePattern.patternText}"T"${timePattern.patternText}');
 
+const frequencyStrings = {
+  'SECONDLY': RecurrenceFrequency.secondly,
+  'MINUTELY': RecurrenceFrequency.minutely,
+  'HOURLY': RecurrenceFrequency.hourly,
+  'DAILY': RecurrenceFrequency.daily,
+  'WEEKLY': RecurrenceFrequency.weekly,
+  'MONTHLY': RecurrenceFrequency.monthly,
+  'YEARLY': RecurrenceFrequency.yearly,
+};
+
 const weekDayStrings = {
   'MO': DayOfWeek.monday,
   'TU': DayOfWeek.tuesday,
@@ -49,10 +59,3 @@ const weekDayStrings = {
   'SA': DayOfWeek.saturday,
   'SU': DayOfWeek.sunday,
 };
-String weekDayToString(DayOfWeek day) {
-  if (day == null) {
-    return null;
-  }
-
-  return weekDayStrings.entries.singleWhere((e) => e.value == day).key;
-}
