@@ -1,6 +1,10 @@
+import 'dart:collection';
+
 import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
+
+import 'codecs/string/string.dart';
 
 enum RecurrenceFrequency {
   secondly,
@@ -20,36 +24,46 @@ class RecurrenceRule {
     this.until,
     this.count,
     this.interval,
-    this.bySeconds = const {},
-    this.byMinutes = const {},
-    this.byHours = const {},
-    this.byWeekDays = const {},
-    this.byMonthDays = const {},
-    this.byYearDays = const {},
-    this.byWeeks = const {},
-    this.byMonths = const {},
-    this.bySetPositions = const {},
+    Set<int> bySeconds = const {},
+    Set<int> byMinutes = const {},
+    Set<int> byHours = const {},
+    Set<ByWeekDayEntry> byWeekDays = const {},
+    Set<int> byMonthDays = const {},
+    Set<int> byYearDays = const {},
+    Set<int> byWeeks = const {},
+    Set<int> byMonths = const {},
+    Set<int> bySetPositions = const {},
+    this.weekStart,
   })  : assert(frequency != null),
         assert(count == null || count >= 1),
         assert(until == null || count == null),
         assert(interval == null || interval >= 1),
         assert(bySeconds != null),
         assert(bySeconds.all(_debugCheckIsValidSecond)),
+        bySeconds = SplayTreeSet.of(bySeconds),
         assert(byMinutes != null),
         assert(byMinutes.all(_debugCheckIsValidMinute)),
+        byMinutes = SplayTreeSet.of(byMinutes),
         assert(byHours != null),
         assert(byHours.all(_debugCheckIsValidHour)),
+        byHours = SplayTreeSet.of(byHours),
         assert(byWeekDays != null),
+        byWeekDays = SplayTreeSet.of(byWeekDays),
         assert(byMonthDays != null),
         assert(byMonthDays.all(_debugCheckIsValidMonthDayEntry)),
+        byMonthDays = SplayTreeSet.of(byMonthDays),
         assert(byYearDays != null),
         assert(byYearDays.all(_debugCheckIsValidDayOfYear)),
+        byYearDays = SplayTreeSet.of(byYearDays),
         assert(byWeeks != null),
         assert(byWeeks.all(_debugCheckIsValidWeekNumber)),
+        byWeeks = SplayTreeSet.of(byWeeks),
         assert(byMonths != null),
         assert(byMonths.all(_debugCheckIsValidMonthEntry)),
+        byMonths = SplayTreeSet.of(byMonths),
         assert(bySetPositions != null),
-        assert(bySetPositions.all(_debugCheckIsValidDayOfYear));
+        assert(bySetPositions.all(_debugCheckIsValidDayOfYear)),
+        bySetPositions = SplayTreeSet.of(bySetPositions);
 
   /// Corresponds to the `FREQ` property.
   final RecurrenceFrequency frequency;
@@ -75,7 +89,7 @@ class RecurrenceRule {
   final Set<int> byHours;
 
   /// Corresponds to the `BYDAY` property.
-  final Set<DayOfWeek> byWeekDays;
+  final Set<ByWeekDayEntry> byWeekDays;
 
   /// Corresponds to the `BYMONTHDAY` property.
   final Set<int> byMonthDays;
@@ -91,18 +105,37 @@ class RecurrenceRule {
 
   /// Corresponds to the `BYSETPOS` property.
   final Set<int> bySetPositions;
+
+  /// Corresponds to the `WKST` property.
+  final DayOfWeek weekStart;
+
+  @override
+  String toString() => RecurrenceRuleStringCodec().encode(this);
+
+  // TODO(JonasWanke): ==, hashCode
 }
 
 /// Corresponds to a single entry in the `BYDAY` list of a [RecurrenceRule].
 @immutable
-class ByWeekDayEntry {
+class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
   ByWeekDayEntry(this.day, [this.occurrence])
       : assert(day != null),
         assert(occurrence == null || _debugCheckIsValidWeekNumber(occurrence));
 
   final DayOfWeek day;
-
   final int occurrence;
+
+  @override
+  int compareTo(ByWeekDayEntry other) {
+    final result = (occurrence ?? 0).compareTo(other.occurrence ?? 0);
+    if (result != 0) {
+      return result;
+    }
+    // This correctly starts with monday.
+    return day.value.compareTo(other.day.value);
+  }
+
+  // TODO(JonasWanke): toString(), ==, hashCode
 }
 
 /// Validates the `seconds` rule.
