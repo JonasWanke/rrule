@@ -14,13 +14,16 @@ Gemfile.lock
 .history
 .svn/
 
-# IntelliJ related
+# IntelliJ
 *.iml
 *.ipr
 *.iws
 .idea/
 
-# Dart/Pub related
+# VS Code
+.vscode/
+
+# Dart/Pub
 **/doc/api/
 .dart_tool/
 .packages
