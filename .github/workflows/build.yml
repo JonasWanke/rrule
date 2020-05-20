@@ -41,7 +41,31 @@ jobs:
         run: pub get
 
       - name: Run tests
-        run: pub run test
+        run: pub run test --coverage=coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+
+  coverage:
+    name: Coverage
+    needs: install
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:2.7
+    steps:
+      - name: Checkout source
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+
+      - name: Install dependencies
+        run: pub get
+
+      - name: Collect coverage
+        run: pub run test_coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
 
   lint:
     name: Lint
@@ -80,23 +104,3 @@ jobs:
           danger_id: "danger-pr"
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
-
-  run-example:
-    name: Run example
-    needs: install
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
-    steps:
-      - name: Checkout source
-        uses: actions/download-artifact@v2
-        with:
-          name: source
-
-      - name: Install dependencies
-        run: pub get
-        working-directory: example
-
-      - name: Run example
-        run: dart main.dart
-        working-directory: example

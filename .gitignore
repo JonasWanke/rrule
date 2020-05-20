@@ -27,3 +27,6 @@ Gemfile.lock
 .pub-cache/
 .pub/
 build/
+.test_coverage.dart
+
+coverage/
