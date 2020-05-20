@@ -7,6 +7,20 @@ import '../../recurrence_rule.dart';
 import 'string.dart';
 
 @immutable
+class RecurrenceRuleToStringOptions {
+  const RecurrenceRuleToStringOptions({
+    this.isTimeUtc = false,
+  }) : assert(isTimeUtc != null);
+
+  /// If true, all time strings will be suffixed with a 'Z' to indicate they are
+  /// in UTC.
+  ///
+  /// See [RFC 5545 Section 3.3.12](https://tools.ietf.org/html/rfc5545#section-3.3.12)
+  /// for more information.
+  final bool isTimeUtc;
+}
+
+@immutable
 class RecurrenceRuleEncoder extends Converter<RecurrenceRule, String> {
   const RecurrenceRuleEncoder({
     this.options = const RecurrenceRuleToStringOptions(),

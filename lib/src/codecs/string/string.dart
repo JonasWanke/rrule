@@ -7,20 +7,6 @@ import 'package:time_machine/time_machine_text_patterns.dart';
 import '../../recurrence_rule.dart';
 import 'encoder.dart';
 
-@immutable
-class RecurrenceRuleToStringOptions {
-  const RecurrenceRuleToStringOptions({
-    this.isTimeUtc = false,
-  }) : assert(isTimeUtc != null);
-
-  /// If true, all time strings will be suffixed with a 'Z' to indicate they are
-  /// in UTC.
-  ///
-  /// See [RFC 5545 Section 3.3.12](https://tools.ietf.org/html/rfc5545#section-3.3.12)
-  /// for more information.
-  final bool isTimeUtc;
-}
-
 /// A [Codec] for converting [RecurrenceRule]s from and to
 /// [RFC 5545](https://tools.ietf.org/html/rfc5545#section-3.8.5.3) compliant
 /// strings.
