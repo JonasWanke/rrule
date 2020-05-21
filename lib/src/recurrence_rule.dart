@@ -68,6 +68,16 @@ class RecurrenceRule {
         assert(bySetPositions.all(_debugCheckIsValidDayOfYear)),
         bySetPositions = SplayTreeSet.of(bySetPositions);
 
+  factory RecurrenceRule.parseString(
+    String input, {
+    RecurrenceRuleFromStringOptions options =
+        const RecurrenceRuleFromStringOptions(),
+  }) {
+    assert(options != null);
+
+    return RecurrenceRuleStringCodec(fromStringOptions: options).decode(input);
+  }
+
   /// Corresponds to the `FREQ` property.
   final RecurrenceFrequency frequency;
 
@@ -198,6 +208,9 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
         other.day == day &&
         other.occurrence == occurrence;
   }
+
+  @override
+  String toString() => ByWeekDayEntryStringCodec().encode(this);
 }
 
 /// Validates the `seconds` rule.

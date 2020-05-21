@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../../recurrence_rule.dart';
+import 'decoder.dart';
 import 'encoder.dart';
 
 /// A [Codec] for converting [RecurrenceRule]s from and to
@@ -13,17 +14,20 @@ import 'encoder.dart';
 class RecurrenceRuleStringCodec extends Codec<RecurrenceRule, String> {
   const RecurrenceRuleStringCodec({
     this.toStringOptions = const RecurrenceRuleToStringOptions(),
-  }) : assert(toStringOptions != null);
+    this.fromStringOptions = const RecurrenceRuleFromStringOptions(),
+  })  : assert(toStringOptions != null),
+        assert(fromStringOptions != null);
 
   final RecurrenceRuleToStringOptions toStringOptions;
+  final RecurrenceRuleFromStringOptions fromStringOptions;
 
   @override
   Converter<RecurrenceRule, String> get encoder =>
       RecurrenceRuleToStringEncoder(options: toStringOptions);
 
   @override
-  // TODO: implement decoder
-  Converter<String, RecurrenceRule> get decoder => throw UnimplementedError();
+  Converter<String, RecurrenceRule> get decoder =>
+      RecurrenceRuleFromStringDecoder(options: fromStringOptions);
 }
 
 @immutable
