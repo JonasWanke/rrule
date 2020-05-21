@@ -1,10 +1,13 @@
 import 'dart:collection';
 
 import 'package:basics/basics.dart';
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'codecs/string/decoder.dart';
 import 'codecs/string/string.dart';
+import 'utils.dart';
 
 enum RecurrenceFrequency {
   secondly,
@@ -110,9 +113,54 @@ class RecurrenceRule {
   final DayOfWeek weekStart;
 
   @override
-  String toString() => RecurrenceRuleStringCodec().encode(this);
+  int get hashCode {
+    return hashList([
+      frequency,
+      until,
+      count,
+      interval,
+      bySeconds,
+      byMinutes,
+      byHours,
+      byWeekDays,
+      byMonthDays,
+      byYearDays,
+      byWeeks,
+      byMonths,
+      bySetPositions,
+      weekStart,
+    ]);
+  }
 
-  // TODO(JonasWanke): ==, hashCode
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final equality = DeepCollectionEquality();
+    return other is RecurrenceRule &&
+        other.frequency == frequency &&
+        other.until == until &&
+        other.count == count &&
+        other.interval == interval &&
+        equality.equals(other.bySeconds, bySeconds) &&
+        equality.equals(other.byMinutes, byMinutes) &&
+        equality.equals(other.byHours, byHours) &&
+        equality.equals(other.byWeekDays, byWeekDays) &&
+        equality.equals(other.byMonthDays, byMonthDays) &&
+        equality.equals(other.byYearDays, byYearDays) &&
+        equality.equals(other.byWeeks, byWeeks) &&
+        equality.equals(other.byMonths, byMonths) &&
+        equality.equals(other.bySetPositions, bySetPositions) &&
+        other.weekStart == weekStart;
+  }
+
+  @override
+  String toString() => RecurrenceRuleStringCodec().encode(this);
 }
 
 /// Corresponds to a single entry in the `BYDAY` list of a [RecurrenceRule].
@@ -135,7 +183,21 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
     return day.value.compareTo(other.day.value);
   }
 
-  // TODO(JonasWanke): toString(), ==, hashCode
+  @override
+  int get hashCode => hashList([day, occurrence]);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is ByWeekDayEntry &&
+        other.day == day &&
+        other.occurrence == occurrence;
+  }
 }
 
 /// Validates the `seconds` rule.
