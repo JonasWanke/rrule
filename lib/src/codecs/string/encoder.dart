@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../../recurrence_rule.dart';
+import 'ical.dart';
 import 'string.dart';
 
 @immutable
@@ -32,33 +33,36 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
 
   @override
   String convert(RecurrenceRule input) {
-    final output = StringBuffer('RRULE:')
-      ..write('FREQ=${_frequencyToString(input.frequency)}');
+    final value = StringBuffer(
+        '$recurRulePartFreq=${_frequencyToString(input.frequency)}');
 
     if (input.until != null) {
-      output
-        ..writeKey('UNTIL')
+      value
+        ..writeKey(recurRulePartUntil)
         ..writeDateTime(input.until, options);
     }
 
-    output
-      ..writeSingle('COUNT', input.count)
-      ..writeSingle('INTERVAL', input.interval)
-      ..writeList('BYSECOND', input.bySeconds)
-      ..writeList('BYMINUTE', input.byMinutes)
-      ..writeList('BYHOUR', input.byHours)
+    value
+      ..writeSingle(recurRulePartCount, input.count)
+      ..writeSingle(recurRulePartInterval, input.interval)
+      ..writeList(recurRulePartBySecond, input.bySeconds)
+      ..writeList(recurRulePartByMinute, input.byMinutes)
+      ..writeList(recurRulePartByHour, input.byHours)
       ..writeList(
-        'BYDAY',
+        recurRulePartByDay,
         input.byWeekDays.map(_byWeekDayEntryEncoder.convert),
       )
-      ..writeList('BYMONTHDAY', input.byMonthDays)
-      ..writeList('BYYEARDAY', input.byYearDays)
-      ..writeList('BYWEEKNO', input.byWeeks)
-      ..writeList('BYMONTH', input.byMonths)
-      ..writeList('BYSETPOS', input.bySetPositions)
-      ..writeSingle('WKST', _weekDayToString(input.weekStart));
+      ..writeList(recurRulePartByMonthDay, input.byMonthDays)
+      ..writeList(recurRulePartByYearDay, input.byYearDays)
+      ..writeList(recurRulePartByWeekNo, input.byWeeks)
+      ..writeList(recurRulePartByMonth, input.byMonths)
+      ..writeList(recurRulePartBySetPos, input.bySetPositions)
+      ..writeSingle(recurRulePartWkSt, _weekDayToString(input.weekStart));
 
-    return output.toString();
+    return ICalPropertyStringCodec().encode(ICalProperty(
+      name: rruleName,
+      value: value.toString(),
+    ));
   }
 }
 
@@ -67,7 +71,7 @@ String _frequencyToString(RecurrenceFrequency input) {
     return null;
   }
 
-  return frequencyStrings.entries.singleWhere((e) => e.value == input).key;
+  return recurFreqValues.entries.singleWhere((e) => e.value == input).key;
 }
 
 String _weekDayToString(DayOfWeek day) {
@@ -75,7 +79,7 @@ String _weekDayToString(DayOfWeek day) {
     return null;
   }
 
-  return weekDayStrings.entries.singleWhere((e) => e.value == day).key;
+  return recurWeekDayValues.entries.singleWhere((e) => e.value == day).key;
 }
 
 extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
@@ -89,7 +93,7 @@ extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
       'See https://tools.ietf.org/html/rfc5545#section-3.3.4 for more '
       'information.',
     );
-    dateTimePattern.appendFormat(input, this);
+    iCalDateTimePattern.appendFormat(input, this);
     if (options.isTimeUtc) {
       write('Z');
     }

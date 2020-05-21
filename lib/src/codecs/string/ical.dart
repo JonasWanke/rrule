@@ -2,8 +2,22 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
+import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../../utils.dart';
+
+/// Pattern corresponding to the `DATE` rule specified in
+/// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
+final iCalDatePattern = LocalDatePattern.createWithInvariantCulture('yyyyMMdd');
+
+/// Pattern corresponding to the `TIME` rule specified in
+/// [RFC 5545 Section 3.3.12: Time](https://tools.ietf.org/html/rfc5545#section-3.3.12).
+final iCalTimePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
+
+/// Pattern corresponding to the `DATE-TIME` rule specified in
+/// [RFC 5545 Section 3.3.5: Date-Time](https://tools.ietf.org/html/rfc5545#section-3.3.5).
+final iCalDateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
+    '${iCalDatePattern.patternText}"T"${iCalTimePattern.patternText}');
 
 @immutable
 class ICalProperty {

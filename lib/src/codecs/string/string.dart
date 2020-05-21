@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
-import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../../recurrence_rule.dart';
 import 'encoder.dart';
@@ -27,9 +26,6 @@ class RecurrenceRuleStringCodec extends Codec<RecurrenceRule, String> {
   Converter<String, RecurrenceRule> get decoder => throw UnimplementedError();
 }
 
-/// Pattern corresponding to the `DATE` rule specified in
-/// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
-final datePattern = LocalDatePattern.createWithInvariantCulture('yyyyMMdd');
 @immutable
 class ByWeekDayEntryStringCodec extends Codec<ByWeekDayEntry, String> {
   const ByWeekDayEntryStringCodec();
@@ -43,16 +39,26 @@ class ByWeekDayEntryStringCodec extends Codec<ByWeekDayEntry, String> {
       ByWeekDayEntryFromStringDecoder();
 }
 
-/// Pattern corresponding to the `TIME` rule specified in
-/// [RFC 5545 Section 3.3.12: Time](https://tools.ietf.org/html/rfc5545#section-3.3.12).
-final timePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
+/// Name of the `RRULE` property as defined in [RFC 5545 Section 3.8.5.3](https://tools.ietf.org/html/rfc5545#section-3.8.5.3).
+const rruleName = 'RRULE';
 
-/// Pattern corresponding to the `DATE-TIME` rule specified in
-/// [RFC 5545 Section 3.3.5: Date-Time](https://tools.ietf.org/html/rfc5545#section-3.3.5).
-final dateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
-    '${datePattern.patternText}"T"${timePattern.patternText}');
+/// Names of `Recurrence Rule` parts as defined in [RFC 5545 Section 3.3.10](https://tools.ietf.org/html/rfc5545#section-3.3.10).
+const recurRulePartFreq = 'FREQ';
+const recurRulePartUntil = 'UNTIL';
+const recurRulePartCount = 'COUNT';
+const recurRulePartInterval = 'INTERVAL';
+const recurRulePartBySecond = 'BYSECOND';
+const recurRulePartByMinute = 'BYMINUTE';
+const recurRulePartByHour = 'BYHOUR';
+const recurRulePartByDay = 'BYDAY';
+const recurRulePartByMonthDay = 'BYMONTHDAY';
+const recurRulePartByYearDay = 'BYYEARDAY';
+const recurRulePartByWeekNo = 'BYWEEKNO';
+const recurRulePartByMonth = 'BYMONTH';
+const recurRulePartBySetPos = 'BYSETPOS';
+const recurRulePartWkSt = 'WKST';
 
-const frequencyStrings = {
+const recurFreqValues = {
   'SECONDLY': RecurrenceFrequency.secondly,
   'MINUTELY': RecurrenceFrequency.minutely,
   'HOURLY': RecurrenceFrequency.hourly,
@@ -62,7 +68,7 @@ const frequencyStrings = {
   'YEARLY': RecurrenceFrequency.yearly,
 };
 
-const weekDayStrings = {
+const recurWeekDayValues = {
   'MO': DayOfWeek.monday,
   'TU': DayOfWeek.tuesday,
   'WE': DayOfWeek.wednesday,
