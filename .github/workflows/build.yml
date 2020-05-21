@@ -41,10 +41,7 @@ jobs:
         run: pub get
 
       - name: Run tests
-        run: pub run test --coverage=coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        run: pub run test
 
   coverage:
     name: Coverage
