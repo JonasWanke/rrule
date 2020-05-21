@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -13,59 +15,79 @@ class ICalProperty {
         assert(parameters != null),
         assert(value != null);
 
-  factory ICalProperty.parse(String contentLine) {
-    // Add some positive lookaheads to make sure we get everything
-    final name = RegExp(_name).matchAsPrefix('$contentLine(?=[;:])').group(0);
+  factory ICalProperty.parse(String contentLine) =>
+      ICalPropertyStringCodec().decode(contentLine);
 
-    var index = name.length;
-    final parameters = <String, List<String>>{};
-    while (contentLine[index] == ';') {
-      // Add 1 for the ";" separator.
-      index++;
+  final String name;
+  final Map<String, List<String>> parameters;
+  final String value;
 
-      final match = RegExp('$_param(?=[;:])').matchAsPrefix(contentLine, index);
-      if (match == null) {
-        throw ICalPropertyFormatException(
-            'Expected parameter after ";" character', contentLine, index);
-      }
+  @override
+  int get hashCode => hashList([name, parameters, value]);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is ICalProperty &&
+        other.name == name &&
+        DeepCollectionEquality().equals(other.parameters, parameters) &&
+        other.value == value;
+  }
 
-      final name = match.group(1);
-      index += name.length;
+  @override
+  String toString() => ICalPropertyStringCodec().encode(this);
+}
 
-      final values = <String>[];
-      while (contentLine[index] == '=' || contentLine[index] == ',') {
-        // Add 1 for the "," separator.
-        index++;
+class ICalPropertyFormatException extends FormatException {
+  const ICalPropertyFormatException(String message, String source, int offset)
+      : super(message, source, offset);
+}
 
-        final match =
-            RegExp('$_paramValue(?=[,;:])').matchAsPrefix(contentLine, index);
-        if (match == null) {
-          throw ICalPropertyFormatException(
-              'Invalid parameter value', contentLine, index);
-        }
+@immutable
+class ICalPropertyStringCodec extends Codec<ICalProperty, String> {
+  const ICalPropertyStringCodec();
 
-        final value = match.group(0);
-        if (value.startsWith(_dquote)) {
-          // value is quoted.
-          values.add(value.substring(1, value.length - 1));
-        } else {
-          values.add(value);
-        }
+  @override
+  Converter<ICalProperty, String> get encoder => _ICalPropertyToStringEncoder();
 
-        index = match.end;
-      }
-      parameters[name] = values;
+  @override
+  Converter<String, ICalProperty> get decoder =>
+      _ICalPropertyFromStringDecoder();
+}
 
-      index = match.end;
+@immutable
+class _ICalPropertyToStringEncoder extends Converter<ICalProperty, String> {
+  const _ICalPropertyToStringEncoder();
+
+  @override
+  String convert(ICalProperty input) {
+    final output = StringBuffer(input.name);
+
+    for (final entry in input.parameters.entries) {
+      output.writeICalParameter(entry.key, entry.value);
     }
 
-    return ICalProperty(
-      name: name,
-      parameters: parameters,
-      // Add 1 for the ":" separator.
-      value: contentLine.substring(index + 1),
-    );
+    output..write(':')..write(input.value);
+    return output.toString();
   }
+}
+
+extension _ICalPropertyToStringEncoderStringBuffer on StringBuffer {
+  void writeICalParameter(String name, List<String> values) {
+    write(';');
+    write(name);
+    write('=');
+    writeAll(values.map((v) => v.contains(RegExp('[,:;]')) ? '"$v"' : v), ',');
+  }
+}
+
+@immutable
+class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
+  const _ICalPropertyFromStringDecoder();
 
   // https://tools.ietf.org/html/rfc3629#section-4
   static const _utf82 = '(?:[\xC2-\xDF]$_utf8Tail)';
@@ -98,35 +120,58 @@ class ICalProperty {
       '(?:$_wsp|\x21|[\x23-\x2B]|[\x2D-\x39]|[\x3C-\x7E]|$_nonUsAscii)';
   static const _nonUsAscii = '(?:$_utf82|$_utf83|$_utf84)';
 
-  final String name;
-  final Map<String, List<String>> parameters;
-  final String value;
+  @override
+  ICalProperty convert(String input) {
+    // Add some positive lookaheads to make sure we get everything
+    final name = RegExp(_name).matchAsPrefix('$input(?=[;:])').group(0);
 
-  @override
-  int get hashCode => hashList([name, parameters, value]);
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
+    var index = name.length;
+    final parameters = <String, List<String>>{};
+    while (input[index] == ';') {
+      // Add 1 for the ";" separator.
+      index++;
+
+      final match = RegExp('$_param(?=[;:])').matchAsPrefix(input, index);
+      if (match == null) {
+        throw ICalPropertyFormatException(
+            'Expected parameter after ";" character', input, index);
+      }
+
+      final name = match.group(1);
+      index += name.length;
+
+      final values = <String>[];
+      while (input[index] == '=' || input[index] == ',') {
+        // Add 1 for the "," separator.
+        index++;
+
+        final match =
+            RegExp('$_paramValue(?=[,;:])').matchAsPrefix(input, index);
+        if (match == null) {
+          throw ICalPropertyFormatException(
+              'Invalid parameter value', input, index);
+        }
+
+        final value = match.group(0);
+        if (value.startsWith(_dquote)) {
+          // value is quoted.
+          values.add(value.substring(1, value.length - 1));
+        } else {
+          values.add(value);
+        }
+
+        index = match.end;
+      }
+      parameters[name] = values;
+
+      index = match.end;
     }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is ICalProperty &&
-        other.name == name &&
-        DeepCollectionEquality().equals(other.parameters, parameters) &&
-        other.value == value;
-  }
 
-  @override
-  String toString() {
-    final params =
-        parameters.entries.map((p) => ';${p.key}=${p.value.join(',')}').join();
-    return '$name$params:$value';
+    return ICalProperty(
+      name: name,
+      parameters: parameters,
+      // Add 1 for the ":" separator.
+      value: input.substring(index + 1),
+    );
   }
-}
-
-class ICalPropertyFormatException extends FormatException {
-  const ICalPropertyFormatException(String message, String source, int offset)
-      : super(message, source, offset);
 }
