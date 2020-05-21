@@ -19,6 +19,10 @@ final iCalTimePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
 final iCalDateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
     '${iCalDatePattern.patternText}"T"${iCalTimePattern.patternText}');
 
+/// An iCalendar content line.
+///
+/// See [RFC 5545 Section 3.1](https://tools.ietf.org/html/rfc5545#section-3.1)
+/// for more information.
 @immutable
 class ICalProperty {
   const ICalProperty({
@@ -136,34 +140,36 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
 
   @override
   ICalProperty convert(String input) {
+    final contentLine = _unfold(input);
+
     // Add some positive lookaheads to make sure we get everything
-    final name = RegExp(_name).matchAsPrefix('$input(?=[;:])').group(0);
+    final name = RegExp(_name).matchAsPrefix('$contentLine(?=[;:])').group(0);
 
     var index = name.length;
     final parameters = <String, List<String>>{};
-    while (input[index] == ';') {
+    while (contentLine[index] == ';') {
       // Add 1 for the ";" separator.
       index++;
 
-      final match = RegExp('$_param(?=[;:])').matchAsPrefix(input, index);
+      final match = RegExp('$_param(?=[;:])').matchAsPrefix(contentLine, index);
       if (match == null) {
         throw ICalPropertyFormatException(
-            'Expected parameter after ";" character', input, index);
+            'Expected parameter after ";" character', contentLine, index);
       }
 
       final name = match.group(1);
       index += name.length;
 
       final values = <String>[];
-      while (input[index] == '=' || input[index] == ',') {
+      while (contentLine[index] == '=' || contentLine[index] == ',') {
         // Add 1 for the "," separator.
         index++;
 
         final match =
-            RegExp('$_paramValue(?=[,;:])').matchAsPrefix(input, index);
+            RegExp('$_paramValue(?=[,;:])').matchAsPrefix(contentLine, index);
         if (match == null) {
           throw ICalPropertyFormatException(
-              'Invalid parameter value', input, index);
+              'Invalid parameter value', contentLine, index);
         }
 
         final value = match.group(0);
@@ -185,7 +191,17 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
       name: name,
       parameters: parameters,
       // Add 1 for the ":" separator.
-      value: input.substring(index + 1),
+      value: contentLine.substring(index + 1),
     );
+  }
+
+  /// Unfolds multiple-line representations of a content line back to a single
+  /// line.
+  ///
+  /// See [RFC 5545 Section 3.1](https://tools.ietf.org/html/rfc5545#section-3.1)
+  /// for more information.
+  String _unfold(String input) {
+    // TODO(JonasWanke): RFC 5545 Section 3.1. allows line breaks within a UTF-8 multi-octet sequence. That should not be allowed inside a String, so maybe support raw byte sequences?
+    return input.replaceAll(RegExp('\r\n[ \t]+'), '');
   }
 }
