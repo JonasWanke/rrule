@@ -72,6 +72,11 @@ class RecurrenceRuleFromStringDecoder
     Set<int> bySetPositions;
     DayOfWeek weekStart;
     for (final part in property.value.split(';')) {
+      if (part.isEmpty) {
+        // This means the value is empty.
+        continue;
+      }
+
       final nameEndIndex = part.indexOf('=');
       final name = part.substring(0, nameEndIndex).toUpperCase();
       final value = part.substring(nameEndIndex + 1);

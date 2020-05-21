@@ -490,4 +490,118 @@ void main() {
     // RRULE:FREQ=MONTHLY;BYMONTHDAY=15,30;COUNT=5
     string: 'RRULE:FREQ=MONTHLY;COUNT=5;BYMONTHDAY=15,30',
   );
+
+  group('from string', () {
+    test('throws on missing frequency', () {
+      final codec = RecurrenceRuleStringCodec();
+
+      expect(
+        () => codec.decode('RRULE:COUNT=3;COUNT=6'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:'),
+        throwsFormatException,
+      );
+    });
+
+    test('throws on duplicate parts', () {
+      final codec = RecurrenceRuleStringCodec();
+
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY,COUNT=3;COUNT=6'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY,COUNT=3;UNTIL=20200101'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY,BYSECOND=3,5;BYSECOND=19,3'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY,BYDAY=+1MO;BYDAY=TU'),
+        throwsFormatException,
+      );
+    });
+
+    test('parses dates', () {
+      final codec = RecurrenceRuleStringCodec();
+
+      expect(
+        codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101'),
+        RecurrenceRule(
+          frequency: RecurrenceFrequency.daily,
+          until: LocalDate(2020, 1, 1).atMidnight(),
+        ),
+      );
+      expect(
+        codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101T123456'),
+        RecurrenceRule(
+          frequency: RecurrenceFrequency.daily,
+          until: LocalDateTime(2020, 1, 1, 12, 34, 56),
+        ),
+      );
+      expect(
+        codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101T123456Z'),
+        RecurrenceRule(
+          frequency: RecurrenceFrequency.daily,
+          until: LocalDateTime(2020, 1, 1, 12, 34, 56),
+        ),
+      );
+    });
+
+    test('parses week day entries', () {
+      final codec = RecurrenceRuleStringCodec();
+
+      expect(
+        codec.decode('RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR,SA,SU'),
+        RecurrenceRule(
+          frequency: RecurrenceFrequency.daily,
+          byWeekDays: {
+            ByWeekDayEntry(DayOfWeek.monday),
+            ByWeekDayEntry(DayOfWeek.tuesday),
+            ByWeekDayEntry(DayOfWeek.wednesday),
+            ByWeekDayEntry(DayOfWeek.thursday),
+            ByWeekDayEntry(DayOfWeek.friday),
+            ByWeekDayEntry(DayOfWeek.saturday),
+            ByWeekDayEntry(DayOfWeek.sunday),
+          },
+        ),
+      );
+      expect(
+        codec.decode('RRULE:FREQ=DAILY;BYDAY=-20SA,-4MO,53FR'),
+        RecurrenceRule(
+          frequency: RecurrenceFrequency.daily,
+          byWeekDays: {
+            ByWeekDayEntry(DayOfWeek.saturday, -20),
+            ByWeekDayEntry(DayOfWeek.monday, -4),
+            ByWeekDayEntry(DayOfWeek.friday, 53),
+          },
+        ),
+      );
+
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=-54SA'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=-4'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=TUE'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=FO'),
+        throwsFormatException,
+      );
+      expect(
+        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=60'),
+        throwsFormatException,
+      );
+    });
+  });
 }

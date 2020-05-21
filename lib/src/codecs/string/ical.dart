@@ -141,6 +141,11 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
   @override
   ICalProperty convert(String input) {
     final contentLine = _unfold(input);
+    final lineBreakMatch = RegExp('[\r\n]').firstMatch(contentLine);
+    if (lineBreakMatch != null) {
+      throw ICalPropertyFormatException(
+          'Unexpected line break detected', contentLine, lineBreakMatch.start);
+    }
 
     // Add some positive lookaheads to make sure we get everything
     final name = RegExp(_name).matchAsPrefix('$contentLine(?=[;:])').group(0);
