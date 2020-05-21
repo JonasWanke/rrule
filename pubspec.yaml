@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   basics: ^0.4.0
+  collection: ^1.14.12
   meta: ^1.1.8
   pedantic: ^1.8.0+1
   time_machine: ^0.9.12
