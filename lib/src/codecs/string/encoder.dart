@@ -26,6 +26,8 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
     this.options = const RecurrenceRuleToStringOptions(),
   }) : assert(options != null);
 
+  static const _byWeekDayEntryEncoder = ByWeekDayEntryToStringEncoder();
+
   final RecurrenceRuleToStringOptions options;
 
   @override
@@ -47,8 +49,7 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
       ..writeList('BYHOUR', input.byHours)
       ..writeList(
         'BYDAY',
-        input.byWeekDays
-            .map((e) => '${e.occurrence ?? ''}${_weekDayToString(e.day)}'),
+        input.byWeekDays.map(_byWeekDayEntryEncoder.convert),
       )
       ..writeList('BYMONTHDAY', input.byMonthDays)
       ..writeList('BYYEARDAY', input.byYearDays)
@@ -117,4 +118,13 @@ extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
     writeKey(key);
     writeAll(entries, ',');
   }
+}
+
+@immutable
+class ByWeekDayEntryToStringEncoder extends Converter<ByWeekDayEntry, String> {
+  const ByWeekDayEntryToStringEncoder();
+
+  @override
+  String convert(ByWeekDayEntry input) =>
+      '${input.occurrence ?? ''}${_weekDayToString(input.day)}';
 }

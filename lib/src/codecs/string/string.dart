@@ -30,6 +30,18 @@ class RecurrenceRuleStringCodec extends Codec<RecurrenceRule, String> {
 /// Pattern corresponding to the `DATE` rule specified in
 /// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
 final datePattern = LocalDatePattern.createWithInvariantCulture('yyyyMMdd');
+@immutable
+class ByWeekDayEntryStringCodec extends Codec<ByWeekDayEntry, String> {
+  const ByWeekDayEntryStringCodec();
+
+  @override
+  Converter<ByWeekDayEntry, String> get encoder =>
+      ByWeekDayEntryToStringEncoder();
+
+  @override
+  Converter<String, ByWeekDayEntry> get decoder =>
+      ByWeekDayEntryFromStringDecoder();
+}
 
 /// Pattern corresponding to the `TIME` rule specified in
 /// [RFC 5545 Section 3.3.12: Time](https://tools.ietf.org/html/rfc5545#section-3.3.12).
