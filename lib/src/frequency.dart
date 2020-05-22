@@ -9,19 +9,19 @@ class RecurrenceFrequency implements Comparable<RecurrenceFrequency> {
         assert(_string != null);
 
   static const RecurrenceFrequency secondly =
-      RecurrenceFrequency._(0, recurFreqSecondly);
+      RecurrenceFrequency._(6, recurFreqSecondly);
   static const RecurrenceFrequency minutely =
-      RecurrenceFrequency._(1, recurFreqMinutely);
+      RecurrenceFrequency._(5, recurFreqMinutely);
   static const RecurrenceFrequency hourly =
-      RecurrenceFrequency._(2, recurFreqHourly);
+      RecurrenceFrequency._(4, recurFreqHourly);
   static const RecurrenceFrequency daily =
       RecurrenceFrequency._(3, recurFreqDaily);
   static const RecurrenceFrequency weekly =
-      RecurrenceFrequency._(4, recurFreqWeekly);
+      RecurrenceFrequency._(2, recurFreqWeekly);
   static const RecurrenceFrequency monthly =
-      RecurrenceFrequency._(5, recurFreqMonthly);
+      RecurrenceFrequency._(1, recurFreqMonthly);
   static const RecurrenceFrequency yearly =
-      RecurrenceFrequency._(6, recurFreqYearly);
+      RecurrenceFrequency._(0, recurFreqYearly);
 
   final int _value;
   final String _string;
