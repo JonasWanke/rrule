@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../../by_week_day_entry.dart';
+import '../../frequency.dart';
 import '../../recurrence_rule.dart';
 import 'ical.dart';
 import 'string.dart';

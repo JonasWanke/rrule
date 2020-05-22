@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../../by_week_day_entry.dart';
+import '../../frequency.dart';
 import '../../recurrence_rule.dart';
 import 'decoder.dart';
 import 'encoder.dart';
@@ -62,14 +64,21 @@ const recurRulePartByMonth = 'BYMONTH';
 const recurRulePartBySetPos = 'BYSETPOS';
 const recurRulePartWkSt = 'WKST';
 
+const recurFreqSecondly = 'SECONDLY';
+const recurFreqMinutely = 'MINUTELY';
+const recurFreqHourly = 'HOURLY';
+const recurFreqDaily = 'DAILY';
+const recurFreqWeekly = 'WEEKLY';
+const recurFreqMonthly = 'MONTHLY';
+const recurFreqYearly = 'YEARLY';
 const recurFreqValues = {
-  'SECONDLY': RecurrenceFrequency.secondly,
-  'MINUTELY': RecurrenceFrequency.minutely,
-  'HOURLY': RecurrenceFrequency.hourly,
-  'DAILY': RecurrenceFrequency.daily,
-  'WEEKLY': RecurrenceFrequency.weekly,
-  'MONTHLY': RecurrenceFrequency.monthly,
-  'YEARLY': RecurrenceFrequency.yearly,
+  recurFreqSecondly: RecurrenceFrequency.secondly,
+  recurFreqMinutely: RecurrenceFrequency.minutely,
+  recurFreqHourly: RecurrenceFrequency.hourly,
+  recurFreqDaily: RecurrenceFrequency.daily,
+  recurFreqWeekly: RecurrenceFrequency.weekly,
+  recurFreqMonthly: RecurrenceFrequency.monthly,
+  recurFreqYearly: RecurrenceFrequency.yearly,
 };
 
 const recurWeekDayValues = {

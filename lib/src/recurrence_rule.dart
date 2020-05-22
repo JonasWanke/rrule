@@ -5,19 +5,12 @@ import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
+import 'by_week_day_entry.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/string.dart';
+import 'frequency.dart';
+import 'recurrence_rule_iteration.dart';
 import 'utils.dart';
-
-enum RecurrenceFrequency {
-  secondly,
-  minutely,
-  hourly,
-  daily,
-  weekly,
-  monthly,
-  yearly,
-}
 
 /// Specified in [RFC 5545 Section 3.8.5.3: Recurrence Rule](https://tools.ietf.org/html/rfc5545#section-3.8.5.3).
 @immutable
@@ -59,7 +52,7 @@ class RecurrenceRule {
         assert(byYearDays.all(_debugCheckIsValidDayOfYear)),
         byYearDays = SplayTreeSet.of(byYearDays),
         assert(byWeeks != null),
-        assert(byWeeks.all(_debugCheckIsValidWeekNumber)),
+        assert(byWeeks.all(debugCheckIsValidWeekNumber)),
         byWeeks = SplayTreeSet.of(byWeeks),
         assert(byMonths != null),
         assert(byMonths.all(_debugCheckIsValidMonthEntry)),
@@ -173,46 +166,6 @@ class RecurrenceRule {
   String toString() => RecurrenceRuleStringCodec().encode(this);
 }
 
-/// Corresponds to a single entry in the `BYDAY` list of a [RecurrenceRule].
-@immutable
-class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
-  ByWeekDayEntry(this.day, [this.occurrence])
-      : assert(day != null),
-        assert(occurrence == null || _debugCheckIsValidWeekNumber(occurrence));
-
-  final DayOfWeek day;
-  final int occurrence;
-
-  @override
-  int compareTo(ByWeekDayEntry other) {
-    final result = (occurrence ?? 0).compareTo(other.occurrence ?? 0);
-    if (result != 0) {
-      return result;
-    }
-    // This correctly starts with monday.
-    return day.value.compareTo(other.day.value);
-  }
-
-  @override
-  int get hashCode => hashList([day, occurrence]);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is ByWeekDayEntry &&
-        other.day == day &&
-        other.occurrence == occurrence;
-  }
-
-  @override
-  String toString() => ByWeekDayEntryStringCodec().encode(this);
-}
-
 /// Validates the `seconds` rule.
 bool _debugCheckIsValidSecond(int number) {
   // "<= 60" is intentional due to leap seconds.
@@ -245,7 +198,7 @@ bool _debugCheckIsValidMonthEntry(int number) {
 }
 
 /// Validates the `weeknum` rule and the first part of the `weekdaynum` rule.
-bool _debugCheckIsValidWeekNumber(int number) {
+bool debugCheckIsValidWeekNumber(int number) {
   assert(1 <= number.abs() && number.abs() <= 53);
   return true;
 }

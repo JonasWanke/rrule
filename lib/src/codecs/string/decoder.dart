@@ -5,6 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:rrule/src/codecs/string/string.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../../by_week_day_entry.dart';
+import '../../frequency.dart';
 import '../../recurrence_rule.dart';
 import '../../utils.dart';
 import 'ical.dart';
