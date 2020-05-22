@@ -137,8 +137,8 @@ class RecurrenceRuleFromStringDecoder
             value,
             oldValue: bySeconds,
             min: 0,
-            // Inclusive maximum is intentional due to leap seconds.
-            max: TimeConstants.secondsPerMinute,
+            // We currently don't support leap seconds.
+            max: TimeConstants.secondsPerMinute - 1,
             allowNegative: false,
           );
           break;

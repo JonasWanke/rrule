@@ -168,8 +168,8 @@ class RecurrenceRule {
 
 /// Validates the `seconds` rule.
 bool _debugCheckIsValidSecond(int number) {
-  // "<= 60" is intentional due to leap seconds.
-  assert(0 <= number && number <= TimeConstants.secondsPerMinute);
+  // We currently don't support leap seconds.
+  assert(0 <= number && number < TimeConstants.secondsPerMinute);
   return true;
 }
 
