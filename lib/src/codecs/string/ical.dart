@@ -19,6 +19,9 @@ final iCalTimePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
 final iCalDateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
     '${iCalDatePattern.patternText}"T"${iCalTimePattern.patternText}');
 
+/// Maximum year number supported by iCalendar.
+const iCalMaxYear = 9999;
+
 /// An iCalendar content line.
 ///
 /// See [RFC 5545 Section 3.1](https://tools.ietf.org/html/rfc5545#section-3.1)

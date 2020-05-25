@@ -90,7 +90,7 @@ extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
     RecurrenceRuleToStringOptions options,
   ) {
     assert(
-      input.year <= 9999 && input.calendarDate.era == Era.common,
+      input.year <= iCalMaxYear && input.calendarDate.era == Era.common,
       'The date format used by RRULEs only support four-digit years. '
       'See https://tools.ietf.org/html/rfc5545#section-3.3.4 for more '
       'information.',
