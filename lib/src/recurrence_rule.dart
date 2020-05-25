@@ -9,7 +9,7 @@ import 'by_week_day_entry.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/string.dart';
 import 'frequency.dart';
-import 'recurrence_rule_iteration.dart';
+import 'iteration/iteration.dart';
 import 'utils.dart';
 
 /// Specified in [RFC 5545 Section 3.8.5.3: Recurrence Rule](https://tools.ietf.org/html/rfc5545#section-3.8.5.3).
@@ -85,6 +85,9 @@ class RecurrenceRule {
   /// Corresponds to the `INTERVAL` property.
   final int interval;
 
+  /// Returns [interval] or `1` if that is not set.
+  int get actualInterval => interval ?? 1;
+
   /// Corresponds to the `BYSECOND` property.
   final Set<int> bySeconds;
 
@@ -113,7 +116,26 @@ class RecurrenceRule {
   final Set<int> bySetPositions;
 
   /// Corresponds to the `WKST` property.
+  ///
+  /// See also:
+  /// - [actualWeekStart], for the resolved value if this is not set.
   final DayOfWeek weekStart;
+
+  /// Returns [weekStart] or [DayOfWeek.monday] if that is not set.
+  DayOfWeek get actualWeekStart => weekStart ?? DayOfWeek.monday;
+
+  /// The [WeekYearRule] starting at [actualWeekStart].
+  ///
+  /// Otherwise, it's the same as [WeekYearRules.iso].
+  WeekYearRule get weekYearRule =>
+      WeekYearRules.forMinDaysInFirstWeek(4, actualWeekStart);
+
+  Iterable<LocalDateTime> getInstances({
+    @required LocalDateTime start,
+  }) {
+    assert(start != null);
+    return getRecurrenceRuleInstances(this, start: start);
+  }
 
   @override
   int get hashCode {

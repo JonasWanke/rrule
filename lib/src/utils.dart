@@ -1,3 +1,4 @@
+import 'package:time_machine/time_machine.dart';
 import 'package:time_machine/time_machine_text_patterns.dart';
 
 /// Combines the [Object.hashCode] values of an arbitrary number of objects
@@ -21,4 +22,25 @@ int hashList(Iterable<Object> arguments) {
 
 extension FancyParseResult<T> on ParseResult<T> {
   T get valueOrNull => TryGetValue(null);
+}
+
+extension FancyLocalDate on LocalDate {
+  LocalDate copyWith({int year, int month, int day}) {
+    return LocalDate(
+      year ?? this.year,
+      month ?? monthOfYear,
+      day ?? dayOfMonth,
+    );
+  }
+}
+
+extension FancyLocalTime on LocalTime {
+  LocalTime copyWith({int hour, int minute, int second, int nanos}) {
+    return LocalTime(
+      hour ?? hourOfDay,
+      minute ?? minuteOfHour,
+      second ?? secondOfMinute,
+      ns: nanos ?? nanosecondOfSecond,
+    );
+  }
 }
