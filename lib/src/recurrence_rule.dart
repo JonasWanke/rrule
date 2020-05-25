@@ -61,7 +61,7 @@ class RecurrenceRule {
         assert(bySetPositions.all(_debugCheckIsValidDayOfYear)),
         bySetPositions = SplayTreeSet.of(bySetPositions);
 
-  factory RecurrenceRule.parseString(
+  factory RecurrenceRule.fromString(
     String input, {
     RecurrenceRuleFromStringOptions options =
         const RecurrenceRuleFromStringOptions(),
