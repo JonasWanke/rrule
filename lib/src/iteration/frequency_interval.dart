@@ -14,7 +14,7 @@ LocalDateTime addFrequencyAndInterval(
   } else if (rrule.frequency == RecurrenceFrequency.monthly) {
     return currentStart._addMonths(rrule.actualInterval);
   } else if (rrule.frequency == RecurrenceFrequency.weekly) {
-    return currentStart._addWeeks(rrule.actualInterval, rrule.weekStart);
+    return currentStart._addWeeks(rrule.actualInterval, rrule.actualWeekStart);
   } else if (rrule.frequency == RecurrenceFrequency.daily) {
     return currentStart._addDays(rrule.actualInterval);
   } else if (rrule.frequency == RecurrenceFrequency.hourly) {
