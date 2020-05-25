@@ -1,5 +1,6 @@
 import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
+import '../by_week_day_entry.dart';
 import '../codecs/string/ical.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -73,6 +74,11 @@ Iterable<LocalDateTime> getRecurrenceRuleInstances(
 }
 
 RecurrenceRule _prepare(RecurrenceRule rrule, LocalDateTime start) {
+  final byDatesEmpty = rrule.byWeekDays.isEmpty &&
+      rrule.byMonthDays.isEmpty &&
+      rrule.byYearDays.isEmpty &&
+      rrule.byWeeks.isEmpty;
+
   return RecurrenceRule(
     frequency: rrule.frequency,
     until: rrule.until,
@@ -90,11 +96,21 @@ RecurrenceRule _prepare(RecurrenceRule rrule, LocalDateTime start) {
         rrule.byHours.isEmpty && rrule.frequency < RecurrenceFrequency.hourly
             ? {start.hourOfDay}
             : rrule.byHours,
-    byWeekDays: rrule.byWeekDays,
-    byMonthDays: rrule.byMonthDays,
+    byWeekDays: byDatesEmpty && rrule.frequency == RecurrenceFrequency.weekly
+        ? {ByWeekDayEntry(start.dayOfWeek)}
+        : rrule.byWeekDays,
+    byMonthDays: byDatesEmpty &&
+            (rrule.frequency == RecurrenceFrequency.monthly ||
+                rrule.frequency == RecurrenceFrequency.yearly)
+        ? {start.dayOfMonth}
+        : rrule.byMonthDays,
     byYearDays: rrule.byYearDays,
     byWeeks: rrule.byWeeks,
-    byMonths: rrule.byMonths,
+    byMonths: byDatesEmpty &&
+            rrule.frequency == RecurrenceFrequency.yearly &&
+            rrule.byMonths.isEmpty
+        ? {start.monthOfYear}
+        : rrule.byMonths,
     bySetPositions: rrule.bySetPositions,
     weekStart: rrule.weekStart,
   );
