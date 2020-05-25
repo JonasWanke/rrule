@@ -36,34 +36,39 @@ bool _isFiltered(RecurrenceRule rrule, LocalDate date) {
 }
 
 bool _isFilteredByMonths(RecurrenceRule rrule, LocalDate date) =>
-    rrule.byMonths.contains(date.monthOfYear);
+    rrule.byMonths.isNotEmpty && !rrule.byMonths.contains(date.monthOfYear);
 bool _isFilteredByWeeksOrWeekDays(RecurrenceRule rrule, LocalDate date) {
+  if (rrule.byWeeks.isEmpty && rrule.byWeekDays.isEmpty) {
+    return false;
+  }
+
   // [RecurrenceRule.byWeeks]
   final weekOfYear = rrule.weekYearRule.getWeekOfWeekYear(date);
-  if (rrule.byWeeks.contains(weekOfYear)) {
-    return true;
-  }
   final weekYear = rrule.weekYearRule.getWeekYear(date);
   final weeksInYear =
       rrule.weekYearRule.getWeeksInWeekYear(weekYear, date.calendar);
   final negativeWeekOfYear = weekOfYear - weeksInYear;
-  if (rrule.byWeeks.contains(negativeWeekOfYear)) {
+  if (rrule.byWeeks.isNotEmpty &&
+      !rrule.byWeeks.contains(weekOfYear) &&
+      !rrule.byWeeks.contains(negativeWeekOfYear)) {
     return true;
   }
 
   // [RecurrenceRule.byWeekDays]
+  if (rrule.byWeekDays.isEmpty) {
+    return false;
+  }
+
   final dayOfWeek = date.dayOfWeek;
   final relevantByWeekDays = rrule.byWeekDays.where((e) => e.day == dayOfWeek);
   final genericByWeekDays =
       relevantByWeekDays.where((e) => e.occurrence == null);
-  if (genericByWeekDays.isNotEmpty) {
-    return true;
-  }
   final specificByWeekDays = relevantByWeekDays
       .where((e) => e.occurrence != null)
       .map((e) => e.occurrence);
-  if (specificByWeekDays.contains(weekOfYear) ||
-      specificByWeekDays.contains(negativeWeekOfYear)) {
+  if (genericByWeekDays.isEmpty &&
+      !specificByWeekDays.contains(weekOfYear) &&
+      !specificByWeekDays.contains(negativeWeekOfYear)) {
     return true;
   }
 
@@ -71,17 +76,25 @@ bool _isFilteredByWeeksOrWeekDays(RecurrenceRule rrule, LocalDate date) {
 }
 
 bool _isFilteredByMonthDays(RecurrenceRule rrule, LocalDate date) {
+  if (rrule.byMonthDays.isEmpty) {
+    return false;
+  }
+
   final dayOfMonth = date.dayOfMonth;
   final daysInMonth = date.calendar.getDaysInMonth(date.year, date.monthOfYear);
   final negativeDayOfMonth = dayOfMonth - daysInMonth;
-  return rrule.byMonthDays.contains(dayOfMonth) ||
-      rrule.byMonthDays.contains(negativeDayOfMonth);
+  return !rrule.byMonthDays.contains(dayOfMonth) &&
+      !rrule.byMonthDays.contains(negativeDayOfMonth);
 }
 
 bool _isFilteredByYearDays(RecurrenceRule rrule, LocalDate date) {
+  if (rrule.byYearDays.isEmpty) {
+    return false;
+  }
+
   final dayOfYear = date.dayOfYear;
   final daysInYear = date.calendar.getDaysInYear(date.year);
   final negativeDayOfYear = dayOfYear - 1 - daysInYear;
-  return rrule.byYearDays.contains(dayOfYear) ||
-      rrule.byYearDays.contains(negativeDayOfYear);
+  return !rrule.byYearDays.contains(dayOfYear) &&
+      !rrule.byYearDays.contains(negativeDayOfYear);
 }
