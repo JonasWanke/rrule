@@ -1,9 +1,8 @@
-import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
-import '../by_week_day_entry.dart';
-import '../codecs/string/ical.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../by_week_day_entry.dart';
+import '../codecs/string/ical.dart';
 import '../frequency.dart';
 import '../recurrence_rule.dart';
 import 'date_set.dart';
