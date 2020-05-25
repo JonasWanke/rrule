@@ -82,7 +82,7 @@ bool _isFilteredByMonthDays(RecurrenceRule rrule, LocalDate date) {
 
   final dayOfMonth = date.dayOfMonth;
   final daysInMonth = date.calendar.getDaysInMonth(date.year, date.monthOfYear);
-  final negativeDayOfMonth = dayOfMonth - daysInMonth;
+  final negativeDayOfMonth = dayOfMonth - 1 - daysInMonth;
   return !rrule.byMonthDays.contains(dayOfMonth) &&
       !rrule.byMonthDays.contains(negativeDayOfMonth);
 }
