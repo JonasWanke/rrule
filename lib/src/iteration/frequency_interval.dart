@@ -50,10 +50,12 @@ extension _FrequencyIntervalCalculation on LocalDateTime {
   LocalDateTime _addMonths(int months) => this + Period(months: months);
 
   LocalDateTime _addWeeks(int weeks, DayOfWeek weekStart) {
+    final surplusDays =
+        (dayOfWeek.value - weekStart.value) % TimeConstants.daysPerWeek;
     return this +
         Period(
           weeks: weeks,
-          days: (dayOfWeek.value - weekStart.value) % TimeConstants.daysPerWeek,
+          days: -surplusDays,
         );
   }
 
