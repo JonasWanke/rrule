@@ -15,3 +15,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 🏗 Refactoring
 ### 📦 Build & CI
 -->
+
+## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.1.0...master)
+
+
+## 0.1.0 · 2020-05-26
+
+Initial release 🎉
