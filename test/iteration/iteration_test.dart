@@ -355,4 +355,251 @@ void main() {
       LocalDate(1998, 2, 1),
     ].map((d) => d.at(LocalTime(9, 0, 0))),
   );
+  testRecurring(
+    'Every 18 months on the 10th thru 15th of the month for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 10,
+      interval: 18,
+      byMonthDays: {10, 11, 12, 13, 14, 15},
+    ),
+    start: LocalDateTime(1997, 9, 10, 9, 0, 0),
+    expectedDates: [
+      ...10.to(16).map((d) => LocalDate(1997, 9, d)),
+      ...10.to(14).map((d) => LocalDate(1999, 3, d)),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Every Tuesday, every other month',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      interval: 2,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
+    ),
+    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+    expectedDates: [
+      ...[2, 9, 16, 23, 30].map((d) => LocalDate(1997, 9, d)),
+      ...[4, 11, 18, 25].map((d) => LocalDate(1997, 11, d)),
+      ...[6, 13, 20, 27].map((d) => LocalDate(1998, 1, d)),
+      ...[3, 10, 17, 24, 31].map((d) => LocalDate(1998, 3, d)),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'Yearly in June and July for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      count: 10,
+      byMonths: {6, 7},
+    ),
+    start: LocalDateTime(1997, 6, 10, 9, 0, 0),
+    expectedDates: 1997.to(2002).expand((y) {
+      return [6, 7].map((m) => LocalDateTime(y, m, 10, 9, 0, 0));
+    }),
+  );
+  testRecurring(
+    'Every other year on January, February, and March for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      count: 10,
+      interval: 2,
+      byMonths: {1, 2, 3},
+    ),
+    start: LocalDateTime(1997, 3, 10, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 3, 10),
+      ...1999.to(2004, by: 2).expand((y) {
+        return 1.to(4).map((m) => LocalDate(y, m, 10));
+      }),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Every third year on the 1st, 100th, and 200th day for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      count: 10,
+      interval: 3,
+      byYearDays: {1, 100, 200},
+    ),
+    start: LocalDateTime(1997, 1, 1, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 1, 1),
+      LocalDate(1997, 4, 10),
+      LocalDate(1997, 7, 19),
+      LocalDate(2000, 1, 1),
+      LocalDate(2000, 4, 9),
+      LocalDate(2000, 7, 18),
+      LocalDate(2003, 1, 1),
+      LocalDate(2003, 4, 10),
+      LocalDate(2003, 7, 19),
+      LocalDate(2006, 1, 1),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Every 20th Monday of the year, forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, 20)},
+    ),
+    start: LocalDateTime(1997, 5, 19, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 5, 19),
+      LocalDate(1998, 5, 18),
+      LocalDate(1999, 5, 17),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'Monday of week number 20 (where the default start of the week is Monday), forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday)},
+      byWeeks: {20},
+    ),
+    start: LocalDateTime(1997, 5, 12, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 5, 12),
+      LocalDate(1998, 5, 11),
+      LocalDate(1999, 5, 17),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'Every Thursday in March, forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
+      byMonths: {3},
+    ),
+    start: LocalDateTime(1997, 3, 13, 9, 0, 0),
+    expectedDates: [
+      ...[13, 20, 27].map((d) => LocalDate(1997, 3, d)),
+      ...[5, 12, 19, 26].map((d) => LocalDate(1998, 3, d)),
+      ...[4, 11, 18, 25].map((d) => LocalDate(1999, 3, d)),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'Every Thursday, but only during June, July, and August, forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
+      byMonths: {6, 7, 8},
+    ),
+    start: LocalDateTime(1997, 6, 5, 9, 0, 0),
+    expectedDates: [
+      ...[5, 12, 19, 26].map((d) => LocalDate(1997, 6, d)),
+      ...[3, 10, 17, 24, 31].map((d) => LocalDate(1997, 7, d)),
+      ...[7, 14, 21, 28].map((d) => LocalDate(1997, 8, d)),
+      ...[4, 11, 18, 25].map((d) => LocalDate(1998, 6, d)),
+      ...[2, 9, 16, 23, 30].map((d) => LocalDate(1998, 7, d)),
+      ...[6, 13, 20, 27].map((d) => LocalDate(1998, 8, d)),
+      ...[3, 10, 17, 24].map((d) => LocalDate(1999, 6, d)),
+      ...[1, 8, 15, 22, 29].map((d) => LocalDate(1999, 7, d)),
+      ...[5, 12, 19, 26].map((d) => LocalDate(1999, 8, d)),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  // Note: the orginal includes an EXDATE for the start, but our implementation
+  // doesn't require the start to be in the result set.
+  testRecurring(
+    'Every Friday the 13th, forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday)},
+      byMonthDays: {13},
+    ),
+    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1998, 2, 13),
+      LocalDate(1998, 3, 13),
+      LocalDate(1998, 11, 13),
+      LocalDate(1999, 8, 13),
+      LocalDate(2000, 10, 13),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'The first Saturday that follows the first Sunday of the month, forever',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.saturday)},
+      byMonthDays: {7, 8, 9, 10, 11, 12, 13},
+    ),
+    start: LocalDateTime(1997, 9, 13, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 13),
+      LocalDate(1997, 10, 11),
+      LocalDate(1997, 11, 8),
+      LocalDate(1997, 12, 13),
+      LocalDate(1998, 1, 10),
+      LocalDate(1998, 2, 7),
+      LocalDate(1998, 3, 7),
+      LocalDate(1998, 4, 11),
+      LocalDate(1998, 5, 9),
+      LocalDate(1998, 6, 13),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'Every 4 years, the first Tuesday after a Monday in November, forever (U.S. Presidential Election day)',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.yearly,
+      interval: 4,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
+      byMonthDays: {2, 3, 4, 5, 6, 7, 8},
+      byMonths: {11},
+    ),
+    start: LocalDateTime(1996, 11, 5, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1996, 11, 5),
+      LocalDate(2000, 11, 7),
+      LocalDate(2004, 11, 2),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
+  testRecurring(
+    'The third instance into the month of one of Tuesday, Wednesday, or Thursday, for the next 3 months',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 3,
+      byWeekDays: {
+        ByWeekDayEntry(DayOfWeek.tuesday),
+        ByWeekDayEntry(DayOfWeek.wednesday),
+        ByWeekDayEntry(DayOfWeek.thursday),
+      },
+      bySetPositions: {3},
+    ),
+    start: LocalDateTime(1997, 9, 4, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 4),
+      LocalDate(1997, 10, 7),
+      LocalDate(1997, 11, 6),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'The second-to-last weekday of the month',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      byWeekDays: {
+        ByWeekDayEntry(DayOfWeek.monday),
+        ByWeekDayEntry(DayOfWeek.tuesday),
+        ByWeekDayEntry(DayOfWeek.wednesday),
+        ByWeekDayEntry(DayOfWeek.thursday),
+        ByWeekDayEntry(DayOfWeek.friday),
+      },
+      bySetPositions: {-2},
+    ),
+    start: LocalDateTime(1997, 9, 29, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 29),
+      LocalDate(1997, 10, 30),
+      LocalDate(1997, 11, 27),
+      LocalDate(1997, 12, 30),
+      LocalDate(1998, 1, 29),
+      LocalDate(1998, 2, 26),
+      LocalDate(1998, 3, 30),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    isInfinite: true,
+  );
 }
