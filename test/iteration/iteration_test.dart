@@ -10,21 +10,27 @@ void main() {
     String description, {
     @required RecurrenceRule rrule,
     @required LocalDateTime start,
-    @required Iterable<LocalDateTime> expectedDates,
+    Iterable<LocalDate> expectedDates,
+    Iterable<LocalDateTime> expectedDateTimes,
     bool isInfinite = false,
   }) {
+    assert((expectedDates == null) != (expectedDateTimes == null));
+
     test(description, () {
+      final expected = expectedDateTimes ??
+          expectedDates.map((d) => d.at(LocalTime(9, 0, 0)));
+
       if (isInfinite) {
         final actual =
-            rrule.getInstances(start: start).take(expectedDates.length * 2);
+            rrule.getInstances(start: start).take(expected.length * 2);
         expect(
           actual.length,
-          expectedDates.length * 2,
+          expected.length * 2,
           reason: 'Is actually \'infinite\'',
         );
-        expect(actual.take(expectedDates.length), expectedDates);
+        expect(actual.take(expected.length), expected);
       } else {
-        expect(rrule.getInstances(start: start), expectedDates);
+        expect(rrule.getInstances(start: start), expected);
       }
     });
   }
@@ -36,7 +42,7 @@ void main() {
       count: 10,
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: 2.to(12).map((d) => LocalDateTime(1997, 9, d, 9, 0, 0)),
+    expectedDates: 2.to(12).map((d) => LocalDate(1997, 9, d)),
   );
   testRecurring(
     'Daily until December 24, 1997',
@@ -50,7 +56,7 @@ void main() {
       ...1.to(32).map((d) => LocalDate(1997, 10, d)),
       ...1.to(31).map((d) => LocalDate(1997, 11, d)),
       ...1.to(24).map((d) => LocalDate(1997, 12, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every other day - forever',
@@ -64,7 +70,7 @@ void main() {
       ...2.to(31, by: 2).map((d) => LocalDate(1997, 10, d)),
       ...1.to(30, by: 2).map((d) => LocalDate(1997, 11, d)),
       ...1.to(32, by: 2).map((d) => LocalDate(1997, 12, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -78,11 +84,11 @@ void main() {
     expectedDates: [
       ...2.to(23, by: 10).map((d) => LocalDate(1997, 9, d)),
       ...2.to(13, by: 10).map((d) => LocalDate(1997, 10, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   group('Every day in January, for 3 years', () {
     final expected = 1998.to(2001).expand((y) {
-      return 1.to(32).map((d) => LocalDateTime(y, 1, d, 9, 0, 0));
+      return 1.to(32).map((d) => LocalDate(y, 1, d));
     });
     testRecurring(
       'with frequency yearly',
@@ -125,7 +131,7 @@ void main() {
       ...2.to(31, by: 7).map((d) => LocalDate(1997, 9, d)),
       ...7.to(29, by: 7).map((d) => LocalDate(1997, 10, d)),
       LocalDate(1997, 11, 4),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Weekly until December 24, 1997',
@@ -139,7 +145,7 @@ void main() {
       ...7.to(29, by: 7).map((d) => LocalDate(1997, 10, d)),
       ...4.to(26, by: 7).map((d) => LocalDate(1997, 11, d)),
       ...2.to(24, by: 7).map((d) => LocalDate(1997, 12, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every other week - forever',
@@ -156,14 +162,14 @@ void main() {
       ...9.to(24, by: 14).map((d) => LocalDate(1997, 12, d)),
       ...6.to(21, by: 14).map((d) => LocalDate(1998, 1, d)),
       ...3.to(18, by: 14).map((d) => LocalDate(1998, 2, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   group('Weekly on Tuesday and Thursday for five weeks', () {
     final expected = [
       ...[2, 4, 9, 11, 16, 18, 23, 25, 30].map((d) => LocalDate(1997, 09, d)),
       LocalDate(1997, 10, 2),
-    ].map((d) => d.at(LocalTime(9, 0, 0)));
+    ];
     testRecurring(
       'with until',
       rrule: RecurrenceRule(
@@ -212,7 +218,7 @@ void main() {
       ...[1, 3, 13, 15, 17, 27, 29, 31].map((d) => LocalDate(1997, 10, d)),
       ...[10, 12, 14, 24, 26, 28].map((d) => LocalDate(1997, 11, d)),
       ...[8, 10, 12, 22].map((d) => LocalDate(1997, 12, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every other week on Tuesday and Thursday, for 8 occurrences',
@@ -230,7 +236,7 @@ void main() {
     expectedDates: [
       ...[2, 4, 16, 18, 30].map((d) => LocalDate(1997, 9, d)),
       ...[2, 14, 16].map((d) => LocalDate(1997, 10, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Monthly on the first Friday for 10 occurrences',
@@ -251,7 +257,7 @@ void main() {
       LocalDate(1998, 4, 3),
       LocalDate(1998, 5, 1),
       LocalDate(1998, 6, 5),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Monthly on the first Friday until December 24, 1997',
@@ -266,7 +272,7 @@ void main() {
       LocalDate(1997, 10, 3),
       LocalDate(1997, 11, 7),
       LocalDate(1997, 12, 5),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every other month on the first and last Sunday of the month for 10 occurrences',
@@ -286,7 +292,7 @@ void main() {
       ...[4, 25].map((d) => LocalDate(1998, 1, d)),
       ...[1, 29].map((d) => LocalDate(1998, 3, d)),
       ...[3, 31].map((d) => LocalDate(1998, 5, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Monthly on the second-to-last Monday of the month for 6 months',
@@ -303,7 +309,7 @@ void main() {
       LocalDate(1997, 12, 22),
       LocalDate(1998, 1, 19),
       LocalDate(1998, 2, 16),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Monthly on the third-to-the-last day of the month, forever',
@@ -319,7 +325,7 @@ void main() {
       LocalDate(1997, 12, 29),
       LocalDate(1998, 1, 29),
       LocalDate(1998, 2, 26),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -336,7 +342,7 @@ void main() {
       ...[2, 15].map((d) => LocalDate(1997, 11, d)),
       ...[2, 15].map((d) => LocalDate(1997, 12, d)),
       ...[2, 15].map((d) => LocalDate(1998, 1, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Monthly on the first and last day of the month for 10 occurrences:',
@@ -353,7 +359,7 @@ void main() {
       ...[1, 31].map((d) => LocalDate(1997, 12, d)),
       ...[1, 31].map((d) => LocalDate(1998, 1, d)),
       LocalDate(1998, 2, 1),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every 18 months on the 10th thru 15th of the month for 10 occurrences',
@@ -367,7 +373,7 @@ void main() {
     expectedDates: [
       ...10.to(16).map((d) => LocalDate(1997, 9, d)),
       ...10.to(14).map((d) => LocalDate(1999, 3, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every Tuesday, every other month',
@@ -382,7 +388,7 @@ void main() {
       ...[4, 11, 18, 25].map((d) => LocalDate(1997, 11, d)),
       ...[6, 13, 20, 27].map((d) => LocalDate(1998, 1, d)),
       ...[3, 10, 17, 24, 31].map((d) => LocalDate(1998, 3, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -394,7 +400,7 @@ void main() {
     ),
     start: LocalDateTime(1997, 6, 10, 9, 0, 0),
     expectedDates: 1997.to(2002).expand((y) {
-      return [6, 7].map((m) => LocalDateTime(y, m, 10, 9, 0, 0));
+      return [6, 7].map((m) => LocalDate(y, m, 10));
     }),
   );
   testRecurring(
@@ -411,7 +417,7 @@ void main() {
       ...1999.to(2004, by: 2).expand((y) {
         return 1.to(4).map((m) => LocalDate(y, m, 10));
       }),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every third year on the 1st, 100th, and 200th day for 10 occurrences',
@@ -433,7 +439,7 @@ void main() {
       LocalDate(2003, 4, 10),
       LocalDate(2003, 7, 19),
       LocalDate(2006, 1, 1),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'Every 20th Monday of the year, forever',
@@ -446,7 +452,7 @@ void main() {
       LocalDate(1997, 5, 19),
       LocalDate(1998, 5, 18),
       LocalDate(1999, 5, 17),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -461,7 +467,7 @@ void main() {
       LocalDate(1997, 5, 12),
       LocalDate(1998, 5, 11),
       LocalDate(1999, 5, 17),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -476,7 +482,7 @@ void main() {
       ...[13, 20, 27].map((d) => LocalDate(1997, 3, d)),
       ...[5, 12, 19, 26].map((d) => LocalDate(1998, 3, d)),
       ...[4, 11, 18, 25].map((d) => LocalDate(1999, 3, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -497,7 +503,7 @@ void main() {
       ...[3, 10, 17, 24].map((d) => LocalDate(1999, 6, d)),
       ...[1, 8, 15, 22, 29].map((d) => LocalDate(1999, 7, d)),
       ...[5, 12, 19, 26].map((d) => LocalDate(1999, 8, d)),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   // Note: the orginal includes an EXDATE for the start, but our implementation
@@ -516,7 +522,7 @@ void main() {
       LocalDate(1998, 11, 13),
       LocalDate(1999, 8, 13),
       LocalDate(2000, 10, 13),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -538,7 +544,7 @@ void main() {
       LocalDate(1998, 4, 11),
       LocalDate(1998, 5, 9),
       LocalDate(1998, 6, 13),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -555,7 +561,7 @@ void main() {
       LocalDate(1996, 11, 5),
       LocalDate(2000, 11, 7),
       LocalDate(2004, 11, 2),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
   testRecurring(
@@ -575,7 +581,7 @@ void main() {
       LocalDate(1997, 9, 4),
       LocalDate(1997, 10, 7),
       LocalDate(1997, 11, 6),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
   );
   testRecurring(
     'The second-to-last weekday of the month',
@@ -599,7 +605,7 @@ void main() {
       LocalDate(1998, 1, 29),
       LocalDate(1998, 2, 26),
       LocalDate(1998, 3, 30),
-    ].map((d) => d.at(LocalTime(9, 0, 0))),
+    ],
     isInfinite: true,
   );
 }
