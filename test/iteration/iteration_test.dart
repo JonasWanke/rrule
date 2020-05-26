@@ -233,6 +233,79 @@ void main() {
     ].map((d) => d.at(LocalTime(9, 0, 0))),
   );
   testRecurring(
+    'Monthly on the first Friday for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 10,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
+    ),
+    start: LocalDateTime(1997, 9, 5, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 5),
+      LocalDate(1997, 10, 3),
+      LocalDate(1997, 11, 7),
+      LocalDate(1997, 12, 5),
+      LocalDate(1998, 1, 2),
+      LocalDate(1998, 2, 6),
+      LocalDate(1998, 3, 6),
+      LocalDate(1998, 4, 3),
+      LocalDate(1998, 5, 1),
+      LocalDate(1998, 6, 5),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Monthly on the first Friday until December 24, 1997',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      until: LocalDate(1997, 12, 24).atMidnight(),
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
+    ),
+    start: LocalDateTime(1997, 9, 5, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 5),
+      LocalDate(1997, 10, 3),
+      LocalDate(1997, 11, 7),
+      LocalDate(1997, 12, 5),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Every other month on the first and last Sunday of the month for 10 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 10,
+      interval: 2,
+      byWeekDays: {
+        ByWeekDayEntry(DayOfWeek.sunday, 1),
+        ByWeekDayEntry(DayOfWeek.sunday, -1),
+      },
+    ),
+    start: LocalDateTime(1997, 9, 7, 9, 0, 0),
+    expectedDates: [
+      ...[7, 28].map((d) => LocalDate(1997, 9, d)),
+      ...[2, 30].map((d) => LocalDate(1997, 11, d)),
+      ...[4, 25].map((d) => LocalDate(1998, 1, d)),
+      ...[1, 29].map((d) => LocalDate(1998, 3, d)),
+      ...[3, 31].map((d) => LocalDate(1998, 5, d)),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
+    'Monthly on the second-to-last Monday of the month for 6 months',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 6,
+      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, -2)},
+    ),
+    start: LocalDateTime(1997, 9, 22, 9, 0, 0),
+    expectedDates: [
+      LocalDate(1997, 9, 22),
+      LocalDate(1997, 10, 20),
+      LocalDate(1997, 11, 17),
+      LocalDate(1997, 12, 22),
+      LocalDate(1998, 1, 19),
+      LocalDate(1998, 2, 16),
+    ].map((d) => d.at(LocalTime(9, 0, 0))),
+  );
+  testRecurring(
     'Monthly on the third-to-the-last day of the month, forever',
     rrule: RecurrenceRule(
       frequency: RecurrenceFrequency.monthly,

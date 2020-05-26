@@ -1,6 +1,7 @@
 import 'package:basics/basics.dart';
 import 'package:time_machine/time_machine.dart';
 
+import '../frequency.dart';
 import '../recurrence_rule.dart';
 import 'date_set.dart';
 
@@ -30,19 +31,20 @@ bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
 /// - [RecurrenceRule.byMonths]
 bool _isFiltered(RecurrenceRule rrule, LocalDate date) {
   return _isFilteredByMonths(rrule, date) ||
-      _isFilteredByWeeksOrWeekDays(rrule, date) ||
+      _isFilteredByWeeks(rrule, date) ||
+      _isFilteredByWeekDays(rrule, date) ||
       _isFilteredByMonthDays(rrule, date) ||
       _isFilteredByYearDays(rrule, date);
 }
 
 bool _isFilteredByMonths(RecurrenceRule rrule, LocalDate date) =>
     rrule.byMonths.isNotEmpty && !rrule.byMonths.contains(date.monthOfYear);
-bool _isFilteredByWeeksOrWeekDays(RecurrenceRule rrule, LocalDate date) {
-  if (rrule.byWeeks.isEmpty && rrule.byWeekDays.isEmpty) {
+
+bool _isFilteredByWeeks(RecurrenceRule rrule, LocalDate date) {
+  if (rrule.byWeeks.isEmpty) {
     return false;
   }
 
-  // [RecurrenceRule.byWeeks]
   final weekOfYear = rrule.weekYearRule.getWeekOfWeekYear(date);
   final weekYear = rrule.weekYearRule.getWeekYear(date);
   final weeksInYear =
@@ -53,8 +55,10 @@ bool _isFilteredByWeeksOrWeekDays(RecurrenceRule rrule, LocalDate date) {
       !rrule.byWeeks.contains(negativeWeekOfYear)) {
     return true;
   }
+  return _isFilteredByWeekDays(rrule, date);
+}
 
-  // [RecurrenceRule.byWeekDays]
+bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
   if (rrule.byWeekDays.isEmpty) {
     return false;
   }
@@ -63,13 +67,75 @@ bool _isFilteredByWeeksOrWeekDays(RecurrenceRule rrule, LocalDate date) {
   final relevantByWeekDays = rrule.byWeekDays.where((e) => e.day == dayOfWeek);
   final genericByWeekDays =
       relevantByWeekDays.where((e) => e.occurrence == null);
+  if (genericByWeekDays.isNotEmpty) {
+    // MO, TU, etc. match
+    return false;
+  }
+
+  // +3TU, -51TH, etc. match
   final specificByWeekDays = relevantByWeekDays
       .where((e) => e.occurrence != null)
       .map((e) => e.occurrence);
-  if (genericByWeekDays.isEmpty &&
-      !specificByWeekDays.contains(weekOfYear) &&
-      !specificByWeekDays.contains(negativeWeekOfYear)) {
+  if (specificByWeekDays.isEmpty) {
     return true;
+  }
+
+  if (rrule.frequency == RecurrenceFrequency.yearly && rrule.byMonths.isEmpty) {
+    assert(
+      rrule.byWeeks.isEmpty,
+      '"[…], the BYDAY rule part MUST NOT be specified with a numeric '
+      'value with the FREQ rule part set to YEARLY when the BYWEEKNO rule part '
+      'is specified." '
+      '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
+    );
+
+    var current =
+        LocalDate(date.year, 1, 1).adjust(DateAdjusters.nextOrSame(dayOfWeek));
+    var occurrence = 1;
+    while (current != date) {
+      current = current + Period(weeks: 1);
+      occurrence++;
+    }
+
+    var totalOccurrences = occurrence - 1;
+    while (current.year == date.year) {
+      current = current + Period(weeks: 1);
+      totalOccurrences++;
+    }
+    final negativeOccurrence = occurrence - 1 - totalOccurrences;
+
+    if (!specificByWeekDays.contains(occurrence) &&
+        !specificByWeekDays.contains(negativeOccurrence)) {
+      return true;
+    }
+  } else if (rrule.frequency == RecurrenceFrequency.monthly) {
+    var current = date
+        .adjust(DateAdjusters.startOfMonth)
+        .adjust(DateAdjusters.nextOrSame(dayOfWeek));
+    var occurrence = 1;
+    while (current != date) {
+      current = current + Period(weeks: 1);
+      occurrence++;
+    }
+
+    var totalOccurrences = occurrence - 1;
+    while (current.monthOfYear == date.monthOfYear) {
+      current = current + Period(weeks: 1);
+      totalOccurrences++;
+    }
+    final negativeOccurrence = occurrence - 1 - totalOccurrences;
+
+    if (!specificByWeekDays.contains(occurrence) &&
+        !specificByWeekDays.contains(negativeOccurrence)) {
+      return true;
+    }
+  } else {
+    assert(
+      false,
+      '"The BYDAY rule part MUST NOT be specified with a numeric value when '
+      'the FREQ rule part is not set to MONTHLY or YEARLY." '
+      '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
+    );
   }
 
   return false;
