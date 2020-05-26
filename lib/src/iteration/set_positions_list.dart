@@ -7,19 +7,20 @@ import 'date_set.dart';
 Iterable<LocalDateTime> buildSetPositionsList(
   RecurrenceRule rrule,
   DateSet dateSet,
-  List<LocalTime> timeSet,
+  Iterable<LocalTime> timeSet,
 ) sync* {
+  final timeList = timeSet.toList(growable: false);
   for (final setPosition in rrule.bySetPositions) {
     int datePosition;
     int timePosition;
 
     if (setPosition < 0) {
-      datePosition = (setPosition / timeSet.length).floor();
-      timePosition = setPosition % timeSet.length;
+      datePosition = (setPosition / timeList.length).floor();
+      timePosition = setPosition % timeList.length;
     } else {
       assert(setPosition > 0);
-      datePosition = ((setPosition - 1) / timeSet.length).floor();
-      timePosition = (setPosition - 1) % timeSet.length;
+      datePosition = ((setPosition - 1) / timeList.length).floor();
+      timePosition = (setPosition - 1) % timeList.length;
     }
 
     final dateIndices = <int>[];
@@ -31,7 +32,7 @@ Iterable<LocalDateTime> buildSetPositionsList(
 
     final dateIndex = dateIndices[datePosition % dateIndices.length];
     final date = dateSet.firstDayOfYear.addDays(dateIndex);
-    final time = timeSet[timePosition];
+    final time = timeList[timePosition];
     yield date.at(time);
   }
 }

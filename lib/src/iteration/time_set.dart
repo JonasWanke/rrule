@@ -4,10 +4,10 @@ import '../frequency.dart';
 import '../recurrence_rule.dart';
 import '../utils.dart';
 
-/// Values in the result are unique, but we need them ordered and indexable.
-List<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
+/// Values in the result are unique, but we need them ordered.
+Iterable<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
   if (rrule.frequency <= RecurrenceFrequency.daily) {
-    return _buildTimeSet(rrule, start);
+    return _buildDayTimeSet(rrule, start);
   }
 
   if ((rrule.frequency >= RecurrenceFrequency.hourly &&
@@ -22,16 +22,7 @@ List<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
   return createTimeSet(rrule, start);
 }
 
-List<LocalTime> _buildTimeSet(RecurrenceRule rrule, LocalTime start) {
-  return [
-    for (final hour in rrule.byHours)
-      for (final minute in rrule.byMinutes)
-        for (final second in rrule.bySeconds)
-          start.copyWith(hour: hour, minute: minute, second: second)
-  ];
-}
-
-List<LocalTime> createTimeSet(RecurrenceRule rrule, LocalTime start) {
+Iterable<LocalTime> createTimeSet(RecurrenceRule rrule, LocalTime start) {
   if (rrule.frequency == RecurrenceFrequency.hourly) {
     return _buildHourTimeSet(rrule, start);
   } else if (rrule.frequency == RecurrenceFrequency.minutely) {
@@ -44,18 +35,34 @@ List<LocalTime> createTimeSet(RecurrenceRule rrule, LocalTime start) {
   return null;
 }
 
-List<LocalTime> _buildHourTimeSet(RecurrenceRule rrule, LocalTime base) {
-  return [
-    for (final minute in rrule.byMinutes)
-      ..._buildMinuteTimeSet(rrule, base.copyWith(minute: minute)),
-  ];
+// Even if a byHour/byMinute/bySecond option is not specified (empty),
+// [_prepare] in `iteration.dart` will add an option corresponding to the start
+// value.
+Iterable<LocalTime> _buildDayTimeSet(
+  RecurrenceRule rrule,
+  LocalTime base,
+) sync* {
+  for (final hour in rrule.byHours) {
+    yield* _buildHourTimeSet(rrule, base.copyWith(hour: hour));
+  }
 }
 
-List<LocalTime> _buildMinuteTimeSet(RecurrenceRule rrule, LocalTime base) {
-  return [
-    for (final second in rrule.bySeconds)
-      ..._buildSecondTimeSet(base.copyWith(second: second)),
-  ];
+Iterable<LocalTime> _buildHourTimeSet(
+  RecurrenceRule rrule,
+  LocalTime base,
+) sync* {
+  for (final minute in rrule.byMinutes) {
+    yield* _buildMinuteTimeSet(rrule, base.copyWith(minute: minute));
+  }
 }
 
-List<LocalTime> _buildSecondTimeSet(LocalTime base) => [base];
+Iterable<LocalTime> _buildMinuteTimeSet(
+  RecurrenceRule rrule,
+  LocalTime base,
+) sync* {
+  for (final second in rrule.bySeconds) {
+    yield* _buildSecondTimeSet(base.copyWith(second: second));
+  }
+}
+
+Iterable<LocalTime> _buildSecondTimeSet(LocalTime base) => [base];

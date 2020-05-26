@@ -26,7 +26,6 @@ Iterable<LocalDateTime> getRecurrenceRuleInstances(
   var count = rrule.count;
 
   var currentStart = start;
-  // TODO(JonasWanke): Does this really support something like FREQ=SECONDLY;INTERVAL=11?
   var timeSet = makeTimeSet(rrule, start.clockTime);
 
   // ignore: literal_only_boolean_expressions
