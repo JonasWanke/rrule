@@ -48,6 +48,10 @@ Iterable<LocalDateTime> getRecurrenceRuleInstances(
       if (rrule.until != null && result > rrule.until) {
         return;
       }
+      if (result < start) {
+        continue;
+      }
+
       yield result;
       if (count != null) {
         count--;
