@@ -44,3 +44,7 @@ extension FancyLocalTime on LocalTime {
     );
   }
 }
+
+extension FancyIterable<T> on Iterable<T> {
+  bool isEmptyOrContains(T item) => isEmpty || contains(item);
+}

@@ -3,6 +3,7 @@ import 'package:time_machine/time_machine.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
+import '../utils.dart';
 import 'date_set.dart';
 
 /// Removes dates that are filtered out by any of the following in place:
@@ -38,7 +39,7 @@ bool _isFiltered(RecurrenceRule rrule, LocalDate date) {
 }
 
 bool _isFilteredByMonths(RecurrenceRule rrule, LocalDate date) =>
-    rrule.byMonths.isNotEmpty && !rrule.byMonths.contains(date.monthOfYear);
+    !rrule.byMonths.isEmptyOrContains(date.monthOfYear);
 
 bool _isFilteredByWeeks(RecurrenceRule rrule, LocalDate date) {
   if (rrule.byWeeks.isEmpty) {

@@ -11,14 +11,11 @@ List<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
   }
 
   if ((rrule.frequency >= RecurrenceFrequency.hourly &&
-          rrule.byHours.isNotEmpty &&
-          !rrule.byHours.contains(start.hourOfDay)) ||
+          !rrule.byHours.isEmptyOrContains(start.hourOfDay)) ||
       (rrule.frequency >= RecurrenceFrequency.minutely &&
-          rrule.byMinutes.isNotEmpty &&
-          !rrule.byMinutes.contains(start.minuteOfHour)) ||
+          !rrule.byMinutes.isEmptyOrContains(start.minuteOfHour)) ||
       (rrule.frequency >= RecurrenceFrequency.secondly &&
-          rrule.bySeconds.isNotEmpty &&
-          !rrule.bySeconds.contains(start.secondOfMinute))) {
+          !rrule.bySeconds.isEmptyOrContains(start.secondOfMinute))) {
     return [];
   }
 
