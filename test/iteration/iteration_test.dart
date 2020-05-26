@@ -608,4 +608,126 @@ void main() {
     ],
     isInfinite: true,
   );
+  testRecurring(
+    'Every 3 hours from 9:00 AM to 5:00 PM on a specific day',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.hourly,
+      until: LocalDateTime(1997, 09, 02, 17, 0, 0),
+      interval: 3,
+    ),
+    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+    expectedDateTimes:
+        9.to(16, by: 3).map((h) => LocalDateTime(1997, 9, 2, h, 0, 0)),
+  );
+  testRecurring(
+    'Every 15 minutes for 6 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.minutely,
+      count: 6,
+      interval: 15,
+    ),
+    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+    expectedDateTimes: [
+      LocalTime(9, 0, 0),
+      LocalTime(9, 15, 0),
+      LocalTime(9, 30, 0),
+      LocalTime(9, 45, 0),
+      LocalTime(10, 0, 0),
+      LocalTime(10, 15, 0),
+    ].map((t) => LocalDate(1997, 9, 2).at(t)),
+  );
+  testRecurring(
+    'Every hour and a half for 4 occurrences',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.minutely,
+      count: 4,
+      interval: 90,
+    ),
+    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+    expectedDateTimes: [
+      LocalTime(9, 0, 0),
+      LocalTime(10, 30, 0),
+      LocalTime(12, 00, 0),
+      LocalTime(13, 30, 0),
+    ].map((t) => LocalDate(1997, 9, 2).at(t)),
+  );
+  group('Every 20 minutes from 9:00 AM to 4:40 PM every day', () {
+    final expected = [2, 3].expand((d) {
+      return 9.to(17).expand((h) {
+        return 0.to(41, by: 20).map((m) => LocalDateTime(1997, 9, d, h, m, 0));
+      });
+    });
+    testRecurring(
+      'with frequency daily',
+      rrule: RecurrenceRule(
+        frequency: RecurrenceFrequency.daily,
+        byMinutes: {0, 20, 40},
+        byHours: {9, 10, 11, 12, 13, 14, 15, 16},
+      ),
+      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+      expectedDateTimes: expected,
+      isInfinite: true,
+    );
+    testRecurring(
+      'with frequency minutely',
+      rrule: RecurrenceRule(
+        frequency: RecurrenceFrequency.minutely,
+        interval: 20,
+        byHours: {9, 10, 11, 12, 13, 14, 15, 16},
+      ),
+      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
+      expectedDateTimes: expected,
+      isInfinite: true,
+    );
+  });
+  group(
+      'An example where the days generated makes a difference because of WKST',
+      () {
+    testRecurring(
+      'with weekStart monday',
+      rrule: RecurrenceRule(
+        frequency: RecurrenceFrequency.weekly,
+        count: 4,
+        interval: 2,
+        byWeekDays: {
+          ByWeekDayEntry(DayOfWeek.tuesday),
+          ByWeekDayEntry(DayOfWeek.sunday)
+        },
+        weekStart: DayOfWeek.monday,
+      ),
+      start: LocalDateTime(1997, 8, 5, 9, 0, 0),
+      expectedDates: [5, 10, 19, 24].map((d) => LocalDate(1997, 8, d)),
+    );
+    testRecurring(
+      'with weekStart sunday',
+      rrule: RecurrenceRule(
+        frequency: RecurrenceFrequency.weekly,
+        count: 4,
+        interval: 2,
+        byWeekDays: {
+          ByWeekDayEntry(DayOfWeek.tuesday),
+          ByWeekDayEntry(DayOfWeek.sunday)
+        },
+        weekStart: DayOfWeek.sunday,
+      ),
+      start: LocalDateTime(1997, 8, 5, 9, 0, 0),
+      expectedDates: [5, 17, 19, 31].map((d) => LocalDate(1997, 8, d)),
+    );
+  });
+  testRecurring(
+    'An example where an invalid date (i.e., February 30) is ignored',
+    rrule: RecurrenceRule(
+      frequency: RecurrenceFrequency.monthly,
+      count: 5,
+      byMonthDays: {15, 30},
+    ),
+    start: LocalDateTime(2007, 1, 15, 9, 0, 0),
+    expectedDates: [
+      LocalDate(2007, 1, 15),
+      LocalDate(2007, 1, 30),
+      LocalDate(2007, 2, 15),
+      LocalDate(2007, 3, 15),
+      LocalDate(2007, 3, 30),
+    ],
+  );
 }
