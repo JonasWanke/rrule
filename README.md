@@ -12,7 +12,7 @@ Create a [`RecurrenceRule`]:
 ```dart
 // Every two weeks on Tuesday and Thursday, but only in December.
 final rrule = RecurrenceRule(
-  frequency: RecurrenceFrequency.weekly,
+  frequency: Frequency.weekly,
   interval: 2,
   byWeekDays: {
     ByWeekDayEntry(DayOfWeek.tuesday),

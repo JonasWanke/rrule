@@ -69,7 +69,7 @@ Iterable<LocalDateTime> getRecurrenceRuleInstances(
       return;
     }
 
-    if (rrule.frequency > RecurrenceFrequency.daily) {
+    if (rrule.frequency > Frequency.daily) {
       timeSet = createTimeSet(rrule, currentStart.clockTime);
     }
   }
@@ -86,30 +86,27 @@ RecurrenceRule _prepare(RecurrenceRule rrule, LocalDateTime start) {
     until: rrule.until,
     count: rrule.count,
     interval: rrule.interval,
-    bySeconds: rrule.bySeconds.isEmpty &&
-            rrule.frequency < RecurrenceFrequency.secondly
+    bySeconds: rrule.bySeconds.isEmpty && rrule.frequency < Frequency.secondly
         ? {start.secondOfMinute}
         : rrule.bySeconds,
-    byMinutes: rrule.byMinutes.isEmpty &&
-            rrule.frequency < RecurrenceFrequency.minutely
+    byMinutes: rrule.byMinutes.isEmpty && rrule.frequency < Frequency.minutely
         ? {start.minuteOfHour}
         : rrule.byMinutes,
-    byHours:
-        rrule.byHours.isEmpty && rrule.frequency < RecurrenceFrequency.hourly
-            ? {start.hourOfDay}
-            : rrule.byHours,
-    byWeekDays: byDatesEmpty && rrule.frequency == RecurrenceFrequency.weekly
+    byHours: rrule.byHours.isEmpty && rrule.frequency < Frequency.hourly
+        ? {start.hourOfDay}
+        : rrule.byHours,
+    byWeekDays: byDatesEmpty && rrule.frequency == Frequency.weekly
         ? {ByWeekDayEntry(start.dayOfWeek)}
         : rrule.byWeekDays,
     byMonthDays: byDatesEmpty &&
-            (rrule.frequency == RecurrenceFrequency.monthly ||
-                rrule.frequency == RecurrenceFrequency.yearly)
+            (rrule.frequency == Frequency.monthly ||
+                rrule.frequency == Frequency.yearly)
         ? {start.dayOfMonth}
         : rrule.byMonthDays,
     byYearDays: rrule.byYearDays,
     byWeeks: rrule.byWeeks,
     byMonths: byDatesEmpty &&
-            rrule.frequency == RecurrenceFrequency.yearly &&
+            rrule.frequency == Frequency.yearly &&
             rrule.byMonths.isEmpty
         ? {start.monthOfYear}
         : rrule.byMonths,

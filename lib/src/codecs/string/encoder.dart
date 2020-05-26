@@ -68,7 +68,7 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   }
 }
 
-String _frequencyToString(RecurrenceFrequency input) {
+String _frequencyToString(Frequency input) {
   if (input == null) {
     return null;
   }

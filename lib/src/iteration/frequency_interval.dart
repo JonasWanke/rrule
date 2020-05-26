@@ -9,28 +9,28 @@ LocalDateTime addFrequencyAndInterval(
   LocalDateTime currentStart, {
   @required bool wereDatesFiltered,
 }) {
-  if (rrule.frequency == RecurrenceFrequency.yearly) {
+  if (rrule.frequency == Frequency.yearly) {
     return currentStart._addYears(rrule.actualInterval);
-  } else if (rrule.frequency == RecurrenceFrequency.monthly) {
+  } else if (rrule.frequency == Frequency.monthly) {
     return currentStart._addMonths(rrule.actualInterval);
-  } else if (rrule.frequency == RecurrenceFrequency.weekly) {
+  } else if (rrule.frequency == Frequency.weekly) {
     return currentStart._addWeeks(rrule.actualInterval, rrule.actualWeekStart);
-  } else if (rrule.frequency == RecurrenceFrequency.daily) {
+  } else if (rrule.frequency == Frequency.daily) {
     return currentStart._addDays(rrule.actualInterval);
-  } else if (rrule.frequency == RecurrenceFrequency.hourly) {
+  } else if (rrule.frequency == Frequency.hourly) {
     return currentStart._addHours(
       rrule.actualInterval,
       wereDatesFiltered,
       rrule.byHours,
     );
-  } else if (rrule.frequency == RecurrenceFrequency.minutely) {
+  } else if (rrule.frequency == Frequency.minutely) {
     return currentStart._addMinutes(
       rrule.actualInterval,
       wereDatesFiltered,
       rrule.byHours,
       rrule.byMinutes,
     );
-  } else if (rrule.frequency == RecurrenceFrequency.secondly) {
+  } else if (rrule.frequency == Frequency.secondly) {
     return currentStart._addSeconds(
       rrule.actualInterval,
       wereDatesFiltered,

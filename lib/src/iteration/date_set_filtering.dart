@@ -81,7 +81,7 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
     return true;
   }
 
-  if (rrule.frequency == RecurrenceFrequency.yearly && rrule.byMonths.isEmpty) {
+  if (rrule.frequency == Frequency.yearly && rrule.byMonths.isEmpty) {
     assert(
       rrule.byWeeks.isEmpty,
       '"[…], the BYDAY rule part MUST NOT be specified with a numeric '
@@ -109,7 +109,7 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
         !specificByWeekDays.contains(negativeOccurrence)) {
       return true;
     }
-  } else if (rrule.frequency == RecurrenceFrequency.monthly) {
+  } else if (rrule.frequency == Frequency.monthly) {
     var current = date
         .adjust(DateAdjusters.startOfMonth)
         .adjust(DateAdjusters.nextOrSame(dayOfWeek));

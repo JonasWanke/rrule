@@ -12,7 +12,7 @@ void main() {
   testRecurring(
     'Daily for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.daily,
+      frequency: Frequency.daily,
       count: 10,
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
@@ -21,7 +21,7 @@ void main() {
   testRecurring(
     'Daily until December 24, 1997',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.daily,
+      frequency: Frequency.daily,
       until: LocalDate(1997, 12, 24).atMidnight(),
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
@@ -35,7 +35,7 @@ void main() {
   testRecurring(
     'Every other day - forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.daily,
+      frequency: Frequency.daily,
       interval: 2,
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
@@ -50,7 +50,7 @@ void main() {
   testRecurring(
     'Every 10 days, 5 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.daily,
+      frequency: Frequency.daily,
       count: 5,
       interval: 10,
     ),
@@ -67,7 +67,7 @@ void main() {
     testRecurring(
       'with frequency yearly',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.yearly,
+        frequency: Frequency.yearly,
         until: LocalDateTime(2000, 01, 31, 14, 0, 0),
         byWeekDays: {
           ByWeekDayEntry(DayOfWeek.sunday),
@@ -86,7 +86,7 @@ void main() {
     testRecurring(
       'with frequency daily',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.daily,
+        frequency: Frequency.daily,
         until: LocalDateTime(2000, 01, 31, 14, 0, 0),
         byMonths: {1},
       ),
@@ -97,7 +97,7 @@ void main() {
   testRecurring(
     'Weekly for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.weekly,
+      frequency: Frequency.weekly,
       count: 10,
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
@@ -110,7 +110,7 @@ void main() {
   testRecurring(
     'Weekly until December 24, 1997',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.weekly,
+      frequency: Frequency.weekly,
       until: LocalDate(1997, 12, 24).atMidnight(),
     ),
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
@@ -124,7 +124,7 @@ void main() {
   testRecurring(
     'Every other week - forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.weekly,
+      frequency: Frequency.weekly,
       interval: 2,
       weekStart: DayOfWeek.sunday,
     ),
@@ -147,7 +147,7 @@ void main() {
     testRecurring(
       'with until',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.weekly,
+        frequency: Frequency.weekly,
         until: LocalDate(1997, 10, 07).atMidnight(),
         weekStart: DayOfWeek.sunday,
         byWeekDays: {
@@ -161,7 +161,7 @@ void main() {
     testRecurring(
       'with count',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.weekly,
+        frequency: Frequency.weekly,
         count: 10,
         byWeekDays: {
           ByWeekDayEntry(DayOfWeek.tuesday),
@@ -176,7 +176,7 @@ void main() {
   testRecurring(
     'Every other week on Monday, Wednesday, and Friday until December 24, 1997',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.weekly,
+      frequency: Frequency.weekly,
       until: LocalDate(1997, 12, 24).atMidnight(),
       interval: 2,
       byWeekDays: {
@@ -197,7 +197,7 @@ void main() {
   testRecurring(
     'Every other week on Tuesday and Thursday, for 8 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.weekly,
+      frequency: Frequency.weekly,
       count: 8,
       interval: 2,
       byWeekDays: {
@@ -215,7 +215,7 @@ void main() {
   testRecurring(
     'Monthly on the first Friday for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 10,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
     ),
@@ -236,7 +236,7 @@ void main() {
   testRecurring(
     'Monthly on the first Friday until December 24, 1997',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       until: LocalDate(1997, 12, 24).atMidnight(),
       byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
     ),
@@ -251,7 +251,7 @@ void main() {
   testRecurring(
     'Every other month on the first and last Sunday of the month for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 10,
       interval: 2,
       byWeekDays: {
@@ -271,7 +271,7 @@ void main() {
   testRecurring(
     'Monthly on the second-to-last Monday of the month for 6 months',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 6,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, -2)},
     ),
@@ -288,7 +288,7 @@ void main() {
   testRecurring(
     'Monthly on the third-to-the-last day of the month, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       byMonthDays: {-3},
     ),
     start: LocalDateTime(1997, 9, 28, 9, 0, 0),
@@ -305,7 +305,7 @@ void main() {
   testRecurring(
     'Monthly on the 2nd and 15th of the month for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 10,
       byMonthDays: {2, 15},
     ),
@@ -321,7 +321,7 @@ void main() {
   testRecurring(
     'Monthly on the first and last day of the month for 10 occurrences:',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 10,
       byMonthDays: {1, -1},
     ),
@@ -338,7 +338,7 @@ void main() {
   testRecurring(
     'Every 18 months on the 10th thru 15th of the month for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 10,
       interval: 18,
       byMonthDays: {10, 11, 12, 13, 14, 15},
@@ -352,7 +352,7 @@ void main() {
   testRecurring(
     'Every Tuesday, every other month',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       interval: 2,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
     ),
@@ -368,7 +368,7 @@ void main() {
   testRecurring(
     'Yearly in June and July for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       count: 10,
       byMonths: {6, 7},
     ),
@@ -380,7 +380,7 @@ void main() {
   testRecurring(
     'Every other year on January, February, and March for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       count: 10,
       interval: 2,
       byMonths: {1, 2, 3},
@@ -396,7 +396,7 @@ void main() {
   testRecurring(
     'Every third year on the 1st, 100th, and 200th day for 10 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       count: 10,
       interval: 3,
       byYearDays: {1, 100, 200},
@@ -418,7 +418,7 @@ void main() {
   testRecurring(
     'Every 20th Monday of the year, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, 20)},
     ),
     start: LocalDateTime(1997, 5, 19, 9, 0, 0),
@@ -432,7 +432,7 @@ void main() {
   testRecurring(
     'Monday of week number 20 (where the default start of the week is Monday), forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.monday)},
       byWeeks: {20},
     ),
@@ -447,7 +447,7 @@ void main() {
   testRecurring(
     'Every Thursday in March, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
       byMonths: {3},
     ),
@@ -462,7 +462,7 @@ void main() {
   testRecurring(
     'Every Thursday, but only during June, July, and August, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
       byMonths: {6, 7, 8},
     ),
@@ -485,7 +485,7 @@ void main() {
   testRecurring(
     'Every Friday the 13th, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.friday)},
       byMonthDays: {13},
     ),
@@ -502,7 +502,7 @@ void main() {
   testRecurring(
     'The first Saturday that follows the first Sunday of the month, forever',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.saturday)},
       byMonthDays: {7, 8, 9, 10, 11, 12, 13},
     ),
@@ -524,7 +524,7 @@ void main() {
   testRecurring(
     'Every 4 years, the first Tuesday after a Monday in November, forever (U.S. Presidential Election day)',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.yearly,
+      frequency: Frequency.yearly,
       interval: 4,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
       byMonthDays: {2, 3, 4, 5, 6, 7, 8},
@@ -541,7 +541,7 @@ void main() {
   testRecurring(
     'The third instance into the month of one of Tuesday, Wednesday, or Thursday, for the next 3 months',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 3,
       byWeekDays: {
         ByWeekDayEntry(DayOfWeek.tuesday),
@@ -560,7 +560,7 @@ void main() {
   testRecurring(
     'The second-to-last weekday of the month',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       byWeekDays: {
         ByWeekDayEntry(DayOfWeek.monday),
         ByWeekDayEntry(DayOfWeek.tuesday),
@@ -585,7 +585,7 @@ void main() {
   testRecurring(
     'Every 3 hours from 9:00 AM to 5:00 PM on a specific day',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.hourly,
+      frequency: Frequency.hourly,
       until: LocalDateTime(1997, 09, 02, 17, 0, 0),
       interval: 3,
     ),
@@ -596,7 +596,7 @@ void main() {
   testRecurring(
     'Every 15 minutes for 6 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.minutely,
+      frequency: Frequency.minutely,
       count: 6,
       interval: 15,
     ),
@@ -613,7 +613,7 @@ void main() {
   testRecurring(
     'Every hour and a half for 4 occurrences',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.minutely,
+      frequency: Frequency.minutely,
       count: 4,
       interval: 90,
     ),
@@ -634,7 +634,7 @@ void main() {
     testRecurring(
       'with frequency daily',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.daily,
+        frequency: Frequency.daily,
         byMinutes: {0, 20, 40},
         byHours: {9, 10, 11, 12, 13, 14, 15, 16},
       ),
@@ -645,7 +645,7 @@ void main() {
     testRecurring(
       'with frequency minutely',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.minutely,
+        frequency: Frequency.minutely,
         interval: 20,
         byHours: {9, 10, 11, 12, 13, 14, 15, 16},
       ),
@@ -660,7 +660,7 @@ void main() {
     testRecurring(
       'with weekStart monday',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.weekly,
+        frequency: Frequency.weekly,
         count: 4,
         interval: 2,
         byWeekDays: {
@@ -675,7 +675,7 @@ void main() {
     testRecurring(
       'with weekStart sunday',
       rrule: RecurrenceRule(
-        frequency: RecurrenceFrequency.weekly,
+        frequency: Frequency.weekly,
         count: 4,
         interval: 2,
         byWeekDays: {
@@ -691,7 +691,7 @@ void main() {
   testRecurring(
     'An example where an invalid date (i.e., February 30) is ignored',
     rrule: RecurrenceRule(
-      frequency: RecurrenceFrequency.monthly,
+      frequency: Frequency.monthly,
       count: 5,
       byMonthDays: {15, 30},
     ),

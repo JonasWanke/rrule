@@ -72,13 +72,13 @@ const recurFreqWeekly = 'WEEKLY';
 const recurFreqMonthly = 'MONTHLY';
 const recurFreqYearly = 'YEARLY';
 const recurFreqValues = {
-  recurFreqSecondly: RecurrenceFrequency.secondly,
-  recurFreqMinutely: RecurrenceFrequency.minutely,
-  recurFreqHourly: RecurrenceFrequency.hourly,
-  recurFreqDaily: RecurrenceFrequency.daily,
-  recurFreqWeekly: RecurrenceFrequency.weekly,
-  recurFreqMonthly: RecurrenceFrequency.monthly,
-  recurFreqYearly: RecurrenceFrequency.yearly,
+  recurFreqSecondly: Frequency.secondly,
+  recurFreqMinutely: Frequency.minutely,
+  recurFreqHourly: Frequency.hourly,
+  recurFreqDaily: Frequency.daily,
+  recurFreqWeekly: Frequency.weekly,
+  recurFreqMonthly: Frequency.monthly,
+  recurFreqYearly: Frequency.yearly,
 };
 
 const recurWeekDayValues = {

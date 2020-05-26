@@ -72,7 +72,7 @@ class RecurrenceRule {
   }
 
   /// Corresponds to the `FREQ` property.
-  final RecurrenceFrequency frequency;
+  final Frequency frequency;
 
   /// (Inclusive)
   ///

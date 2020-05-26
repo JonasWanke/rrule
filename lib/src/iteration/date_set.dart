@@ -69,14 +69,14 @@ class DateSet {
 }
 
 DateSet makeDateSet(RecurrenceRule rrule, LocalDate base) {
-  if (rrule.frequency == RecurrenceFrequency.yearly) {
+  if (rrule.frequency == Frequency.yearly) {
     return _buildYearlyDateSet(base);
-  } else if (rrule.frequency == RecurrenceFrequency.monthly) {
+  } else if (rrule.frequency == Frequency.monthly) {
     return _buildMonthlyDateSet(base);
-  } else if (rrule.frequency == RecurrenceFrequency.weekly) {
+  } else if (rrule.frequency == Frequency.weekly) {
     return _buildWeeklyDateSet(base, rrule.actualWeekStart);
   } else {
-    assert(rrule.frequency >= RecurrenceFrequency.daily);
+    assert(rrule.frequency >= Frequency.daily);
     return _buildDailyDateSet(base);
   }
 }

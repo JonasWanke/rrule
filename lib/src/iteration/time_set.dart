@@ -6,15 +6,15 @@ import '../utils.dart';
 
 /// Values in the result are unique, but we need them ordered.
 Iterable<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
-  if (rrule.frequency <= RecurrenceFrequency.daily) {
+  if (rrule.frequency <= Frequency.daily) {
     return _buildDayTimeSet(rrule, start);
   }
 
-  if ((rrule.frequency >= RecurrenceFrequency.hourly &&
+  if ((rrule.frequency >= Frequency.hourly &&
           !rrule.byHours.isEmptyOrContains(start.hourOfDay)) ||
-      (rrule.frequency >= RecurrenceFrequency.minutely &&
+      (rrule.frequency >= Frequency.minutely &&
           !rrule.byMinutes.isEmptyOrContains(start.minuteOfHour)) ||
-      (rrule.frequency >= RecurrenceFrequency.secondly &&
+      (rrule.frequency >= Frequency.secondly &&
           !rrule.bySeconds.isEmptyOrContains(start.secondOfMinute))) {
     return [];
   }
@@ -23,11 +23,11 @@ Iterable<LocalTime> makeTimeSet(RecurrenceRule rrule, LocalTime start) {
 }
 
 Iterable<LocalTime> createTimeSet(RecurrenceRule rrule, LocalTime start) {
-  if (rrule.frequency == RecurrenceFrequency.hourly) {
+  if (rrule.frequency == Frequency.hourly) {
     return _buildHourTimeSet(rrule, start);
-  } else if (rrule.frequency == RecurrenceFrequency.minutely) {
+  } else if (rrule.frequency == Frequency.minutely) {
     return _buildMinuteTimeSet(rrule, start);
-  } else if (rrule.frequency == RecurrenceFrequency.secondly) {
+  } else if (rrule.frequency == Frequency.secondly) {
     return _buildSecondTimeSet(start);
   }
 

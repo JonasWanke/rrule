@@ -60,7 +60,7 @@ class RecurrenceRuleFromStringDecoder
           'Content line is not an RRULE but a ${property.name}!');
     }
 
-    RecurrenceFrequency frequency;
+    Frequency frequency;
     _UntilOrCount untilOrCount;
     int interval;
     Set<int> bySeconds;
@@ -361,8 +361,7 @@ class RecurrenceRuleFromStringDecoder
   }
 }
 
-RecurrenceFrequency _frequencyFromString(String input) =>
-    recurFreqValues[input];
+Frequency _frequencyFromString(String input) => recurFreqValues[input];
 DayOfWeek _weekDayFromString(String day) => recurWeekDayValues[day];
 
 /// Helper class to reuse the logic of
