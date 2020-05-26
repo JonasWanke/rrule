@@ -1,5 +1,4 @@
 import 'package:basics/basics.dart';
-import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
 import 'package:time_machine/time_machine.dart';
