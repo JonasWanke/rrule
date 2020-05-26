@@ -35,6 +35,7 @@ void main() {
     });
   }
 
+  // All examples taken from https://tools.ietf.org/html/rfc5545#section-3.8.5.3.
   testRecurring(
     'Daily for 10 occurrences',
     rrule: RecurrenceRule(
