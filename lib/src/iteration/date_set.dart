@@ -8,7 +8,7 @@ import '../utils.dart';
 
 @immutable
 class DateSet {
-  const DateSet({
+  const DateSet._({
     @required this.isIncluded,
     @required this.start,
     @required this.end,
@@ -36,7 +36,7 @@ class DateSet {
     }
     end ??= length;
 
-    return DateSet(
+    return DateSet._(
       isIncluded: List.generate(length, (i) => start <= i && i < end),
       start: start,
       end: end,
@@ -84,30 +84,30 @@ DateSet makeDateSet(RecurrenceRule rrule, LocalDate base) {
 DateSet _buildYearlyDateSet(LocalDate base) => DateSet.create(base: base);
 
 DateSet _buildMonthlyDateSet(LocalDate base) {
-  final monthStart = base.adjust(DateAdjusters.startOfMonth).dayOfYear - 1;
-  final monthEnd = base.adjust(DateAdjusters.endOfMonth).dayOfYear;
-  return DateSet.create(base: base, start: monthStart, end: monthEnd);
+  return DateSet.create(
+    base: base,
+    start: base.adjust(DateAdjusters.startOfMonth).dayOfYear - 1,
+    end: base.adjust(DateAdjusters.endOfMonth).dayOfYear,
+  );
 }
 
 DateSet _buildWeeklyDateSet(LocalDate base, DayOfWeek weekStart) {
   // We need to handle cross-year weeks here.
-  final isIncluded = List.generate(
-      base.calendar.getDaysInYear(base.year) + TimeConstants.daysPerWeek,
-      (_) => false);
   var i = base.dayOfYear - 1;
   final start = i;
+  var current = base;
   for (final _ in 0.to(TimeConstants.daysPerWeek)) {
-    isIncluded[i] = true;
     i++;
-    if (base.addDays(i - start).dayOfWeek == weekStart) {
+    current += Period(days: 1);
+    if (current.dayOfWeek == weekStart) {
       break;
     }
   }
-  return DateSet(
-    isIncluded: isIncluded,
+  return DateSet.create(
+    base: base,
+    addExtraWeek: true,
     start: start,
     end: i,
-    firstDayOfYear: base.copyWith(month: 1, day: 1),
   );
 }
 
