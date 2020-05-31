@@ -54,11 +54,11 @@ You can convert between [`RecurrenceRule`]s and [iCalendar/RFC 5545][RFC 5545]-c
 
 ```dart
 final string = 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12;WKST=SU';
-final rrule = RecurrenceRule.fromString()
+final rrule = RecurrenceRule.fromString(string);
 
-assert(rrule.toString == string); // true
+assert(rrule.toString() == string); // true
 ```
-<sup>(Same rule as the first one)</sup>
+<sup>(Same RRULE as the first one)</sup>
 
 
 ## Limitations
