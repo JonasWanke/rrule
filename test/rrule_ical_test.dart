@@ -1,15 +1,49 @@
 import 'package:basics/basics.dart';
+import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
 import 'package:time_machine/time_machine.dart';
 
-import 'utils.dart';
+import 'codecs/utils.dart';
+import 'iteration/utils.dart';
 
 void main() {
-  // This file tests all examples given in RFC 5545:
-  // https://tools.ietf.org/html/rfc5545#section-3.8.5.3.
-  testRecurring(
+  @isTestGroup
+  void testRrule(
+    String description, {
+    @required String string,
+    @required RecurrenceRule rrule,
+    @required LocalDateTime start,
+    Iterable<LocalDate> expectedDates,
+    Iterable<LocalDateTime> expectedDateTimes,
+    bool isInfinite = false,
+  }) {
+    testStringCodec(
+      'StringCodec',
+      codec: RecurrenceRuleStringCodec(
+        toStringOptions: RecurrenceRuleToStringOptions(isTimeUtc: true),
+      ),
+      value: rrule,
+      string: string,
+    );
+
+    testRecurring(
+      'recurrence',
+      rrule: rrule,
+      start: start,
+      expectedDates: expectedDates,
+      expectedDateTimes: expectedDateTimes,
+      isInfinite: isInfinite,
+    );
+  }
+
+  // All examples taken from https://tools.ietf.org/html/rfc5545#section-3.8.5.3.
+  // Some RRULE-strings had some fields reordered to match the production rule
+  // (recur-rule-part) order and remain consistent. The original string is
+  // prepended as a comment.
+  testRrule(
     'Daily for 10 occurrences',
+    string: 'RRULE:FREQ=DAILY;COUNT=10',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       count: 10,
@@ -17,8 +51,9 @@ void main() {
     start: LocalDateTime(1997, 9, 2, 9, 0, 0),
     expectedDates: 2.to(12).map((d) => LocalDate(1997, 9, d)),
   );
-  testRecurring(
+  testRrule(
     'Daily until December 24, 1997',
+    string: 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       until: LocalDate(1997, 12, 24).atMidnight(),
@@ -31,8 +66,9 @@ void main() {
       ...1.to(24).map((d) => LocalDate(1997, 12, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every other day - forever',
+    string: 'RRULE:FREQ=DAILY;INTERVAL=2',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       interval: 2,
@@ -46,8 +82,10 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Every 10 days, 5 occurrences',
+    // RRULE:FREQ=DAILY;INTERVAL=10;COUNT=5
+    string: 'RRULE:FREQ=DAILY;COUNT=5;INTERVAL=10',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       count: 5,
@@ -63,8 +101,11 @@ void main() {
     final expected = 1998.to(2001).expand((y) {
       return 1.to(32).map((d) => LocalDate(y, 1, d));
     });
-    testRecurring(
+    testRrule(
       'with frequency yearly',
+      // RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA
+      string:
+          'RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=1',
       rrule: RecurrenceRule(
         frequency: Frequency.yearly,
         until: LocalDateTime(2000, 01, 31, 14, 0, 0),
@@ -82,8 +123,9 @@ void main() {
       start: LocalDateTime(1998, 1, 1, 9, 0, 0),
       expectedDates: expected,
     );
-    testRecurring(
+    testRrule(
       'with frequency daily',
+      string: 'RRULE:FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1',
       rrule: RecurrenceRule(
         frequency: Frequency.daily,
         until: LocalDateTime(2000, 01, 31, 14, 0, 0),
@@ -93,8 +135,9 @@ void main() {
       expectedDates: expected,
     );
   });
-  testRecurring(
+  testRrule(
     'Weekly for 10 occurrences',
+    string: 'RRULE:FREQ=WEEKLY;COUNT=10',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       count: 10,
@@ -106,8 +149,9 @@ void main() {
       LocalDate(1997, 11, 4),
     ],
   );
-  testRecurring(
+  testRrule(
     'Weekly until December 24, 1997',
+    string: 'RRULE:FREQ=WEEKLY;UNTIL=19971224T000000Z',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       until: LocalDate(1997, 12, 24).atMidnight(),
@@ -120,8 +164,9 @@ void main() {
       ...2.to(24, by: 7).map((d) => LocalDate(1997, 12, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every other week - forever',
+    string: 'RRULE:FREQ=WEEKLY;INTERVAL=2;WKST=SU',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       interval: 2,
@@ -143,8 +188,10 @@ void main() {
       ...[2, 4, 9, 11, 16, 18, 23, 25, 30].map((d) => LocalDate(1997, 09, d)),
       LocalDate(1997, 10, 2),
     ];
-    testRecurring(
+    testRrule(
       'with until',
+      // RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH
+      string: 'RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;BYDAY=TU,TH;WKST=SU',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
         until: LocalDate(1997, 10, 07).atMidnight(),
@@ -157,8 +204,10 @@ void main() {
       start: LocalDateTime(1997, 9, 2, 9, 0, 0),
       expectedDates: expected,
     );
-    testRecurring(
+    testRrule(
       'with count',
+      // RRULE:FREQ=WEEKLY;COUNT=10;WKST=SU;BYDAY=TU,TH
+      string: 'RRULE:FREQ=WEEKLY;COUNT=10;BYDAY=TU,TH;WKST=SU',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
         count: 10,
@@ -172,8 +221,11 @@ void main() {
       expectedDates: expected,
     );
   });
-  testRecurring(
+  testRrule(
     'Every other week on Monday, Wednesday, and Friday until December 24, 1997',
+    // RRULE:FREQ=WEEKLY;INTERVAL=2;UNTIL=19971224T000000Z;WKST=SU;BYDAY=MO,WE,FR
+    string:
+        'RRULE:FREQ=WEEKLY;UNTIL=19971224T000000Z;INTERVAL=2;BYDAY=MO,WE,FR;WKST=SU',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       until: LocalDate(1997, 12, 24).atMidnight(),
@@ -193,8 +245,10 @@ void main() {
       ...[8, 10, 12, 22].map((d) => LocalDate(1997, 12, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every other week on Tuesday and Thursday, for 8 occurrences',
+    // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=8;WKST=SU;BYDAY=TU,TH
+    string: 'RRULE:FREQ=WEEKLY;COUNT=8;INTERVAL=2;BYDAY=TU,TH;WKST=SU',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       count: 8,
@@ -211,8 +265,9 @@ void main() {
       ...[2, 14, 16].map((d) => LocalDate(1997, 10, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Monthly on the first Friday for 10 occurrences',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
@@ -232,8 +287,9 @@ void main() {
       LocalDate(1998, 6, 5),
     ],
   );
-  testRecurring(
+  testRrule(
     'Monthly on the first Friday until December 24, 1997',
+    string: 'RRULE:FREQ=MONTHLY;UNTIL=19971224T000000Z;BYDAY=1FR',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       until: LocalDate(1997, 12, 24).atMidnight(),
@@ -247,8 +303,10 @@ void main() {
       LocalDate(1997, 12, 5),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every other month on the first and last Sunday of the month for 10 occurrences',
+    // RRULE:FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=1SU,-1SU
+    string: 'RRULE:FREQ=MONTHLY;COUNT=10;INTERVAL=2;BYDAY=-1SU,1SU',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
@@ -267,8 +325,9 @@ void main() {
       ...[3, 31].map((d) => LocalDate(1998, 5, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Monthly on the second-to-last Monday of the month for 6 months',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=6;BYDAY=-2MO',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 6,
@@ -284,8 +343,9 @@ void main() {
       LocalDate(1998, 2, 16),
     ],
   );
-  testRecurring(
+  testRrule(
     'Monthly on the third-to-the-last day of the month, forever',
+    string: 'RRULE:FREQ=MONTHLY;BYMONTHDAY=-3',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       byMonthDays: {-3},
@@ -301,8 +361,9 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Monthly on the 2nd and 15th of the month for 10 occurrences',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=10;BYMONTHDAY=2,15',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
@@ -317,8 +378,10 @@ void main() {
       ...[2, 15].map((d) => LocalDate(1998, 1, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Monthly on the first and last day of the month for 10 occurrences:',
+    // RRULE:FREQ=MONTHLY;COUNT=10;BYMONTHDAY=1,-1
+    string: 'RRULE:FREQ=MONTHLY;COUNT=10;BYMONTHDAY=-1,1',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
@@ -334,8 +397,11 @@ void main() {
       LocalDate(1998, 2, 1),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every 18 months on the 10th thru 15th of the month for 10 occurrences',
+    // RRULE:FREQ=MONTHLY;INTERVAL=18;COUNT=10;BYMONTHDAY=10,11,12,13,14,15
+    string:
+        'RRULE:FREQ=MONTHLY;COUNT=10;INTERVAL=18;BYMONTHDAY=10,11,12,13,14,15',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
@@ -348,8 +414,9 @@ void main() {
       ...10.to(14).map((d) => LocalDate(1999, 3, d)),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every Tuesday, every other month',
+    string: 'RRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=TU',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       interval: 2,
@@ -364,8 +431,9 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Yearly in June and July for 10 occurrences',
+    string: 'RRULE:FREQ=YEARLY;COUNT=10;BYMONTH=6,7',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       count: 10,
@@ -376,8 +444,10 @@ void main() {
       return [6, 7].map((m) => LocalDate(y, m, 10));
     }),
   );
-  testRecurring(
+  testRrule(
     'Every other year on January, February, and March for 10 occurrences',
+    // RRULE:FREQ=YEARLY;INTERVAL=2;COUNT=10;BYMONTH=1,2,3
+    string: 'RRULE:FREQ=YEARLY;COUNT=10;INTERVAL=2;BYMONTH=1,2,3',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       count: 10,
@@ -392,8 +462,10 @@ void main() {
       }),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every third year on the 1st, 100th, and 200th day for 10 occurrences',
+    // RRULE:FREQ=YEARLY;INTERVAL=3;COUNT=10;BYYEARDAY=1,100,200
+    string: 'RRULE:FREQ=YEARLY;COUNT=10;INTERVAL=3;BYYEARDAY=1,100,200',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       count: 10,
@@ -414,8 +486,9 @@ void main() {
       LocalDate(2006, 1, 1),
     ],
   );
-  testRecurring(
+  testRrule(
     'Every 20th Monday of the year, forever',
+    string: 'RRULE:FREQ=YEARLY;BYDAY=20MO',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, 20)},
@@ -428,8 +501,10 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Monday of week number 20 (where the default start of the week is Monday), forever',
+    // RRULE:FREQ=YEARLY;BYWEEKNO=20;BYDAY=MO
+    string: 'RRULE:FREQ=YEARLY;BYDAY=MO;BYWEEKNO=20',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.monday)},
@@ -443,8 +518,10 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Every Thursday in March, forever',
+    // RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=TH
+    string: 'RRULE:FREQ=YEARLY;BYDAY=TH;BYMONTH=3',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
@@ -458,8 +535,9 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Every Thursday, but only during June, July, and August, forever',
+    string: 'RRULE:FREQ=YEARLY;BYDAY=TH;BYMONTH=6,7,8',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
@@ -481,8 +559,9 @@ void main() {
   );
   // Note: the orginal includes an EXDATE for the start, but our implementation
   // doesn't require the start to be in the result set.
-  testRecurring(
+  testRrule(
     'Every Friday the 13th, forever',
+    string: 'RRULE:FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.friday)},
@@ -498,8 +577,9 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'The first Saturday that follows the first Sunday of the month, forever',
+    string: 'RRULE:FREQ=MONTHLY;BYDAY=SA;BYMONTHDAY=7,8,9,10,11,12,13',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       byWeekDays: {ByWeekDayEntry(DayOfWeek.saturday)},
@@ -520,8 +600,11 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Every 4 years, the first Tuesday after a Monday in November, forever (U.S. Presidential Election day)',
+    // RRULE:FREQ=YEARLY;INTERVAL=4;BYMONTH=11;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8
+    string:
+        'RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8;BYMONTH=11',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       interval: 4,
@@ -537,8 +620,9 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'The third instance into the month of one of Tuesday, Wednesday, or Thursday, for the next 3 months',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 3,
@@ -556,8 +640,9 @@ void main() {
       LocalDate(1997, 11, 6),
     ],
   );
-  testRecurring(
+  testRrule(
     'The second-to-last weekday of the month',
+    string: 'RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-2',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       byWeekDays: {
@@ -581,8 +666,10 @@ void main() {
     ],
     isInfinite: true,
   );
-  testRecurring(
+  testRrule(
     'Every 3 hours from 9:00 AM to 5:00 PM on a specific day',
+    // RRULE:FREQ=HOURLY;INTERVAL=3;UNTIL=19970902T170000Z
+    string: 'RRULE:FREQ=HOURLY;UNTIL=19970902T170000Z;INTERVAL=3',
     rrule: RecurrenceRule(
       frequency: Frequency.hourly,
       until: LocalDateTime(1997, 09, 02, 17, 0, 0),
@@ -592,8 +679,10 @@ void main() {
     expectedDateTimes:
         9.to(16, by: 3).map((h) => LocalDateTime(1997, 9, 2, h, 0, 0)),
   );
-  testRecurring(
+  testRrule(
     'Every 15 minutes for 6 occurrences',
+    // RRULE:FREQ=MINUTELY;INTERVAL=15;COUNT=6
+    string: 'RRULE:FREQ=MINUTELY;COUNT=6;INTERVAL=15',
     rrule: RecurrenceRule(
       frequency: Frequency.minutely,
       count: 6,
@@ -609,8 +698,10 @@ void main() {
       LocalTime(10, 15, 0),
     ].map((t) => LocalDate(1997, 9, 2).at(t)),
   );
-  testRecurring(
+  testRrule(
     'Every hour and a half for 4 occurrences',
+    // RRULE:FREQ=MINUTELY;INTERVAL=90;COUNT=4
+    string: 'RRULE:FREQ=MINUTELY;COUNT=4;INTERVAL=90',
     rrule: RecurrenceRule(
       frequency: Frequency.minutely,
       count: 4,
@@ -630,8 +721,10 @@ void main() {
         return 0.to(41, by: 20).map((m) => LocalDateTime(1997, 9, d, h, m, 0));
       });
     });
-    testRecurring(
+    testRrule(
       'with frequency daily',
+      // RRULE:FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,20,40
+      string: 'RRULE:FREQ=DAILY;BYMINUTE=0,20,40;BYHOUR=9,10,11,12,13,14,15,16',
       rrule: RecurrenceRule(
         frequency: Frequency.daily,
         byMinutes: {0, 20, 40},
@@ -641,8 +734,9 @@ void main() {
       expectedDateTimes: expected,
       isInfinite: true,
     );
-    testRecurring(
+    testRrule(
       'with frequency minutely',
+      string: 'RRULE:FREQ=MINUTELY;INTERVAL=20;BYHOUR=9,10,11,12,13,14,15,16',
       rrule: RecurrenceRule(
         frequency: Frequency.minutely,
         interval: 20,
@@ -656,8 +750,10 @@ void main() {
   group(
       'An example where the days generated makes a difference because of WKST',
       () {
-    testRecurring(
+    testRrule(
       'with weekStart monday',
+      // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO
+      string: 'RRULE:FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=MO',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
         count: 4,
@@ -671,8 +767,10 @@ void main() {
       start: LocalDateTime(1997, 8, 5, 9, 0, 0),
       expectedDates: [5, 10, 19, 24].map((d) => LocalDate(1997, 8, d)),
     );
-    testRecurring(
+    testRrule(
       'with weekStart sunday',
+      // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU
+      string: 'RRULE:FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=SU',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
         count: 4,
@@ -687,8 +785,9 @@ void main() {
       expectedDates: [5, 17, 19, 31].map((d) => LocalDate(1997, 8, d)),
     );
   });
-  testRecurring(
+  testRrule(
     'An example where an invalid date (i.e., February 30) is ignored',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=5;BYMONTHDAY=15,30',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 5,
