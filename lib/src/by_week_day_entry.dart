@@ -1,3 +1,4 @@
+import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -13,7 +14,10 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
         assert(occurrence == null || debugCheckIsValidWeekNumber(occurrence));
 
   final DayOfWeek day;
+
   final int occurrence;
+  bool get hasOccurrence => occurrence != null;
+  bool get hasNoOccurrence => !hasOccurrence;
 
   @override
   int compareTo(ByWeekDayEntry other) {
@@ -43,4 +47,9 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
 
   @override
   String toString() => ByWeekDayEntryStringCodec().encode(this);
+}
+
+extension ByWeekDayEntryIterable on Iterable<ByWeekDayEntry> {
+  bool get anyHasOccurrence => any((e) => e.hasOccurrence);
+  bool get noneHasOccurrence => none((e) => e.hasOccurrence);
 }
