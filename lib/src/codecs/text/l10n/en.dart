@@ -67,12 +67,12 @@ class RruleL10nEn extends RruleL10n {
   @override
   String onDaysOfWeek(
     String days, {
-    bool anyHasOccurrence = false,
+    bool indicateFrequency = false,
     DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
   }) {
     final frequencyString =
         frequency == DaysOfWeekFrequency.monthly ? 'month' : 'year';
-    final suffix = anyHasOccurrence ? ' of the $frequencyString' : '';
+    final suffix = indicateFrequency ? ' of the $frequencyString' : '';
     return 'on $days$suffix';
   }
 

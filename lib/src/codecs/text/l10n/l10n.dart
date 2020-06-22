@@ -30,7 +30,7 @@ abstract class RruleL10n {
       };
   String onDaysOfWeek(
     String days, {
-    bool anyHasOccurrence = false,
+    bool indicateFrequency = false,
     DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
   });
   String get weekdaysString;

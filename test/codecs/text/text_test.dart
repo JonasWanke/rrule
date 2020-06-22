@@ -23,6 +23,21 @@ void main() {
     });
   }
 
+  testText(
+    'Weekly in January – March, August & September on Monday, Wednesday – Friday & Sunday',
+    string: 'RRULE:FREQ=WEEKLY;BYMONTH=1,2,3,8,9;BYDAY=MO,WE,TH,FR,SU',
+  );
+  testText(
+    'Every other week in January – March on weekdays & Sunday',
+    string:
+        'RRULE:FREQ=WEEKLY;INTERVAL=2;BYMONTH=1,2,3;BYDAY=MO,TU,WE,TH,FR,SU',
+  );
+  testText(
+    'Monthly on Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st – 5th, 26th, or 3rd-to-last – last day of the month',
+    string:
+        'RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,1TH,1FR,2TH,2FR,2SA,-2TH,-2FR,-2SU,-1TH,-1FR,-1SU;BYMONTHDAY=1,2,3,4,5,26,-3,-2,-1',
+  );
+
   group('FREQ=YEARLY', () {
     // 0/1 digits in the comment before a text function mean whether each of
     // byMonths, byWeeks, byYearDays, byMonthDays & byWeekDays (in that order)
@@ -225,6 +240,14 @@ void main() {
   testText(
     'Weekly, until Monday, January 1, 2007 8:00:00 AM',
     string: 'RRULE:FREQ=WEEKLY;UNTIL=20070101T080000Z',
+  );
+  testText(
+    'Weekly on Tuesday',
+    string: 'RRULE:FREQ=WEEKLY;BYDAY=TU',
+  );
+  testText(
+    'Weekly on Monday & Wednesday',
+    string: 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE',
   );
   testText(
     'Weekly on weekdays',

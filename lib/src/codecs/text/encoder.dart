@@ -49,7 +49,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
   void _convertDaily(RecurrenceRule input, StringBuffer output) {
     // [in January – March, August & September]
-    _addByMonths(input, output);
+    output.add(_formatByMonths(input));
 
     // [byWeekDays]:
     //   [on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])]
@@ -58,36 +58,28 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     // byWeekDays, byMonthDays:
     //   on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])
     //   that are also the 1st & 3rd-to-last – last day of the month
-    if (input.hasByWeekDays) {
-      final daysString = input.byWeekDays
-          .occurrenceFreeFormattedForUser(l10n, weekStart: input.weekStart);
-      output.add(l10n.onDaysOfWeek(daysString));
-    }
-
-    output.add(_formatByMonthDays(
-      input,
-      useAlsoVariant: input.hasByWeekDays,
-    ));
+    assert(input.byWeekDays.noneHasOccurrence);
+    output
+      ..add(_formatByWeekDays(input))
+      ..add(_formatByMonthDays(
+        input,
+        useAlsoVariant: input.hasByWeekDays,
+      ));
   }
 
   void _convertWeekly(RecurrenceRule input, StringBuffer output) {
     // [in January – March, August & September]
-    _addByMonths(input, output);
+    output.add(_formatByMonths(input));
 
     // [byWeekDays]:
     //   [on (Monday, Wednesday – Friday & Sunday | a weekday [& Sunday])]
-    if (input.hasByWeekDays) {
-      final daysString = input.byWeekDays.occurrenceFreeFormattedForUser(
-        l10n,
-        weekStart: input.actualWeekStart,
-      );
-      output.add(l10n.onDaysOfWeek(daysString));
-    }
+    assert(input.byWeekDays.noneHasOccurrence);
+    output.add(_formatByWeekDays(input));
   }
 
   void _convertMonthly(RecurrenceRule input, StringBuffer output) {
     // [in January – March, August & September]
-    _addByMonths(input, output);
+    output.add(_formatByMonths(input));
 
     // [byWeekDays]:
     //   [on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])]
@@ -96,28 +88,24 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     // byWeekDays, byMonthDays:
     //   on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])
     //   that are also the 1st or 3rd-to-last – last day of the month
-
-    // Monthly on Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st & 3rd-to-last – last day of the month
-    if (input.hasByWeekDays) {
-      final daysString = input.byWeekDays.formattedForUser(
-        l10n,
-        weekStart: input.actualWeekStart,
-      );
-      output.add(l10n.onDaysOfWeek(daysString));
-    }
-
-    output.add(_formatByMonthDays(
-      input,
-      variant: input.byWeekDays.anyHasOccurrence
-          ? DaysOfVariant.dayAndFrequency
-          : input.byMonthDays.any((d) => d < 0)
-              ? DaysOfVariant.day
-              : DaysOfVariant.simple,
-      useAlsoVariant: input.hasByWeekDays,
-      combination: input.hasByWeekDays
-          ? ListCombination.disjunctive
-          : ListCombination.conjunctiveShort,
-    ));
+    output
+      ..add(_formatByWeekDays(
+        input,
+        frequency: DaysOfWeekFrequency.monthly,
+        indicateFrequency: false,
+      ))
+      ..add(_formatByMonthDays(
+        input,
+        variant: input.byWeekDays.anyHasOccurrence
+            ? DaysOfVariant.dayAndFrequency
+            : input.byMonthDays.any((d) => d < 0)
+                ? DaysOfVariant.day
+                : DaysOfVariant.simple,
+        useAlsoVariant: input.hasByWeekDays,
+        combination: input.hasByWeekDays
+            ? ListCombination.disjunctive
+            : ListCombination.conjunctiveShort,
+      ));
   }
 
   void _convertYearly(RecurrenceRule input, StringBuffer output) {
@@ -216,15 +204,6 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     }
   }
 
-  void _addByMonths(RecurrenceRule input, StringBuffer output) {
-    if (input.byMonths.isEmpty) {
-      return;
-    }
-
-    final monthString = input.byMonths.formattedForUser(l10n, map: l10n.month);
-    output.add(l10n.inMonths(monthString));
-  }
-
   String _formatByMonths(
     RecurrenceRule input, {
     bool useAlsoVariant = false,
@@ -293,15 +272,20 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
   String _formatByWeekDays(
     RecurrenceRule input, {
-    DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+    DaysOfWeekFrequency frequency,
+    bool indicateFrequency,
   }) {
     if (input.byWeekDays.isEmpty) {
       return null;
     }
 
     return l10n.onDaysOfWeek(
-      input.byWeekDays.formattedForUser(l10n, weekStart: input.actualWeekStart),
-      anyHasOccurrence: input.byWeekDays.anyHasOccurrence,
+      input.byWeekDays.formattedForUser(
+        l10n,
+        addEveryPrefix: frequency != null,
+        weekStart: input.actualWeekStart,
+      ),
+      indicateFrequency: indicateFrequency ?? input.byWeekDays.anyHasOccurrence,
       frequency: frequency,
     );
   }
@@ -417,6 +401,7 @@ extension on Iterable<ByWeekDayEntry> {
 
   String formattedForUser(
     RruleL10n l10n, {
+    @required bool addEveryPrefix,
     @required DayOfWeek weekStart,
   }) {
     assert(isNotEmpty);
@@ -430,7 +415,7 @@ extension on Iterable<ByWeekDayEntry> {
           .map((e) => ByWeekDayEntry(e.day))
           .occurrenceFreeFormattedForUser(
             l10n,
-            addEveryPrefix: !hasOccurrence,
+            addEveryPrefix: addEveryPrefix && !hasOccurrence,
             weekStart: weekStart,
             combination: ListCombination.conjunctiveShort,
           );
