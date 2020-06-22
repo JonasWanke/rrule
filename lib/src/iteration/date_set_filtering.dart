@@ -51,7 +51,7 @@ bool _isFilteredByWeeks(RecurrenceRule rrule, LocalDate date) {
   final weeksInYear =
       rrule.weekYearRule.getWeeksInWeekYear(weekYear, date.calendar);
   final negativeWeekOfYear = weekOfYear - weeksInYear;
-  if (rrule.byWeeks.isNotEmpty &&
+  if (rrule.hasByWeeks &&
       !rrule.byWeeks.contains(weekOfYear) &&
       !rrule.byWeeks.contains(negativeWeekOfYear)) {
     return true;

@@ -56,7 +56,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     // byWeekDays, byMonthDays:
     //   on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])
     //   that are also the 1st & 3rd-to-last – last day of the month
-    if (input.byWeekDays.isNotEmpty) {
+    if (input.hasByWeekDays) {
       final daysString = input.byWeekDays
           .occurrenceFreeFormattedForUser(l10n, weekStart: input.weekStart);
       output.add(l10n.onDaysOfWeek(daysString));
@@ -64,7 +64,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
     output.add(_formatByMonthDays(
       input,
-      useAlsoVariant: input.byWeekDays.isNotEmpty,
+      useAlsoVariant: input.hasByWeekDays,
     ));
   }
 
@@ -74,7 +74,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
     // [byWeekDays]:
     //   [on (Monday, Wednesday – Friday & Sunday | a weekday [& Sunday])]
-    if (input.byWeekDays.isNotEmpty) {
+    if (input.hasByWeekDays) {
       final daysString = input.byWeekDays.occurrenceFreeFormattedForUser(
         l10n,
         weekStart: input.actualWeekStart,
@@ -96,8 +96,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     //   that are also the 1st or 3rd-to-last – last day of the month
 
     // Monthly on Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st & 3rd-to-last – last day of the month
-    final hasByWeekDays = input.byWeekDays.isNotEmpty;
-    if (hasByWeekDays) {
+    if (input.hasByWeekDays) {
       final daysString = input.byWeekDays.formattedForUser(
         l10n,
         weekStart: input.actualWeekStart,
@@ -112,8 +111,8 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           : input.byMonthDays.any((d) => d < 0)
               ? DaysOfVariant.day
               : DaysOfVariant.simple,
-      useAlsoVariant: hasByWeekDays,
-      combination: hasByWeekDays
+      useAlsoVariant: input.hasByWeekDays,
+      combination: input.hasByWeekDays
           ? ListCombination.disjunctive
           : ListCombination.conjunctiveShort,
     ));

@@ -90,30 +90,39 @@ class RecurrenceRule {
 
   /// Corresponds to the `BYSECOND` property.
   final Set<int> bySeconds;
+  bool get hasBySeconds => bySeconds.isNotEmpty;
 
   /// Corresponds to the `BYMINUTE` property.
   final Set<int> byMinutes;
+  bool get hasByMinutes => byMinutes.isNotEmpty;
 
   /// Corresponds to the `BYHOUR` property.
   final Set<int> byHours;
+  bool get hasByHours => byHours.isNotEmpty;
 
   /// Corresponds to the `BYDAY` property.
   final Set<ByWeekDayEntry> byWeekDays;
+  bool get hasByWeekDays => byWeekDays.isNotEmpty;
 
   /// Corresponds to the `BYMONTHDAY` property.
   final Set<int> byMonthDays;
+  bool get hasByMonthDays => byMonthDays.isNotEmpty;
 
   /// Corresponds to the `BYYEARDAY` property.
   final Set<int> byYearDays;
+  bool get hasByYearDays => byYearDays.isNotEmpty;
 
   /// Corresponds to the `BYWEEKNO` property.
   final Set<int> byWeeks;
+  bool get hasByWeeks => byWeeks.isNotEmpty;
 
   /// Corresponds to the `BYMONTH` property.
   final Set<int> byMonths;
+  bool get hasByMonths => byMonths.isNotEmpty;
 
   /// Corresponds to the `BYSETPOS` property.
   final Set<int> bySetPositions;
+  bool get hasBySetPositions => bySetPositions.isNotEmpty;
 
   /// Corresponds to the `WKST` property.
   ///

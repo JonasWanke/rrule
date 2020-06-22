@@ -34,7 +34,7 @@ Iterable<LocalDateTime> getRecurrenceRuleInstances(
     final isFiltered = removeFilteredDates(rrule, dateSet);
 
     Iterable<LocalDateTime> results;
-    if (rrule.bySetPositions.isNotEmpty) {
+    if (rrule.hasBySetPositions) {
       results = buildSetPositionsList(rrule, dateSet, timeSet)
           .where((dt) => start <= dt);
     } else {
