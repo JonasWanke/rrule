@@ -70,9 +70,9 @@ void main() {
       final codec = RecurrenceRuleStringCodec();
 
       expect(
-        codec.decode('RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR,SA,SU'),
+        codec.decode('RRULE:FREQ=YEARLY;BYDAY=MO,TU,WE,TH,FR,SA,SU'),
         RecurrenceRule(
-          frequency: Frequency.daily,
+          frequency: Frequency.yearly,
           byWeekDays: {
             ByWeekDayEntry(DayOfWeek.monday),
             ByWeekDayEntry(DayOfWeek.tuesday),
@@ -85,9 +85,9 @@ void main() {
         ),
       );
       expect(
-        codec.decode('RRULE:FREQ=DAILY;BYDAY=-20SA,-4MO,53FR'),
+        codec.decode('RRULE:FREQ=YEARLY;BYDAY=-20SA,-4MO,53FR'),
         RecurrenceRule(
-          frequency: Frequency.daily,
+          frequency: Frequency.yearly,
           byWeekDays: {
             ByWeekDayEntry(DayOfWeek.saturday, -20),
             ByWeekDayEntry(DayOfWeek.monday, -4),
@@ -97,23 +97,23 @@ void main() {
       );
 
       expect(
-        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=-54SA'),
+        () => codec.decode('RRULE:FREQ=YEARLY;BYDAY=-54SA'),
         throwsFormatException,
       );
       expect(
-        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=-4'),
+        () => codec.decode('RRULE:FREQ=YEARLY;BYDAY=-4'),
         throwsFormatException,
       );
       expect(
-        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=TUE'),
+        () => codec.decode('RRULE:FREQ=YEARLY;BYDAY=TUE'),
         throwsFormatException,
       );
       expect(
-        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=FO'),
+        () => codec.decode('RRULE:FREQ=YEARLY;BYDAY=FO'),
         throwsFormatException,
       );
       expect(
-        () => codec.decode('RRULE:FREQ=DAILY;BYDAY=60'),
+        () => codec.decode('RRULE:FREQ=YEARLY;BYDAY=60'),
         throwsFormatException,
       );
     });
