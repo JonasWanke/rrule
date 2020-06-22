@@ -16,8 +16,10 @@ abstract class RruleL10n {
   String count(int count);
   String range(String start, String end) => '$start – $end';
 
-  String inMonths(String months);
+  String inMonths(String months, {bool useAlsoVariant = false});
   String month(int month) => LocalDate(1, month, 1).toString('MMMM', culture);
+
+  String inWeeks(String weeks, {bool useAlsoVariant = false});
 
   Set<DayOfWeek> get weekdays => {
         DayOfWeek.monday,
@@ -26,8 +28,13 @@ abstract class RruleL10n {
         DayOfWeek.thursday,
         DayOfWeek.friday,
       };
-  String onDaysOfWeek(String days);
+  String onDaysOfWeek(
+    String days, {
+    bool anyHasOccurrence = false,
+    DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+  });
   String get weekdaysString;
+  String get everyXDaysOfWeekPrefix;
   String dayOfWeek(DayOfWeek dayOfWeek) {
     return LocalDate.minIsoValue
         .adjust(DateAdjusters.nextOrSame(dayOfWeek))
@@ -85,14 +92,8 @@ abstract class RruleL10n {
   String ordinal(int number);
 }
 
-enum DaysOfVariant {
-  simple,
-  day,
-  dayAndFrequency,
-}
+enum DaysOfWeekFrequency { monthly, yearly }
 
-enum ListCombination {
-  conjunctiveShort,
-  conjunctiveLong,
-  disjunctive,
-}
+enum DaysOfVariant { simple, day, dayAndFrequency }
+
+enum ListCombination { conjunctiveShort, conjunctiveLong, disjunctive }

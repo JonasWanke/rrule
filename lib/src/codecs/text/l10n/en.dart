@@ -53,12 +53,33 @@ class RruleL10nEn extends RruleL10n {
   }
 
   @override
-  String inMonths(String months) => 'in $months';
+  String inMonths(String months, {bool useAlsoVariant = false}) {
+    final prefix = useAlsoVariant ? 'that are also in' : 'in';
+    return '$prefix $months';
+  }
 
   @override
-  String onDaysOfWeek(String days) => 'on $days';
+  String inWeeks(String weeks, {bool useAlsoVariant = false}) {
+    final prefix = useAlsoVariant ? 'that are also in the' : 'in the';
+    return '$prefix $weeks week of the year';
+  }
+
+  @override
+  String onDaysOfWeek(
+    String days, {
+    bool anyHasOccurrence = false,
+    DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+  }) {
+    final frequencyString =
+        frequency == DaysOfWeekFrequency.monthly ? 'month' : 'year';
+    final suffix = anyHasOccurrence ? ' of the $frequencyString' : '';
+    return 'on $days$suffix';
+  }
+
   @override
   String get weekdaysString => 'weekdays';
+  @override
+  String get everyXDaysOfWeekPrefix => 'every ';
   @override
   String nthDaysOfWeek(int occurrence, String daysOfWeek) {
     if (occurrence == null) {
