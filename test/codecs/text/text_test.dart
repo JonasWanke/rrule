@@ -33,7 +33,7 @@ void main() {
         'RRULE:FREQ=WEEKLY;INTERVAL=2;BYMONTH=1,2,3;BYDAY=MO,TU,WE,TH,FR,SU',
   );
   testText(
-    'Monthly on Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st – 5th, 26th, or 3rd-to-last – last day of the month',
+    'Monthly on every Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st – 5th, 26th, or 3rd-to-last – last day of the month',
     string:
         'RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,1TH,1FR,2TH,2FR,2SA,-2TH,-2FR,-2SU,-1TH,-1FR,-1SU;BYMONTHDAY=1,2,3,4,5,26,-3,-2,-1',
   );
