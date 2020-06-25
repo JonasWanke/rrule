@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
-import 'package:rrule/src/codecs/text/encoder.dart';
-import 'package:rrule/src/codecs/text/l10n/en.dart';
 import 'package:test/test.dart';
 import 'package:time_machine/time_machine.dart';
+
+import 'utils.dart' as utils;
 
 void main() {
   setUpAll(TimeMachine.initialize);
@@ -12,16 +12,8 @@ void main() {
   setUp(() async => l10n = await RruleL10nEn.withDefaultCulture());
 
   @isTest
-  void testText(String text, {@required String string}) {
-    test(text, () async {
-      final stringCodec = RecurrenceRuleStringCodec();
-      final rrule = stringCodec.decode(string);
-
-      // TODO(JonasWanke): use codec directly when supporting fromText()
-      final textEncoder = RecurrenceRuleToTextEncoder(l10n);
-      expect(textEncoder.convert(rrule), text);
-    });
-  }
+  void testText(String text, {@required String string}) =>
+      utils.testText(text, text: text, string: string, l10n: l10n);
 
   testText(
     'Weekly in January – March, August & September on Monday, Wednesday – Friday & Sunday',
