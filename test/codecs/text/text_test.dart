@@ -42,7 +42,7 @@ void main() {
     );
     // 00001
     testText(
-      'Annually on every Monday and the last Thursday of the year',
+      'Annually on every Monday & the last Thursday of the year',
       string: 'RRULE:FREQ=YEARLY;BYDAY=MO,-1TH',
     );
     // 00010
@@ -52,7 +52,7 @@ void main() {
     );
     // 00011
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the month',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month',
       string: 'RRULE:FREQ=YEARLY;BYMONTHDAY=1,-1;BYDAY=MO,-1TH',
     );
     // 00100
@@ -62,7 +62,7 @@ void main() {
     );
     // 00101
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the year',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year',
       string: 'RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYDAY=MO,-1TH',
     );
     // 00110
@@ -72,7 +72,7 @@ void main() {
     );
     // 00111
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year',
       string: 'RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH',
     );
 
@@ -125,7 +125,7 @@ void main() {
     );
     // 10001
     testText(
-      'Annually on every Monday and the last Thursday of the month in January & December',
+      'Annually on every Monday & the last Thursday of the month in January & December',
       string: 'RRULE:FREQ=YEARLY;BYMONTH=1,12;BYDAY=MO,-1TH',
     );
     // 10010
@@ -136,7 +136,7 @@ void main() {
     // 10011
     // TODO(JonasWanke): the 1st or last day in January or December
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December',
       string: 'RRULE:FREQ=YEARLY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH',
     );
     // 10100
@@ -146,7 +146,7 @@ void main() {
     );
     // 10101
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December',
       string: 'RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYDAY=MO,-1TH',
     );
     // 10110
@@ -156,7 +156,7 @@ void main() {
     );
     // 10111
     testText(
-      'Annually on every Monday and the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December',
+      'Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December',
       string:
           'RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH',
     );
