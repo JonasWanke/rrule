@@ -41,7 +41,7 @@ abstract class RruleL10n {
         .toString('dddd', culture);
   }
 
-  String nthDaysOfWeek(int occurrence, String daysOfWeek);
+  String nthDaysOfWeek(Iterable<int> occurrences, String daysOfWeek);
 
   String onDaysOfMonth(
     String days, {

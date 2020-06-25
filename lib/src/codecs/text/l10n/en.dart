@@ -81,11 +81,13 @@ class RruleL10nEn extends RruleL10n {
   @override
   String get everyXDaysOfWeekPrefix => 'every ';
   @override
-  String nthDaysOfWeek(int occurrence, String daysOfWeek) {
-    if (occurrence == null) {
+  String nthDaysOfWeek(Iterable<int> occurrences, String daysOfWeek) {
+    if (occurrences.isEmpty) {
       return daysOfWeek;
     } else {
-      return 'the ${ordinal(occurrence)} $daysOfWeek';
+      final ordinals = list(
+          occurrences.map(ordinal).toList(), ListCombination.conjunctiveShort);
+      return 'the $ordinals $daysOfWeek';
     }
   }
 

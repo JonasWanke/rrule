@@ -279,10 +279,20 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       return null;
     }
 
+    var addEveryPrefix = frequency != null;
+    if (frequency == DaysOfWeekFrequency.yearly &&
+        input.byWeekDays.noneHasOccurrence &&
+        !input.hasByMonthDays &&
+        !input.hasByYearDays &&
+        input.byWeeks.length == 1 &&
+        !input.hasByMonths) {
+      addEveryPrefix = false;
+    }
+
     return l10n.onDaysOfWeek(
       input.byWeekDays.formattedForUser(
         l10n,
-        addEveryPrefix: frequency != null,
+        addEveryPrefix: addEveryPrefix,
         weekStart: input.actualWeekStart,
       ),
       indicateFrequency: indicateFrequency ?? input.byWeekDays.anyHasOccurrence,
@@ -409,6 +419,17 @@ extension on Iterable<ByWeekDayEntry> {
     final grouped = groupBy<ByWeekDayEntry, int>(this, (e) => e.occurrence)
         .entries
         .sortedForUserGeneral(key: (e) => e.value.first.occurrence ?? 0);
+
+    if (anyHasOccurrence && map((e) => e.day).toSet().length == 1) {
+      // Simplify this special case:
+      // All entries contain the same day of the week.
+
+      return l10n.nthDaysOfWeek(
+        grouped.map((e) => e.key),
+        l10n.dayOfWeek(first.day),
+      );
+    }
+
     final strings = grouped.map((entry) {
       final hasOccurrence = entry.key != null;
       final daysOfWeek = entry.value
@@ -420,10 +441,22 @@ extension on Iterable<ByWeekDayEntry> {
             combination: ListCombination.conjunctiveShort,
           );
       return hasOccurrence
-          ? l10n.nthDaysOfWeek(entry.key, daysOfWeek)
+          ? l10n.nthDaysOfWeek(hasOccurrence ? entry.key : [], daysOfWeek)
           : daysOfWeek;
     }).toList();
-    return l10n.list(strings, ListCombination.conjunctiveLong);
+
+    // If no inner (short) conjunction is used, we can simply use the short
+    // variant instead of the long one.
+    final atMostOneWeekDayPerOccurrence = every((entry) {
+      return where((e) => e.occurrence == entry.occurrence).length == 1;
+    });
+
+    return l10n.list(
+      strings,
+      atMostOneWeekDayPerOccurrence
+          ? ListCombination.conjunctiveShort
+          : ListCombination.conjunctiveLong,
+    );
   }
 }
 
