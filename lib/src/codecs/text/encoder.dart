@@ -441,7 +441,7 @@ extension on Iterable<ByWeekDayEntry> {
             combination: ListCombination.conjunctiveShort,
           );
       return hasOccurrence
-          ? l10n.nthDaysOfWeek(hasOccurrence ? entry.key : [], daysOfWeek)
+          ? l10n.nthDaysOfWeek(hasOccurrence ? [entry.key] : [], daysOfWeek)
           : daysOfWeek;
     }).toList();
 
