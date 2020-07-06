@@ -9,7 +9,7 @@ void main() {
   setUpAll(TimeMachine.initialize);
   RruleL10n l10n;
 
-  setUp(() async => l10n = await RruleL10nEn.withDefaultCulture());
+  setUp(() async => l10n = await RruleL10nEn.create());
 
   @isTest
   void testText(String text, {@required String string}) =>

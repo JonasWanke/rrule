@@ -6,11 +6,10 @@ import 'l10n.dart';
 
 @immutable
 class RruleL10nEn extends RruleL10n {
-  const RruleL10nEn(Culture culture) : super(culture);
+  const RruleL10nEn._(Culture culture) : super(culture);
 
-  static Future<RruleL10nEn> withDefaultCulture() async {
-    return RruleL10nEn(await Cultures.getCulture('en'));
-  }
+  static Future<RruleL10nEn> create() async =>
+      RruleL10nEn._(await Cultures.getCulture('en'));
 
   @override
   String frequencyInterval(Frequency frequency, int interval) {

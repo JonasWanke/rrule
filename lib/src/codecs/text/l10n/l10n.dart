@@ -2,9 +2,15 @@ import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../../../frequency.dart';
+import '../../../recurrence_rule.dart';
+import 'en.dart';
 
 export 'en.dart';
 
+/// Contains localized strings used by [RecurrenceRule.toText].
+///
+/// Currently, only English is supported. You can get an instance via
+/// [RruleL10nEn.create].
 @immutable
 abstract class RruleL10n {
   const RruleL10n(this.culture) : assert(culture != null);

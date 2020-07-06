@@ -19,7 +19,7 @@ void testText(
 
     // TODO(JonasWanke): use codec directly when supporting fromText()
     final textEncoder = RecurrenceRuleToTextEncoder(
-      l10n ?? await RruleL10nEn.withDefaultCulture(),
+      l10n ?? await RruleL10nEn.create(),
     );
     expect(textEncoder.convert(rrule), text);
   });
