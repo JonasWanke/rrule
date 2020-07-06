@@ -228,7 +228,11 @@ class RecurrenceRule {
   /// This may only be called on rules that are fully convertable to text.
   String toText({@required RruleL10n l10n}) {
     assert(l10n != null);
-    assert(canFullyConvertToText);
+    assert(
+      canFullyConvertToText,
+      "This recurrence rule can't fully be converted to text. See "
+      '[RecurrenceRule.canFullyConvertToText] for more information.',
+    );
 
     return RecurrenceRuleToTextEncoder(l10n).convert(this);
   }
@@ -254,6 +258,7 @@ class RecurrenceRule {
         hasByMonths) {
       return false;
     }
+    return true;
   }
 }
 
