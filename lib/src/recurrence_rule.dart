@@ -224,8 +224,25 @@ class RecurrenceRule {
   String toString() => RecurrenceRuleStringCodec().encode(this);
 
   /// Converts this rule to a human-readable string.
-  String toText(RruleL10n l10n) =>
-      RecurrenceRuleToTextEncoder(l10n).convert(this);
+  ///
+  /// This may only be called on rules that are fully convertable to text.
+  String toText({@required RruleL10n l10n}) {
+    assert(l10n != null);
+    assert(canFullyConvertToText);
+
+    return RecurrenceRuleToTextEncoder(l10n).convert(this);
+  }
+
+  /// Whether this rule can be converted to a human-readable string.
+  ///
+  /// - Unsupported attributes: [bySeconds], [byMinutes], [byHours]
+  /// - Unsupported frequencies: [Frequency.secondly], [Frequency.hourly],
+  ///   [Frequency.daily]
+  bool get canFullyConvertToText =>
+      !hasBySeconds &&
+      !hasByMinutes &&
+      !hasByHours &&
+      frequency <= Frequency.daily;
 }
 
 /// Validates the `seconds` rule.

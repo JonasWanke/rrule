@@ -23,7 +23,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     final output = StringBuffer(frequencyIntervalString);
 
     if (input.frequency > Frequency.daily) {
-      // _convertSubDaily(input, output);
+      assert(false, 'Frequencies > daily are not supported yet in toText().');
     } else {
       if (input.frequency == Frequency.daily) {
         _convertDaily(input, output);
