@@ -112,17 +112,6 @@ class RruleL10nEn extends RruleL10n {
     return '$prefix $days day of the year';
   }
 
-  String _plural(
-    int count, {
-    @required String one,
-    @required String other,
-  }) {
-    assert(one != null);
-    assert(other != null);
-
-    return count == 1 ? one : other;
-  }
-
   @override
   String list(List<String> items, ListCombination combination) {
     assert(items != null);
