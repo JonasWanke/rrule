@@ -22,11 +22,6 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         l10n.frequencyInterval(input.frequency, input.actualInterval);
     final output = StringBuffer(frequencyIntervalString);
 
-    if (input.hasBySetPositions) {
-      final instances = input.bySetPositions.formattedForUser(l10n);
-      output.add(l10n.onInstances(instances));
-    }
-
     if (input.frequency > Frequency.daily) {
       // _convertSubDaily(input, output);
     } else {
@@ -86,6 +81,11 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     // [in January – March, August & September]
     output.add(_formatByMonths(input));
 
+    if (input.hasBySetPositions) {
+      final instances = input.bySetPositions.formattedForUser(l10n);
+      output.add(l10n.onInstances(instances));
+    }
+
     // [byWeekDays]:
     //   [on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])]
     // [byMonthDays]:
@@ -98,6 +98,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         input,
         frequency: DaysOfWeekFrequency.monthly,
         indicateFrequency: false,
+        variant: input.hasBySetPositions
+            ? InOnVariant.instanceOf
+            : InOnVariant.simple,
       ))
       ..add(_formatByMonthDays(
         input,
@@ -106,7 +109,11 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
             : input.byMonthDays.any((d) => d < 0)
                 ? DaysOfVariant.day
                 : DaysOfVariant.simple,
-        variant: input.hasByWeekDays ? InOnVariant.also : InOnVariant.simple,
+        variant: input.hasByWeekDays
+            ? InOnVariant.also
+            : input.hasBySetPositions
+                ? InOnVariant.instanceOf
+                : InOnVariant.simple,
         combination: input.hasByWeekDays
             ? ListCombination.disjunctive
             : ListCombination.conjunctiveShort,
@@ -114,7 +121,13 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
   }
 
   void _convertYearly(RecurrenceRule input, StringBuffer output) {
-    // Order of by-attributes: byWeekDays, byMonthDays, byYearDays, byWeeks, byMonths
+    if (input.hasBySetPositions) {
+      final instances = input.bySetPositions.formattedForUser(l10n);
+      output.add(l10n.onInstances(instances));
+    }
+
+    // Order of remaining by-attributes:
+    // byWeekDays, byMonthDays, byYearDays, byWeeks, byMonths
 
     final firstVariant =
         input.hasBySetPositions ? InOnVariant.instanceOf : InOnVariant.simple;

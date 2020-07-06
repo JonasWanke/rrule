@@ -15,6 +15,19 @@ void main() {
   void testText(String text, {@required String string}) =>
       utils.testText(text, text: text, string: string, l10n: l10n);
 
+  testText(
+    'Annually on every Monday',
+    string: 'RRULE:FREQ=YEARLY;BYDAY=MO',
+  );
+  testText(
+    'Every other year on every Monday',
+    string: 'RRULE:FREQ=YEARLY;INTERVAL=2;BYDAY=MO',
+  );
+  testText(
+    'Every 4 years on every Monday',
+    string: 'RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=MO',
+  );
+
   // 0/1 digits in the comment before a text function mean whether each of
   // bySetPositions, byMonths, byWeeks, byYearDays, byMonthDays & byWeekDays
   // (in that order) is included.
@@ -193,7 +206,6 @@ void main() {
   // 100000: invalid
   // 100001
   testText(
-    //'Annually on                                   every Monday & the last Thursday of the year',
     'Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year',
     string: 'RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYDAY=MO,-1TH',
   );
