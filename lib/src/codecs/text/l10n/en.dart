@@ -53,15 +53,28 @@ class RruleL10nEn extends RruleL10n {
   }
 
   @override
-  String inMonths(String months, {bool useAlsoVariant = false}) {
-    final prefix = useAlsoVariant ? 'that are also in' : 'in';
-    return '$prefix $months';
-  }
+  String onInstances(String instances) => 'on the $instances instance';
 
   @override
-  String inWeeks(String weeks, {bool useAlsoVariant = false}) {
-    final prefix = useAlsoVariant ? 'that are also in the' : 'in the';
-    return '$prefix $weeks week of the year';
+  String inMonths(String months, {InOnVariant variant = InOnVariant.simple}) =>
+      '${_inVariant(variant)} $months';
+
+  @override
+  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple}) =>
+      '${_inVariant(variant)} the $weeks week of the year';
+
+  String _inVariant(InOnVariant variant) {
+    switch (variant) {
+      case InOnVariant.simple:
+        return 'in';
+      case InOnVariant.also:
+        return 'that are also in';
+      case InOnVariant.instanceOf:
+        return 'of';
+      default:
+        assert(false);
+        return null;
+    }
   }
 
   @override
@@ -69,11 +82,14 @@ class RruleL10nEn extends RruleL10n {
     String days, {
     bool indicateFrequency = false,
     DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+    InOnVariant variant = InOnVariant.simple,
   }) {
+    assert(variant != InOnVariant.also);
+
     final frequencyString =
         frequency == DaysOfWeekFrequency.monthly ? 'month' : 'year';
     final suffix = indicateFrequency ? ' of the $frequencyString' : '';
-    return 'on $days$suffix';
+    return '${_onVariant(variant)} $days$suffix';
   }
 
   @override
@@ -94,22 +110,36 @@ class RruleL10nEn extends RruleL10n {
   @override
   String onDaysOfMonth(
     String days, {
-    DaysOfVariant variant = DaysOfVariant.dayAndFrequency,
-    bool useAlsoVariant = false,
+    DaysOfVariant daysOfVariant = DaysOfVariant.dayAndFrequency,
+    InOnVariant variant = InOnVariant.simple,
   }) {
-    final prefix = useAlsoVariant ? 'that are also the' : 'on the';
     final suffix = {
       DaysOfVariant.simple: '',
       DaysOfVariant.day: ' day',
       DaysOfVariant.dayAndFrequency: ' day of the month',
-    }[variant];
-    return '$prefix $days$suffix';
+    }[daysOfVariant];
+    return '${_onVariant(variant)} the $days$suffix';
   }
 
   @override
-  String onDaysOfYear(String days, {bool useAlsoVariant = false}) {
-    final prefix = useAlsoVariant ? 'that are also the' : 'on the';
-    return '$prefix $days day of the year';
+  String onDaysOfYear(
+    String days, {
+    InOnVariant variant = InOnVariant.simple,
+  }) =>
+      '${_onVariant(variant)} the $days day of the year';
+
+  String _onVariant(InOnVariant variant) {
+    switch (variant) {
+      case InOnVariant.simple:
+        return 'on';
+      case InOnVariant.also:
+        return 'that are also';
+      case InOnVariant.instanceOf:
+        return 'of';
+      default:
+        assert(false);
+        return null;
+    }
   }
 
   @override

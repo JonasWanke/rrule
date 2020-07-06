@@ -75,6 +75,16 @@ class RecurrenceRule {
         byMonths = SplayTreeSet.of(byMonths),
         assert(bySetPositions != null),
         assert(bySetPositions.all(_debugCheckIsValidDayOfYear)),
+        assert(
+          bySetPositions.isEmpty ||
+              [
+                ...[bySeconds, byMinutes, byHours],
+                ...[byWeekDays, byMonthDays, byYearDays],
+                ...[byWeeks, byMonths],
+              ].any((by) => by.isNotEmpty),
+          '[BYSETPOS] MUST only be used in conjunction with another BYxxx rule '
+          'part.',
+        ),
         bySetPositions = SplayTreeSet.of(bySetPositions);
 
   factory RecurrenceRule.fromString(

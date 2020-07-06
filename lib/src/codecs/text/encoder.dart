@@ -22,6 +22,11 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         l10n.frequencyInterval(input.frequency, input.actualInterval);
     final output = StringBuffer(frequencyIntervalString);
 
+    if (input.hasBySetPositions) {
+      final instances = input.bySetPositions.formattedForUser(l10n);
+      output.add(l10n.onInstances(instances));
+    }
+
     if (input.frequency > Frequency.daily) {
       // _convertSubDaily(input, output);
     } else {
@@ -63,7 +68,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       ..add(_formatByWeekDays(input))
       ..add(_formatByMonthDays(
         input,
-        useAlsoVariant: input.hasByWeekDays,
+        variant: input.hasByWeekDays ? InOnVariant.also : InOnVariant.simple,
       ));
   }
 
@@ -96,12 +101,12 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       ))
       ..add(_formatByMonthDays(
         input,
-        variant: input.byWeekDays.anyHasOccurrence
+        daysOfVariant: input.byWeekDays.anyHasOccurrence
             ? DaysOfVariant.dayAndFrequency
             : input.byMonthDays.any((d) => d < 0)
                 ? DaysOfVariant.day
                 : DaysOfVariant.simple,
-        useAlsoVariant: input.hasByWeekDays,
+        variant: input.hasByWeekDays ? InOnVariant.also : InOnVariant.simple,
         combination: input.hasByWeekDays
             ? ListCombination.disjunctive
             : ListCombination.conjunctiveShort,
@@ -111,6 +116,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
   void _convertYearly(RecurrenceRule input, StringBuffer output) {
     // Order of by-attributes: byWeekDays, byMonthDays, byYearDays, byWeeks, byMonths
 
+    final firstVariant =
+        input.hasBySetPositions ? InOnVariant.instanceOf : InOnVariant.simple;
+
     final startWithByWeekDays = input.hasByWeekDays;
     if (startWithByWeekDays) {
       final frequency = input.hasByYearDays || input.hasByMonthDays
@@ -118,18 +126,22 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           : input.hasByMonths
               ? DaysOfWeekFrequency.monthly
               : DaysOfWeekFrequency.yearly;
-      output.add(_formatByWeekDays(input, frequency: frequency));
+      output.add(_formatByWeekDays(
+        input,
+        frequency: frequency,
+        variant: firstVariant,
+      ));
     }
 
     final startWithByMonthDays = input.hasByMonthDays && !startWithByWeekDays;
     if (startWithByMonthDays) {
-      output.add(_formatByMonthDays(input));
+      output.add(_formatByMonthDays(input, variant: firstVariant));
     }
 
     final startWithByYearDays =
         input.hasByYearDays && !startWithByWeekDays && !startWithByMonthDays;
     if (startWithByYearDays) {
-      output.add(_formatByYearDays(input));
+      output.add(_formatByYearDays(input, variant: firstVariant));
     }
 
     final startWithByWeeks = input.hasByWeeks &&
@@ -137,7 +149,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         !startWithByMonthDays &&
         !startWithByYearDays;
     if (startWithByWeeks) {
-      output.add(_formatByWeeks(input));
+      output.add(_formatByWeeks(input, variant: firstVariant));
     }
 
     final startWithByMonths = input.hasByMonths &&
@@ -146,7 +158,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         !startWithByYearDays &&
         !startWithByWeeks;
     if (startWithByMonths) {
-      output.add(_formatByMonths(input));
+      output.add(_formatByMonths(input, variant: firstVariant));
     }
 
     final daysOnlyByWeek =
@@ -177,25 +189,25 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       if (!startWithByMonthDays)
         _formatByMonthDays(
           input,
-          useAlsoVariant: true,
+          variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
       if (!startWithByYearDays)
         _formatByYearDays(
           input,
-          useAlsoVariant: true,
+          variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
       if (!startWithByWeeks && !appendByWeeksDirectly)
         _formatByWeeks(
           input,
-          useAlsoVariant: true,
+          variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
       if (!startWithByMonths && !appendByMonthsDirectly)
         _formatByMonths(
           input,
-          useAlsoVariant: true,
+          variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
     ].where((l) => l != null).toList();
@@ -206,7 +218,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
   String _formatByMonths(
     RecurrenceRule input, {
-    bool useAlsoVariant = false,
+    InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     if (input.byMonths.isEmpty) {
@@ -219,13 +231,13 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         map: l10n.month,
         combination: combination,
       ),
-      useAlsoVariant: useAlsoVariant,
+      variant: variant,
     );
   }
 
   String _formatByWeeks(
     RecurrenceRule input, {
-    bool useAlsoVariant = false,
+    InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     if (input.byWeeks.isEmpty) {
@@ -234,13 +246,13 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
     return l10n.inWeeks(
       input.byWeeks.formattedForUser(l10n, combination: combination),
-      useAlsoVariant: useAlsoVariant,
+      variant: variant,
     );
   }
 
   String _formatByYearDays(
     RecurrenceRule input, {
-    bool useAlsoVariant = false,
+    InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     if (input.byYearDays.isEmpty) {
@@ -249,14 +261,14 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
     return l10n.onDaysOfYear(
       input.byYearDays.formattedForUser(l10n, combination: combination),
-      useAlsoVariant: useAlsoVariant,
+      variant: variant,
     );
   }
 
   String _formatByMonthDays(
     RecurrenceRule input, {
-    DaysOfVariant variant = DaysOfVariant.dayAndFrequency,
-    bool useAlsoVariant = false,
+    DaysOfVariant daysOfVariant = DaysOfVariant.dayAndFrequency,
+    InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     if (input.byMonthDays.isEmpty) {
@@ -265,8 +277,8 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
     return l10n.onDaysOfMonth(
       input.byMonthDays.formattedForUser(l10n, combination: combination),
+      daysOfVariant: daysOfVariant,
       variant: variant,
-      useAlsoVariant: useAlsoVariant,
     );
   }
 
@@ -274,6 +286,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     RecurrenceRule input, {
     DaysOfWeekFrequency frequency,
     bool indicateFrequency,
+    InOnVariant variant = InOnVariant.simple,
   }) {
     if (input.byWeekDays.isEmpty) {
       return null;
@@ -297,6 +310,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       ),
       indicateFrequency: indicateFrequency ?? input.byWeekDays.anyHasOccurrence,
       frequency: frequency,
+      variant: variant,
     );
   }
 }

@@ -16,10 +16,12 @@ abstract class RruleL10n {
   String count(int count);
   String range(String start, String end) => '$start – $end';
 
-  String inMonths(String months, {bool useAlsoVariant = false});
+  String onInstances(String instances);
+
+  String inMonths(String months, {InOnVariant variant = InOnVariant.simple});
   String month(int month) => LocalDate(1, month, 1).toString('MMMM', culture);
 
-  String inWeeks(String weeks, {bool useAlsoVariant = false});
+  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple});
 
   Set<DayOfWeek> get weekdays => {
         DayOfWeek.monday,
@@ -32,6 +34,7 @@ abstract class RruleL10n {
     String days, {
     bool indicateFrequency = false,
     DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+    InOnVariant variant = InOnVariant.simple,
   });
   String get weekdaysString;
   String get everyXDaysOfWeekPrefix;
@@ -45,11 +48,11 @@ abstract class RruleL10n {
 
   String onDaysOfMonth(
     String days, {
-    DaysOfVariant variant = DaysOfVariant.dayAndFrequency,
-    bool useAlsoVariant = false,
+    DaysOfVariant daysOfVariant = DaysOfVariant.dayAndFrequency,
+    InOnVariant variant = InOnVariant.simple,
   });
 
-  String onDaysOfYear(String days, {bool useAlsoVariant = false});
+  String onDaysOfYear(String days, {InOnVariant variant = InOnVariant.simple});
 
   String list(List<String> items, ListCombination combination);
 
@@ -91,6 +94,8 @@ abstract class RruleL10n {
 
   String ordinal(int number);
 }
+
+enum InOnVariant { simple, also, instanceOf }
 
 enum DaysOfWeekFrequency { monthly, yearly }
 
