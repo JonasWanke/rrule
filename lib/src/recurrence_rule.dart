@@ -236,13 +236,25 @@ class RecurrenceRule {
   /// Whether this rule can be converted to a human-readable string.
   ///
   /// - Unsupported attributes: [bySeconds], [byMinutes], [byHours]
-  /// - Unsupported frequencies: [Frequency.secondly], [Frequency.hourly],
-  ///   [Frequency.daily]
-  bool get canFullyConvertToText =>
-      !hasBySeconds &&
-      !hasByMinutes &&
-      !hasByHours &&
-      frequency <= Frequency.daily;
+  /// - Unsupported frequencies (if any by-parts are specified):
+  ///   [Frequency.secondly], [Frequency.hourly], [Frequency.daily]
+  bool get canFullyConvertToText {
+    if (hasBySeconds || hasByMinutes || hasByHours) {
+      return false;
+    } else if (frequency <= Frequency.daily) {
+      return true;
+    } else if (hasBySetPositions ||
+        hasBySeconds ||
+        hasByMinutes ||
+        hasByHours ||
+        hasByWeekDays ||
+        hasByMonthDays ||
+        hasByYearDays ||
+        hasByWeeks ||
+        hasByMonths) {
+      return false;
+    }
+  }
 }
 
 /// Validates the `seconds` rule.
