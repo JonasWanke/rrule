@@ -68,32 +68,35 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
   }
 
   void _convertWeekly(RecurrenceRule input, StringBuffer output) {
-    // [in January – March, August & September]
-    output.add(_formatByMonths(input));
-
-    // [byWeekDays]:
-    //   [on (Monday, Wednesday – Friday & Sunday | a weekday [& Sunday])]
     assert(input.byWeekDays.noneHasOccurrence);
-    output.add(_formatByWeekDays(input));
+    output
+      // [in January – March, August & September]
+      ..add(_formatByMonths(input))
+      // [on the 1st & 2nd-to-last instance]
+      ..add(_formatBySetPositions(input))
+      // [byWeekDays]:
+      //   [on (Monday, Wednesday – Friday & Sunday | a weekday [& Sunday])]
+      ..add(_formatByWeekDays(
+        input,
+        variant: input.hasBySetPositions
+            ? InOnVariant.instanceOf
+            : InOnVariant.simple,
+      ));
   }
 
   void _convertMonthly(RecurrenceRule input, StringBuffer output) {
-    // [in January – March, August & September]
-    output.add(_formatByMonths(input));
-
-    if (input.hasBySetPositions) {
-      final instances = input.bySetPositions.formattedForUser(l10n);
-      output.add(l10n.onInstances(instances));
-    }
-
-    // [byWeekDays]:
-    //   [on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])]
-    // [byMonthDays]:
-    //   [on the 1st and last day of the month]
-    // byWeekDays, byMonthDays:
-    //   on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])
-    //   that are also the 1st or 3rd-to-last – last day of the month
     output
+      // [in January – March, August & September]
+      ..add(_formatByMonths(input))
+      // [on the 1st & 2nd-to-last instance]
+      ..add(_formatBySetPositions(input))
+      // [byWeekDays]:
+      //   [on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])]
+      // [byMonthDays]:
+      //   [on the 1st and last day of the month]
+      // byWeekDays, byMonthDays:
+      //   on (Monday, Wednesday – Friday & Sunday | weekdays [& Sunday])
+      //   that are also the 1st or 3rd-to-last – last day of the month
       ..add(_formatByWeekDays(
         input,
         frequency: DaysOfWeekFrequency.monthly,
@@ -121,10 +124,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
   }
 
   void _convertYearly(RecurrenceRule input, StringBuffer output) {
-    if (input.hasBySetPositions) {
-      final instances = input.bySetPositions.formattedForUser(l10n);
-      output.add(l10n.onInstances(instances));
-    }
+    output.add(_formatBySetPositions(input));
 
     // Order of remaining by-attributes:
     // byWeekDays, byMonthDays, byYearDays, byWeeks, byMonths
@@ -227,6 +227,14 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     if (limits.isNotEmpty) {
       output.add(l10n.list(limits, ListCombination.conjunctiveLong));
     }
+  }
+
+  String _formatBySetPositions(RecurrenceRule input) {
+    if (input.bySetPositions.isEmpty) {
+      return null;
+    }
+
+    return l10n.onInstances(input.bySetPositions.formattedForUser(l10n));
   }
 
   String _formatByMonths(
