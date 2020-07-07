@@ -317,7 +317,7 @@ class RecurrenceRuleFromStringDecoder
   }) {
     _checkDuplicatePart(name, oldValue);
 
-    Set<T> newValue = {};
+    var newValue = <T>{};
     try {
       for (final entry in value.split(',')) {
         newValue.add(parse(entry));
