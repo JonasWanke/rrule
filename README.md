@@ -48,7 +48,7 @@ final startingNextYear = instances.where(
 > **Note:** Convenience methods or parameters will be added soon to make these limitations easier.
 
 
-## String conversion
+## Machine-readable String conversion
 
 You can convert between [`RecurrenceRule`]s and [iCalendar/RFC 5545][RFC 5545]-compliant `String`s by using [`RecurrenceRuleStringCodec`] or the following convenience methods:
 
@@ -59,6 +59,35 @@ final rrule = RecurrenceRule.fromString(string);
 assert(rrule.toString() == string); // true
 ```
 <sup>(Same RRULE as the first one)</sup>
+
+
+## Human-readable Text conversion
+
+You can convert a [`RecurrenceRule`] to a human-readable `String`s by using [`RecurrenceRule.toText()`]:
+
+```dart
+// First, load the localizations (currently, only English is supported):
+final l10n = await RruleL10nEn.create();
+
+final rrule = RecurrenceRule.fromString(
+    'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12;WKST=SU');
+
+final text = 'Every other week in December on Tuesday & Thursday';
+assert(rrule.toText(l10n: l10n) == string); // true
+```
+<sup>(Same RRULE as the first one)</sup>
+
+A few more examples:
+
+- `RRULE:INTERVAL=4;FREQ=HOURLY`: Every 4 hours
+- `RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1`: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
+- `RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR`: Weekly on weekdays
+- `RRULE:INTERVAL=2;FREQ=WEEKLY`: Every other week
+- `RRULE:FREQ=MONTHLY;BYDAY=-3TU`: Monthly on the 3rd-to-last Tuesday
+- `RRULE:FREQ=YEARLY;BYDAY=+13FR`: Annually on the 13th Friday of the year
+- `RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE`: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December
+
+While this already supports really complex RRULEs, some of them are not (yet) supported. See [`RecurrenceRule.canFullyConvertToText`] for more information.
 
 
 ## Limitations
@@ -76,4 +105,6 @@ The recurrence calculation code of `RecurrencRule`s is mostly a partial port of 
 [<kbd>rrule.js</kbd>]: https://github.com/jakubroztocil/rrule
 [RFC 5545]: https://tools.ietf.org/html/rfc5545
 [`RecurrenceRule`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule-class.html
+[`RecurrenceRule.canFullyConvertToText`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule/canFullyConvertToText.html
+[`RecurrenceRule.toText()`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule/toText.html
 [`RecurrenceRuleStringCodec`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRuleStringCodec-class.html

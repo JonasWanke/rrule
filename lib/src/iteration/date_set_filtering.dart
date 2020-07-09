@@ -51,7 +51,7 @@ bool _isFilteredByWeeks(RecurrenceRule rrule, LocalDate date) {
   final weeksInYear =
       rrule.weekYearRule.getWeeksInWeekYear(weekYear, date.calendar);
   final negativeWeekOfYear = weekOfYear - weeksInYear;
-  if (rrule.byWeeks.isNotEmpty &&
+  if (rrule.hasByWeeks &&
       !rrule.byWeeks.contains(weekOfYear) &&
       !rrule.byWeeks.contains(negativeWeekOfYear)) {
     return true;
@@ -66,17 +66,15 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
 
   final dayOfWeek = date.dayOfWeek;
   final relevantByWeekDays = rrule.byWeekDays.where((e) => e.day == dayOfWeek);
-  final genericByWeekDays =
-      relevantByWeekDays.where((e) => e.occurrence == null);
+  final genericByWeekDays = relevantByWeekDays.where((e) => e.hasNoOccurrence);
   if (genericByWeekDays.isNotEmpty) {
     // MO, TU, etc. match
     return false;
   }
 
   // +3TU, -51TH, etc. match
-  final specificByWeekDays = relevantByWeekDays
-      .where((e) => e.occurrence != null)
-      .map((e) => e.occurrence);
+  final specificByWeekDays =
+      relevantByWeekDays.where((e) => e.hasOccurrence).map((e) => e.occurrence);
   if (specificByWeekDays.isEmpty) {
     return true;
   }

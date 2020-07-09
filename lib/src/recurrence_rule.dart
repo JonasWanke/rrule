@@ -8,6 +8,8 @@ import 'package:time_machine/time_machine.dart';
 import 'by_week_day_entry.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/string.dart';
+import 'codecs/text/encoder.dart';
+import 'codecs/text/l10n/l10n.dart';
 import 'frequency.dart';
 import 'iteration/iteration.dart';
 import 'utils.dart';
@@ -44,6 +46,20 @@ class RecurrenceRule {
         assert(byHours.all(_debugCheckIsValidHour)),
         byHours = SplayTreeSet.of(byHours),
         assert(byWeekDays != null),
+        assert(
+          [Frequency.monthly, Frequency.yearly].contains(frequency) ||
+              byWeekDays.noneHasOccurrence,
+          'The BYDAY rule part MUST NOT be specified with a numeric value when '
+          'the FREQ rule part is not set to MONTHLY or YEARLY.',
+        ),
+        assert(
+          frequency != Frequency.yearly ||
+              byWeeks.isEmpty ||
+              byWeekDays.noneHasOccurrence,
+          '[…] the BYDAY rule part MUST NOT be specified with a numeric value '
+          'with the FREQ rule part set to YEARLY when the BYWEEKNO rule part '
+          'is specified',
+        ),
         byWeekDays = SplayTreeSet.of(byWeekDays),
         assert(byMonthDays != null),
         assert(byMonthDays.all(_debugCheckIsValidMonthDayEntry)),
@@ -59,6 +75,16 @@ class RecurrenceRule {
         byMonths = SplayTreeSet.of(byMonths),
         assert(bySetPositions != null),
         assert(bySetPositions.all(_debugCheckIsValidDayOfYear)),
+        assert(
+          bySetPositions.isEmpty ||
+              [
+                ...[bySeconds, byMinutes, byHours],
+                ...[byWeekDays, byMonthDays, byYearDays],
+                ...[byWeeks, byMonths],
+              ].any((by) => by.isNotEmpty),
+          '[BYSETPOS] MUST only be used in conjunction with another BYxxx rule '
+          'part.',
+        ),
         bySetPositions = SplayTreeSet.of(bySetPositions);
 
   factory RecurrenceRule.fromString(
@@ -90,30 +116,39 @@ class RecurrenceRule {
 
   /// Corresponds to the `BYSECOND` property.
   final Set<int> bySeconds;
+  bool get hasBySeconds => bySeconds.isNotEmpty;
 
   /// Corresponds to the `BYMINUTE` property.
   final Set<int> byMinutes;
+  bool get hasByMinutes => byMinutes.isNotEmpty;
 
   /// Corresponds to the `BYHOUR` property.
   final Set<int> byHours;
+  bool get hasByHours => byHours.isNotEmpty;
 
   /// Corresponds to the `BYDAY` property.
   final Set<ByWeekDayEntry> byWeekDays;
+  bool get hasByWeekDays => byWeekDays.isNotEmpty;
 
   /// Corresponds to the `BYMONTHDAY` property.
   final Set<int> byMonthDays;
+  bool get hasByMonthDays => byMonthDays.isNotEmpty;
 
   /// Corresponds to the `BYYEARDAY` property.
   final Set<int> byYearDays;
+  bool get hasByYearDays => byYearDays.isNotEmpty;
 
   /// Corresponds to the `BYWEEKNO` property.
   final Set<int> byWeeks;
+  bool get hasByWeeks => byWeeks.isNotEmpty;
 
   /// Corresponds to the `BYMONTH` property.
   final Set<int> byMonths;
+  bool get hasByMonths => byMonths.isNotEmpty;
 
   /// Corresponds to the `BYSETPOS` property.
   final Set<int> bySetPositions;
+  bool get hasBySetPositions => bySetPositions.isNotEmpty;
 
   /// Corresponds to the `WKST` property.
   ///
@@ -184,8 +219,47 @@ class RecurrenceRule {
         other.weekStart == weekStart;
   }
 
+  /// Converts this rule to a machine-readable, RFC-5545-compliant string.
   @override
   String toString() => RecurrenceRuleStringCodec().encode(this);
+
+  /// Converts this rule to a human-readable string.
+  ///
+  /// This may only be called on rules that are fully convertable to text.
+  String toText({@required RruleL10n l10n}) {
+    assert(l10n != null);
+    assert(
+      canFullyConvertToText,
+      "This recurrence rule can't fully be converted to text. See "
+      '[RecurrenceRule.canFullyConvertToText] for more information.',
+    );
+
+    return RecurrenceRuleToTextEncoder(l10n).convert(this);
+  }
+
+  /// Whether this rule can be converted to a human-readable string.
+  ///
+  /// - Unsupported attributes: [bySeconds], [byMinutes], [byHours]
+  /// - Unsupported frequencies (if any by-parts are specified):
+  ///   [Frequency.secondly], [Frequency.hourly], [Frequency.daily]
+  bool get canFullyConvertToText {
+    if (hasBySeconds || hasByMinutes || hasByHours) {
+      return false;
+    } else if (frequency <= Frequency.daily) {
+      return true;
+    } else if (hasBySetPositions ||
+        hasBySeconds ||
+        hasByMinutes ||
+        hasByHours ||
+        hasByWeekDays ||
+        hasByMonthDays ||
+        hasByYearDays ||
+        hasByWeeks ||
+        hasByMonths) {
+      return false;
+    }
+    return true;
+  }
 }
 
 /// Validates the `seconds` rule.
