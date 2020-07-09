@@ -3,7 +3,7 @@ name: "rrule"
 description: "🔁 Recurrence rule parsing & calculation as defined in the iCalendar RFC"
 homepage: "https://github.com/JonasWanke/rrule"
 license: "apache-2.0"
-version: "0.1.0"
+version: "0.1.1"
 categorization:
   component:
     values:
