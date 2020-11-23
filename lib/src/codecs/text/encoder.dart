@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:basics/basics.dart';
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart' hide ListExtensions;
 import 'package:meta/meta.dart';
 import 'package:time_machine/time_machine.dart';
 
