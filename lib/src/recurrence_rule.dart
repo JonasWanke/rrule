@@ -219,6 +219,40 @@ class RecurrenceRule {
         other.weekStart == weekStart;
   }
 
+  RecurrenceRule copyWith({
+    Frequency frequency,
+    LocalDateTime until,
+    int count,
+    int interval,
+    Set<int> bySeconds,
+    Set<int> byMinutes,
+    Set<int> byHours,
+    Set<ByWeekDayEntry> byWeekDays,
+    Set<int> byMonthDays,
+    Set<int> byYearDays,
+    Set<int> byWeeks,
+    Set<int> byMonths,
+    Set<int> bySetPositions,
+    DayOfWeek weekStart,
+  }) {
+    return RecurrenceRule(
+      frequency: frequency ?? this.frequency,
+      until: until ?? this.until,
+      count: count ?? this.count,
+      interval: interval ?? this.interval,
+      bySeconds: bySeconds ?? this.bySeconds,
+      byMinutes: byMinutes ?? this.byMinutes,
+      byHours: byHours ?? this.byHours,
+      byWeekDays: byWeekDays ?? this.byWeekDays,
+      byMonthDays: byMonthDays ?? this.byMonthDays,
+      byYearDays: byYearDays ?? this.byYearDays,
+      byWeeks: byWeeks ?? this.byWeeks,
+      byMonths: byMonths ?? this.byMonths,
+      bySetPositions: bySetPositions ?? this.bySetPositions,
+      weekStart: weekStart ?? this.weekStart,
+    );
+  }
+
   /// Converts this rule to a machine-readable, RFC-5545-compliant string.
   @override
   String toString() => RecurrenceRuleStringCodec().encode(this);
