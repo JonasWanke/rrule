@@ -29,6 +29,9 @@ void main() {
       text: text,
       rrule: rrule,
       start: start,
+      expectedDates: expectedDates,
+      expectedDateTimes: expectedDateTimes,
+      isInfinite: isInfinite,
       l10n: l10n,
     );
   }
