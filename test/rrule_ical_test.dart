@@ -4,9 +4,7 @@ import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
 import 'package:time_machine/time_machine.dart';
 
-import 'codecs/text/utils.dart';
-import 'codecs/utils.dart';
-import 'iteration/utils.dart';
+import 'utils.dart' as utils;
 
 void main() {
   setUpAll(TimeMachine.initialize);
@@ -25,30 +23,14 @@ void main() {
     Iterable<LocalDateTime> expectedDateTimes,
     bool isInfinite = false,
   }) {
-    group(description, () {
-      testStringCodec(
-        'StringCodec',
-        codec: RecurrenceRuleStringCodec(
-          toStringOptions: RecurrenceRuleToStringOptions(isTimeUtc: true),
-        ),
-        value: rrule,
-        string: string,
-      );
-
-      // TODO(JonasWanke): Remove the condition when all properties are supported.
-      if (text != null) {
-        testText('TextCodec', text: text, string: string, l10n: l10n);
-      }
-
-      testRecurring(
-        'recurrence',
-        rrule: rrule,
-        start: start,
-        expectedDates: expectedDates,
-        expectedDateTimes: expectedDateTimes,
-        isInfinite: isInfinite,
-      );
-    });
+    utils.testRrule(
+      description,
+      string: string,
+      text: text,
+      rrule: rrule,
+      start: start,
+      l10n: l10n,
+    );
   }
 
   // All examples taken from https://tools.ietf.org/html/rfc5545#section-3.8.5.3.
