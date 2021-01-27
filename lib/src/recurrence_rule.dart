@@ -222,8 +222,11 @@ class RecurrenceRule {
   RecurrenceRule copyWith({
     Frequency frequency,
     LocalDateTime until,
+    bool clearUntil = false,
     int count,
+    bool clearCount = false,
     int interval,
+    bool clearInterval = false,
     Set<int> bySeconds,
     Set<int> byMinutes,
     Set<int> byHours,
@@ -235,11 +238,18 @@ class RecurrenceRule {
     Set<int> bySetPositions,
     DayOfWeek weekStart,
   }) {
+    assert(clearUntil != null);
+    assert(!(clearUntil && until != null));
+    assert(clearCount != null);
+    assert(!(clearCount && count != null));
+    assert(clearInterval != null);
+    assert(!(clearInterval && interval != null));
+
     return RecurrenceRule(
       frequency: frequency ?? this.frequency,
-      until: until ?? this.until,
-      count: count ?? this.count,
-      interval: interval ?? this.interval,
+      until: clearUntil ? null : until ?? this.until,
+      count: clearCount ? null : count ?? this.count,
+      interval: clearInterval ? null : interval ?? this.interval,
       bySeconds: bySeconds ?? this.bySeconds,
       byMinutes: byMinutes ?? this.byMinutes,
       byHours: byHours ?? this.byHours,
