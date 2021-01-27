@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
 <!-- Template:
-## [NEW](https://github.com/JonasWanke/rrule/compare/vOLD...vNEW) · 2020-xx-xx
+## [NEW](https://github.com/JonasWanke/rrule/compare/vOLD...vNEW) · 2021-xx-xx
 ### ⚠ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
@@ -16,7 +16,12 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.1.2...master)
+## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.1.3...master)
+
+## [0.1.3](https://github.com/JonasWanke/rrule/compare/v0.1.2...v0.1.3) · 2021-01-27
+
+### 🎉 New Features
+- add `clearUntil`/`clearCount`/`clearInterval` to `recurrenceRule.copyWith(…)`, closes: [#17](https://github.com/JonasWanke/rrule/issues/17)
 
 
 ## [0.1.2](https://github.com/JonasWanke/rrule/compare/v0.1.1...v0.1.2) · 2020-11-24
