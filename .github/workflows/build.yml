@@ -4,62 +4,41 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 4,11 * * *"
+    - cron: '0 4 * * *'
 
 jobs:
-  install:
-    name: Install dependencies
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: pub get
-
-      - name: Persist current state
-        uses: actions/upload-artifact@v1
-        with:
-          name: source
-          path: .
-
   test:
     name: Run tests
     needs: install
     runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
+    strategy:
+      matrix:
+        sdk: [stable, beta, dev]
     steps:
-      - name: Checkout source
-        uses: actions/download-artifact@v2
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
         with:
-          name: source
+          sdk: ${{ matrix.sdk }}
+      - run: dart pub get
 
-      - name: Install dependencies
-        run: pub get
-
-      - name: Run tests
-        run: pub run test
+      - run: dart test
 
   coverage:
     name: Coverage
     needs: install
     runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
+    strategy:
+      matrix:
+        sdk: [stable, beta, dev]
     steps:
-      - name: Checkout source
-        uses: actions/download-artifact@v2
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
         with:
-          name: source
-
-      - name: Install dependencies
-        run: pub get
+          sdk: ${{ matrix.sdk }}
+      - run: dart pub get
 
       - name: Collect coverage
-        run: pub run test_coverage
+        run: dart pub run test_coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -68,16 +47,15 @@ jobs:
     name: Lint
     needs: install
     runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
+    strategy:
+      matrix:
+        sdk: [stable, beta, dev]
     steps:
-      - name: Checkout source
-        uses: actions/download-artifact@v2
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
         with:
-          name: source
-
-      - name: Install dependencies
-        run: pub get
+          sdk: ${{ matrix.sdk }}
+      - run: dart pub get
 
       - name: Run linter
         run: dartanalyzer . > analyze_report.txt
@@ -87,7 +65,7 @@ jobs:
         uses: actions/setup-ruby@v1
         if: github.event_name == 'pull_request'
         with:
-          ruby-version: "2.6"
+          ruby-version: '2.6'
       - name: Install ruby gems
         run: |
           gem install bundler
@@ -98,6 +76,6 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           danger_file: Dangerfile
-          danger_id: "danger-pr"
+          danger_id: 'danger-pr'
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
