@@ -9,7 +9,6 @@ on:
 jobs:
   test:
     name: Run tests
-    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,7 +24,6 @@ jobs:
 
   coverage:
     name: Coverage
-    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,7 +43,6 @@ jobs:
 
   lint:
     name: Lint
-    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
