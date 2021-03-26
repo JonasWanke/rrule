@@ -1,18 +1,17 @@
 import 'dart:convert';
 
-import 'package:basics/basics.dart';
-import 'package:collection/collection.dart' hide ListExtensions;
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
 
 import '../../by_week_day_entry.dart';
 import '../../frequency.dart';
 import '../../recurrence_rule.dart';
+import '../../utils.dart';
 import 'l10n/l10n.dart';
 
 @immutable
 class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
-  const RecurrenceRuleToTextEncoder(this.l10n) : assert(l10n != null);
+  const RecurrenceRuleToTextEncoder(this.l10n);
 
   final RruleL10n l10n;
 
@@ -51,9 +50,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     }
 
     if (input.until != null) {
-      output.write(l10n.until(input.until));
+      output.write(l10n.until(input.until!));
     } else if (input.count != null) {
-      output.write(l10n.count(input.count));
+      output.write(l10n.count(input.count!));
     }
 
     return output.toString();
@@ -249,28 +248,24 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
-    ].where((l) => l != null).toList();
+    ].whereNotNull().toList();
     if (limits.isNotEmpty) {
       output.add(l10n.list(limits, ListCombination.conjunctiveLong));
     }
   }
 
-  String _formatBySetPositions(RecurrenceRule input) {
-    if (input.bySetPositions.isEmpty) {
-      return null;
-    }
+  String? _formatBySetPositions(RecurrenceRule input) {
+    if (input.bySetPositions.isEmpty) return null;
 
     return l10n.onInstances(input.bySetPositions.formattedForUser(l10n));
   }
 
-  String _formatByMonths(
+  String? _formatByMonths(
     RecurrenceRule input, {
     InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
-    if (input.byMonths.isEmpty) {
-      return null;
-    }
+    if (input.byMonths.isEmpty) return null;
 
     return l10n.inMonths(
       input.byMonths.formattedForUser(
@@ -282,14 +277,12 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     );
   }
 
-  String _formatByWeeks(
+  String? _formatByWeeks(
     RecurrenceRule input, {
     InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
-    if (input.byWeeks.isEmpty) {
-      return null;
-    }
+    if (input.byWeeks.isEmpty) return null;
 
     return l10n.inWeeks(
       input.byWeeks.formattedForUser(l10n, combination: combination),
@@ -297,14 +290,12 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     );
   }
 
-  String _formatByYearDays(
+  String? _formatByYearDays(
     RecurrenceRule input, {
     InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
-    if (input.byYearDays.isEmpty) {
-      return null;
-    }
+    if (input.byYearDays.isEmpty) return null;
 
     return l10n.onDaysOfYear(
       input.byYearDays.formattedForUser(l10n, combination: combination),
@@ -312,15 +303,13 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     );
   }
 
-  String _formatByMonthDays(
+  String? _formatByMonthDays(
     RecurrenceRule input, {
     DaysOfVariant daysOfVariant = DaysOfVariant.dayAndFrequency,
     InOnVariant variant = InOnVariant.simple,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
-    if (input.byMonthDays.isEmpty) {
-      return null;
-    }
+    if (input.byMonthDays.isEmpty) return null;
 
     return l10n.onDaysOfMonth(
       input.byMonthDays.formattedForUser(l10n, combination: combination),
@@ -329,15 +318,13 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     );
   }
 
-  String _formatByWeekDays(
+  String? _formatByWeekDays(
     RecurrenceRule input, {
-    DaysOfWeekFrequency frequency,
-    bool indicateFrequency,
+    DaysOfWeekFrequency? frequency,
+    bool? indicateFrequency,
     InOnVariant variant = InOnVariant.simple,
   }) {
-    if (input.byWeekDays.isEmpty) {
-      return null;
-    }
+    if (input.byWeekDays.isEmpty) return null;
 
     var addEveryPrefix = frequency != null;
     if (frequency == DaysOfWeekFrequency.yearly &&
@@ -363,10 +350,8 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 }
 
 extension on StringBuffer {
-  void add(Object obj) {
-    if (obj == null) {
-      return;
-    }
+  void add(Object? obj) {
+    if (obj == null) return;
 
     write(' ');
     write(obj);
@@ -378,9 +363,9 @@ typedef _ItemToString<T> = String Function(T item);
 extension<T> on Iterable<T> {
   /// Creates a list with all items sorted by their key like
   /// `0, 1, 2, 3, …, -3, -2, -1`.
-  List<T> sortedForUserGeneral({@required int Function(T item) key}) {
-    final nonNegative = where((e) => key(e) >= 0).toList()..sortBy(key);
-    final negative = where((e) => key(e) < 0).toList()..sortBy(key);
+  List<T> sortedForUserGeneral({required int Function(T item) key}) {
+    final nonNegative = where((e) => key(e) >= 0).sortedBy<num>(key);
+    final negative = where((e) => key(e) < 0).sortedBy<num>(key);
     return nonNegative + negative;
   }
 }
@@ -388,7 +373,7 @@ extension<T> on Iterable<T> {
 extension on Iterable<int> {
   String formattedForUser(
     RruleL10n l10n, {
-    _ItemToString<int> map,
+    _ItemToString<int>? map,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     assert(isNotEmpty);
@@ -404,7 +389,12 @@ extension on Iterable<int> {
       }
 
       mapped._addIndividualOrCombined(
-          l10n, raw, startIndex, i, map ?? l10n.ordinal);
+        l10n,
+        raw,
+        startIndex,
+        i,
+        map ?? l10n.ordinal,
+      );
     }
 
     return l10n.list(mapped, combination);
@@ -416,24 +406,25 @@ extension on Iterable<int> {
 extension on Iterable<ByWeekDayEntry> {
   String occurrenceFreeFormattedForUser(
     RruleL10n l10n, {
-    @required bool addEveryPrefix,
-    @required DayOfWeek weekStart,
+    required bool addEveryPrefix,
+    required int weekStart,
     ListCombination combination = ListCombination.conjunctiveShort,
   }) {
     assert(noneHasOccurrence);
     assert(isNotEmpty);
+    assert(weekStart.isValidRruleDayOfWeek);
 
     // With [addEveryPrefix]:
     //   every Monday
     //   weekdays & every Sunday
     //   weekdays, every Saturday & Sunday
 
-    final raw = map((e) => e.day).toList()
-      ..sortBy((e) => (e.value - weekStart.value) % TimeConstants.daysPerWeek);
+    final raw = map((e) => e.day)
+        .sortedBy<num>((it) => (it - DateTime.monday) % DateTime.daysPerWeek);
 
     final mapped = <String>[];
 
-    final containsAllWeekdays = raw.containsAll(l10n.weekdays);
+    final containsAllWeekdays = l10n.weekdays.every(raw.contains);
     if (containsAllWeekdays) {
       mapped.add(l10n.weekdaysString);
       raw.removeWhere((d) => l10n.weekdays.contains(d));
@@ -446,12 +437,12 @@ extension on Iterable<ByWeekDayEntry> {
 
       var current = startValue;
       while (raw.length > i + 1 &&
-          raw[i + 1].value == (current.value + 1) % TimeConstants.daysPerWeek) {
+          raw[i + 1] == (current + 1) % DateTime.daysPerWeek) {
         i++;
         current = raw[i];
       }
 
-      mapped._addIndividualOrCombined(
+      mapped._addIndividualOrCombined<int>(
         l10n,
         raw,
         startIndex,
@@ -472,21 +463,22 @@ extension on Iterable<ByWeekDayEntry> {
 
   String formattedForUser(
     RruleL10n l10n, {
-    @required bool addEveryPrefix,
-    @required DayOfWeek weekStart,
+    required bool addEveryPrefix,
+    required int weekStart,
   }) {
     assert(isNotEmpty);
+    assert(weekStart.isValidRruleDayOfWeek);
 
-    final grouped = groupBy<ByWeekDayEntry, int>(this, (e) => e.occurrence)
+    final grouped = groupBy<ByWeekDayEntry, int?>(this, (e) => e.occurrence)
         .entries
-        .sortedForUserGeneral(key: (e) => e.value.first.occurrence ?? 0);
+        .sortedForUserGeneral(key: (it) => it.value.first.occurrence ?? 0);
 
-    if (anyHasOccurrence && map((e) => e.day).toSet().length == 1) {
+    if (anyHasOccurrence && map((it) => it.day).toSet().length == 1) {
       // Simplify this special case:
       // All entries contain the same day of the week.
 
       return l10n.nthDaysOfWeek(
-        grouped.map((e) => e.key),
+        grouped.map((it) => it.key!),
         l10n.dayOfWeek(first.day),
       );
     }
@@ -494,7 +486,7 @@ extension on Iterable<ByWeekDayEntry> {
     final strings = grouped.map((entry) {
       final hasOccurrence = entry.key != null;
       final daysOfWeek = entry.value
-          .map((e) => ByWeekDayEntry(e.day))
+          .map((it) => ByWeekDayEntry(it.day))
           .occurrenceFreeFormattedForUser(
             l10n,
             addEveryPrefix: addEveryPrefix && !hasOccurrence,
@@ -502,7 +494,7 @@ extension on Iterable<ByWeekDayEntry> {
             combination: ListCombination.conjunctiveShort,
           );
       return hasOccurrence
-          ? l10n.nthDaysOfWeek(hasOccurrence ? [entry.key] : [], daysOfWeek)
+          ? l10n.nthDaysOfWeek(hasOccurrence ? [entry.key!] : [], daysOfWeek)
           : daysOfWeek;
     }).toList();
 

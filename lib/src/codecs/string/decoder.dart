@@ -1,33 +1,26 @@
 import 'dart:convert';
 
-import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
-import 'package:rrule/src/codecs/string/string.dart';
-import 'package:time_machine/time_machine.dart';
 
 import '../../by_week_day_entry.dart';
 import '../../frequency.dart';
 import '../../recurrence_rule.dart';
 import '../../utils.dart';
 import 'ical.dart';
+import 'string.dart';
 
 @immutable
 class RecurrenceRuleFromStringOptions {
   /// Strict rules according to the iCalendar standard.
   const RecurrenceRuleFromStringOptions({
     this.duplicatePartBehavior = RecurrenceRuleDuplicatePartBehavior.exception,
-  }) : assert(duplicatePartBehavior != null);
+  });
 
   const RecurrenceRuleFromStringOptions.lenient({
     RecurrenceRuleDuplicatePartBehavior duplicatePartBehavior =
         RecurrenceRuleDuplicatePartBehavior.mergePreferLast,
   }) : this(duplicatePartBehavior: duplicatePartBehavior);
 
-  /// If true, all time strings will be suffixed with a 'Z' to indicate they are
-  /// in UTC.
-  ///
-  /// See [RFC 5545 Section 3.3.12](https://tools.ietf.org/html/rfc5545#section-3.3.12)
-  /// for more information.
   final RecurrenceRuleDuplicatePartBehavior duplicatePartBehavior;
 }
 
@@ -46,7 +39,7 @@ class RecurrenceRuleFromStringDecoder
     extends Converter<String, RecurrenceRule> {
   const RecurrenceRuleFromStringDecoder({
     this.options = const RecurrenceRuleFromStringOptions(),
-  }) : assert(options != null);
+  });
 
   static const _byWeekDayEntryDecoder = ByWeekDayEntryFromStringDecoder();
 
@@ -60,19 +53,19 @@ class RecurrenceRuleFromStringDecoder
           'Content line is not an RRULE but a ${property.name}!');
     }
 
-    Frequency frequency;
-    _UntilOrCount untilOrCount;
-    int interval;
-    Set<int> bySeconds;
-    Set<int> byMinutes;
-    Set<int> byHours;
-    Set<ByWeekDayEntry> byWeekDays;
-    Set<int> byMonthDays;
-    Set<int> byYearDays;
-    Set<int> byWeeks;
-    Set<int> byMonths;
-    Set<int> bySetPositions;
-    DayOfWeek weekStart;
+    Frequency? frequency;
+    _UntilOrCount? untilOrCount;
+    int? interval;
+    Set<int>? bySeconds;
+    Set<int>? byMinutes;
+    Set<int>? byHours;
+    Set<ByWeekDayEntry>? byWeekDays;
+    Set<int>? byMonthDays;
+    Set<int>? byYearDays;
+    Set<int>? byWeeks;
+    Set<int>? byMonths;
+    Set<int>? bySetPositions;
+    int? weekStart;
     for (final part in property.value.split(';')) {
       if (part.isEmpty) {
         // This means the value is empty.
@@ -98,20 +91,20 @@ class RecurrenceRuleFromStringDecoder
             value,
             oldValue: untilOrCount,
             parse: () {
-              // Remove the optional "Z" suffix indicating a time in UTC. We ignore
-              // time zones and only handle [LocalDateTime]s.
-              final normalizedValue = value.withoutSuffix('Z');
-              final match =
-                  iCalDateTimePattern.parse(normalizedValue).valueOrNull ??
-                      iCalDatePattern
-                          .parse(normalizedValue)
-                          .valueOrNull
-                          ?.atMidnight();
+              // Remove the optional "Z" suffix indicating a time in UTC as we
+              // ignore time zones.
+              final normalizedValue = value.endsWith('Z')
+                  ? value.substring(0, value.length - 1)
+                  : value;
+              final match = normalizedValue.length == 8
+                  ? DateTime.tryParse(normalizedValue)
+                  : normalizedValue.length == 15
+                      ? DateTime.tryParse(normalizedValue)
+                      : null;
               if (match == null) {
                 throw FormatException('Cannot parse date or date-time');
               }
-
-              return _UntilOrCount(until: match);
+              return _UntilOrCount(until: match.copyWith(isUtc: true));
             },
           );
           break;
@@ -138,7 +131,7 @@ class RecurrenceRuleFromStringDecoder
             oldValue: bySeconds,
             min: 0,
             // We currently don't support leap seconds.
-            max: TimeConstants.secondsPerMinute - 1,
+            max: Duration.secondsPerMinute - 1,
             allowNegative: false,
           );
           break;
@@ -148,7 +141,7 @@ class RecurrenceRuleFromStringDecoder
             value,
             oldValue: byMinutes,
             min: 0,
-            max: TimeConstants.minutesPerHour - 1,
+            max: Duration.minutesPerHour - 1,
             allowNegative: false,
           );
           break;
@@ -158,7 +151,7 @@ class RecurrenceRuleFromStringDecoder
             value,
             oldValue: byHours,
             min: 0,
-            max: TimeConstants.hoursPerDay - 1,
+            max: Duration.hoursPerDay - 1,
             allowNegative: false,
           );
           break;
@@ -223,6 +216,11 @@ class RecurrenceRuleFromStringDecoder
             oldValue: weekStart,
             parse: () => _weekDayFromString(value),
           );
+          if (weekStart != null && weekStart != DateTime.monday) {
+            throw FormatException(
+              'Unsupported value for RRULE part $name: "$value" (Only MO is supported.)',
+            );
+          }
           break;
       }
     }
@@ -245,15 +243,14 @@ class RecurrenceRuleFromStringDecoder
       byWeeks: byWeeks ?? {},
       byMonths: byMonths ?? {},
       bySetPositions: bySetPositions ?? {},
-      weekStart: weekStart,
     );
   }
 
   T _parseSimplePart<T>(
     String name,
     String value, {
-    @required T oldValue,
-    @required T Function() parse,
+    required T oldValue,
+    required T Function() parse,
   }) {
     _checkDuplicatePart(name, oldValue);
 
@@ -262,7 +259,8 @@ class RecurrenceRuleFromStringDecoder
       newValue = parse();
     } on FormatException catch (e) {
       throw FormatException(
-          'Invalid value for RRULE part $name: "$value" (Exception: $e)');
+        'Invalid value for RRULE part $name: "$value" (Exception: $e)',
+      );
     }
 
     if (oldValue != null) {
@@ -288,9 +286,9 @@ class RecurrenceRuleFromStringDecoder
   Set<int> _parseIntSetPart(
     String name,
     String value, {
-    @required Set<int> oldValue,
-    @required int min,
-    @required int max,
+    required Set<int>? oldValue,
+    required int min,
+    required int max,
     bool allowNegative = true,
   }) {
     return _parseSetPart(
@@ -312,8 +310,8 @@ class RecurrenceRuleFromStringDecoder
   Set<T> _parseSetPart<T>(
     String name,
     String value, {
-    @required Set<T> oldValue,
-    @required T Function(String value) parse,
+    required Set<T>? oldValue,
+    required T Function(String value) parse,
   }) {
     _checkDuplicatePart(name, oldValue);
 
@@ -347,7 +345,7 @@ class RecurrenceRuleFromStringDecoder
     return newValue;
   }
 
-  void _checkDuplicatePart(String name, Object oldValue) {
+  void _checkDuplicatePart(String name, Object? oldValue) {
     if (oldValue != null &&
         options.duplicatePartBehavior ==
             RecurrenceRuleDuplicatePartBehavior.exception) {
@@ -361,8 +359,8 @@ class RecurrenceRuleFromStringDecoder
   }
 }
 
-Frequency _frequencyFromString(String input) => recurFreqValues[input];
-DayOfWeek _weekDayFromString(String day) => recurWeekDayValues[day];
+Frequency? _frequencyFromString(String input) => recurFreqValues[input];
+int? _weekDayFromString(String day) => recurWeekDayValues[day];
 
 /// Helper class to reuse the logic of
 /// [RecurrenceRuleFromStringDecoder._parseSimplePart] for
@@ -370,13 +368,12 @@ DayOfWeek _weekDayFromString(String day) => recurWeekDayValues[day];
 /// be set.
 @immutable
 class _UntilOrCount {
-  const _UntilOrCount({
-    this.until,
-    this.count,
-  }) : assert((until == null) != (count == null));
+  _UntilOrCount({this.until, this.count})
+      : assert(until.isValidRruleDateTime),
+        assert((until == null) != (count == null));
 
-  final LocalDateTime until;
-  final int count;
+  final DateTime? until;
+  final int? count;
 }
 
 @immutable
@@ -392,7 +389,7 @@ class ByWeekDayEntryFromStringDecoder
       throw FormatException('Cannot parse $input');
     }
 
-    int occurrence;
+    int? occurrence;
     final numberMatch = match.group(2);
     if (numberMatch != null) {
       occurrence = int.parse(numberMatch);
@@ -400,16 +397,16 @@ class ByWeekDayEntryFromStringDecoder
         throw FormatException('Value must be in range ±1–53');
       }
 
-      if (match.group(1) == '-') {
-        occurrence = -occurrence;
-      }
+      if (match.group(1) == '-') occurrence = -occurrence;
     }
 
     final dayMatch = match.group(3);
-    final weekDay = _weekDayFromString(dayMatch);
+    final weekDay = _weekDayFromString(dayMatch!);
     if (weekDay == null) {
-      throw FormatException('Invalid day of week: "$dayMatch"; allowed values '
-          'are ${recurWeekDayValues.keys.join(',')}');
+      throw FormatException(
+        'Invalid day of week: "$dayMatch"; allowed values are '
+        '${recurWeekDayValues.keys.join(',')}.',
+      );
     }
 
     return ByWeekDayEntry(weekDay, occurrence);

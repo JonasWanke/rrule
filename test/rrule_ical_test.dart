@@ -1,26 +1,22 @@
-import 'package:basics/basics.dart';
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
 
 import 'utils.dart' as utils;
 
 void main() {
-  setUpAll(TimeMachine.initialize);
-  RruleL10n l10n;
-
-  setUp(() async => l10n = await RruleL10nEn.create());
+  late final RruleL10n l10n;
+  setUpAll(() async => l10n = await RruleL10nEn.create());
 
   @isTestGroup
   void testRrule(
     String description, {
-    @required String string,
-    @required String text,
-    @required RecurrenceRule rrule,
-    @required LocalDateTime start,
-    Iterable<LocalDate> expectedDates,
-    Iterable<LocalDateTime> expectedDateTimes,
+    required String string,
+    String? text,
+    required RecurrenceRule rrule,
+    required DateTime start,
+    required Iterable<DateTime> expected,
     bool isInfinite = false,
   }) {
     utils.testRrule(
@@ -29,10 +25,9 @@ void main() {
       text: text,
       rrule: rrule,
       start: start,
-      expectedDates: expectedDates,
-      expectedDateTimes: expectedDateTimes,
+      expected: expected,
       isInfinite: isInfinite,
-      l10n: l10n,
+      l10n: () => l10n,
     );
   }
 
@@ -49,8 +44,8 @@ void main() {
       frequency: Frequency.daily,
       count: 10,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: 2.to(12).map((d) => LocalDate(1997, 9, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: 2.until(12).map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
   );
   testRrule(
     'Daily until December 24, 1997',
@@ -58,14 +53,14 @@ void main() {
     text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
-      until: LocalDate(1997, 12, 24).atMidnight(),
+      until: DateTime.utc(1997, 12, 24),
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(31).map((d) => LocalDate(1997, 9, d)),
-      ...1.to(32).map((d) => LocalDate(1997, 10, d)),
-      ...1.to(31).map((d) => LocalDate(1997, 11, d)),
-      ...1.to(24).map((d) => LocalDate(1997, 12, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...2.until(31).map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...1.until(32).map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...1.until(31).map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...1.until(24).map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
     ],
   );
   testRrule(
@@ -76,12 +71,16 @@ void main() {
       frequency: Frequency.daily,
       interval: 2,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(31, by: 2).map((d) => LocalDate(1997, 9, d)),
-      ...2.to(31, by: 2).map((d) => LocalDate(1997, 10, d)),
-      ...1.to(30, by: 2).map((d) => LocalDate(1997, 11, d)),
-      ...1.to(32, by: 2).map((d) => LocalDate(1997, 12, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+          .map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+          .map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
+          .map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31]
+          .map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
@@ -95,16 +94,16 @@ void main() {
       count: 5,
       interval: 10,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(23, by: 10).map((d) => LocalDate(1997, 9, d)),
-      ...2.to(13, by: 10).map((d) => LocalDate(1997, 10, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 12, 22].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 12].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
     ],
   );
   group('Every day in January, for 3 years', () {
-    final expected = 1998.to(2001).expand((y) {
-      return 1.to(32).map((d) => LocalDate(y, 1, d));
-    });
+    final expected = 1998.rangeTo(2000).expand((y) {
+      return 1.rangeTo(31).map((d) => DateTime.utc(y, 1, d, 9, 0, 0));
+    }).toList();
     testRrule(
       'with frequency yearly',
       // RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA
@@ -114,20 +113,20 @@ void main() {
           'Annually on weekdays, every Saturday & Sunday in January, until Monday, January 31, 2000 2:00:00 PM',
       rrule: RecurrenceRule(
         frequency: Frequency.yearly,
-        until: LocalDateTime(2000, 01, 31, 14, 0, 0),
+        until: DateTime.utc(2000, 01, 31, 14, 0, 0),
         byWeekDays: {
-          ByWeekDayEntry(DayOfWeek.sunday),
-          ByWeekDayEntry(DayOfWeek.monday),
-          ByWeekDayEntry(DayOfWeek.tuesday),
-          ByWeekDayEntry(DayOfWeek.wednesday),
-          ByWeekDayEntry(DayOfWeek.thursday),
-          ByWeekDayEntry(DayOfWeek.friday),
-          ByWeekDayEntry(DayOfWeek.saturday),
+          ByWeekDayEntry(DateTime.sunday),
+          ByWeekDayEntry(DateTime.monday),
+          ByWeekDayEntry(DateTime.tuesday),
+          ByWeekDayEntry(DateTime.wednesday),
+          ByWeekDayEntry(DateTime.thursday),
+          ByWeekDayEntry(DateTime.friday),
+          ByWeekDayEntry(DateTime.saturday),
         },
         byMonths: {1},
       ),
-      start: LocalDateTime(1998, 1, 1, 9, 0, 0),
-      expectedDates: expected,
+      start: DateTime.utc(1998, 1, 1, 9, 0, 0),
+      expected: expected,
     );
     testRrule(
       'with frequency daily',
@@ -135,11 +134,11 @@ void main() {
       text: 'Daily in January, until Monday, January 31, 2000 2:00:00 PM',
       rrule: RecurrenceRule(
         frequency: Frequency.daily,
-        until: LocalDateTime(2000, 01, 31, 14, 0, 0),
+        until: DateTime.utc(2000, 01, 31, 14, 0, 0),
         byMonths: {1},
       ),
-      start: LocalDateTime(1998, 1, 1, 9, 0, 0),
-      expectedDates: expected,
+      start: DateTime.utc(1998, 1, 1, 9, 0, 0),
+      expected: expected,
     );
   });
   testRrule(
@@ -150,11 +149,11 @@ void main() {
       frequency: Frequency.weekly,
       count: 10,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(31, by: 7).map((d) => LocalDate(1997, 9, d)),
-      ...7.to(29, by: 7).map((d) => LocalDate(1997, 10, d)),
-      LocalDate(1997, 11, 4),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 9, 16, 23, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[7, 14, 21, 28].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      DateTime.utc(1997, 11, 4, 9, 0, 0),
     ],
   );
   testRrule(
@@ -163,16 +162,18 @@ void main() {
     text: 'Weekly, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
-      until: LocalDate(1997, 12, 24).atMidnight(),
+      until: DateTime.utc(1997, 12, 24),
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(31, by: 7).map((d) => LocalDate(1997, 9, d)),
-      ...7.to(29, by: 7).map((d) => LocalDate(1997, 10, d)),
-      ...4.to(26, by: 7).map((d) => LocalDate(1997, 11, d)),
-      ...2.to(24, by: 7).map((d) => LocalDate(1997, 12, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 9, 16, 23, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[7, 14, 21, 28].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[4, 11, 18, 25].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[2, 9, 16, 23].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
     ],
   );
+  /*
+  TODO(JonasWanke): Re-add these tests when we support WKST again.
   testRrule(
     'Every other week - forever',
     string: 'RRULE:FREQ=WEEKLY;INTERVAL=2;WKST=SU',
@@ -180,23 +181,24 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       interval: 2,
-      weekStart: DayOfWeek.sunday,
+      weekStart: DateTime.sunday,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...2.to(31, by: 14).map((d) => LocalDate(1997, 9, d)),
-      ...14.to(29, by: 14).map((d) => LocalDate(1997, 10, d)),
-      ...11.to(26, by: 14).map((d) => LocalDate(1997, 11, d)),
-      ...9.to(24, by: 14).map((d) => LocalDate(1997, 12, d)),
-      ...6.to(21, by: 14).map((d) => LocalDate(1998, 1, d)),
-      ...3.to(18, by: 14).map((d) => LocalDate(1998, 2, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 16, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[14, 28].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[11, 25].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[9, 23].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
+      ...[6, 20].map((d) => DateTime.utc(1998, 1, d, 9, 0, 0)),
+      ...[3, 18].map((d) => DateTime.utc(1998, 2, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
   group('Weekly on Tuesday and Thursday for five weeks', () {
     final expected = [
-      ...[2, 4, 9, 11, 16, 18, 23, 25, 30].map((d) => LocalDate(1997, 09, d)),
-      LocalDate(1997, 10, 2),
+      ...[2, 4, 9, 11, 16, 18, 23, 25, 30]
+          .map((d) => DateTime.utc(1997, 09, d, 9, 0, 0)),
+      DateTime.utc(1997, 10, 2, 9, 0, 0),
     ];
     testRrule(
       'with until',
@@ -206,15 +208,15 @@ void main() {
           'Weekly on Tuesday & Thursday, until Tuesday, October 7, 1997 12:00:00 AM',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
-        until: LocalDate(1997, 10, 07).atMidnight(),
-        weekStart: DayOfWeek.sunday,
+        until: DateTime.utc(1997, 10, 07),
+        weekStart: DateTime.sunday,
         byWeekDays: {
-          ByWeekDayEntry(DayOfWeek.tuesday),
-          ByWeekDayEntry(DayOfWeek.thursday),
+          ByWeekDayEntry(DateTime.tuesday),
+          ByWeekDayEntry(DateTime.thursday),
         },
       ),
-      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-      expectedDates: expected,
+      start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+      expected: expected,
     );
     testRrule(
       'with count',
@@ -225,13 +227,13 @@ void main() {
         frequency: Frequency.weekly,
         count: 10,
         byWeekDays: {
-          ByWeekDayEntry(DayOfWeek.tuesday),
-          ByWeekDayEntry(DayOfWeek.thursday),
+          ByWeekDayEntry(DateTime.tuesday),
+          ByWeekDayEntry(DateTime.thursday),
         },
-        weekStart: DayOfWeek.sunday,
+        weekStart: DateTime.sunday,
       ),
-      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-      expectedDates: expected,
+      start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+      expected: expected,
     );
   });
   testRrule(
@@ -243,21 +245,24 @@ void main() {
         'Every other week on Monday, Wednesday & Friday, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
-      until: LocalDate(1997, 12, 24).atMidnight(),
+      until: DateTime.utc(1997, 12, 24),
       interval: 2,
       byWeekDays: {
-        ByWeekDayEntry(DayOfWeek.monday),
-        ByWeekDayEntry(DayOfWeek.wednesday),
-        ByWeekDayEntry(DayOfWeek.friday),
+        ByWeekDayEntry(DateTime.monday),
+        ByWeekDayEntry(DateTime.wednesday),
+        ByWeekDayEntry(DateTime.friday),
       },
-      weekStart: DayOfWeek.sunday,
+      weekStart: DateTime.sunday,
     ),
-    start: LocalDateTime(1997, 9, 1, 9, 0, 0),
-    expectedDates: [
-      ...[1, 3, 5, 15, 17, 19, 29].map((d) => LocalDate(1997, 9, d)),
-      ...[1, 3, 13, 15, 17, 27, 29, 31].map((d) => LocalDate(1997, 10, d)),
-      ...[10, 12, 14, 24, 26, 28].map((d) => LocalDate(1997, 11, d)),
-      ...[8, 10, 12, 22].map((d) => LocalDate(1997, 12, d)),
+    start: DateTime.utc(1997, 9, 1, 9, 0, 0),
+    expected: [
+      ...[1, 3, 5, 15, 17, 19, 29]
+          .map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[1, 3, 13, 15, 17, 27, 29, 31]
+          .map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[10, 12, 14, 24, 26, 28]
+          .map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[8, 10, 12, 22].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
     ],
   );
   testRrule(
@@ -270,17 +275,18 @@ void main() {
       count: 8,
       interval: 2,
       byWeekDays: {
-        ByWeekDayEntry(DayOfWeek.tuesday),
-        ByWeekDayEntry(DayOfWeek.thursday),
+        ByWeekDayEntry(DateTime.tuesday),
+        ByWeekDayEntry(DateTime.thursday),
       },
-      weekStart: DayOfWeek.sunday,
+      weekStart: DateTime.sunday,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...[2, 4, 16, 18, 30].map((d) => LocalDate(1997, 9, d)),
-      ...[2, 14, 16].map((d) => LocalDate(1997, 10, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 4, 16, 18, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 14, 16].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
     ],
   );
+  */
   testRrule(
     'Monthly on the first Friday for 10 occurrences',
     string: 'RRULE:FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
@@ -288,20 +294,20 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 10,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
+      byWeekDays: {ByWeekDayEntry(DateTime.friday, 1)},
     ),
-    start: LocalDateTime(1997, 9, 5, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 5),
-      LocalDate(1997, 10, 3),
-      LocalDate(1997, 11, 7),
-      LocalDate(1997, 12, 5),
-      LocalDate(1998, 1, 2),
-      LocalDate(1998, 2, 6),
-      LocalDate(1998, 3, 6),
-      LocalDate(1998, 4, 3),
-      LocalDate(1998, 5, 1),
-      LocalDate(1998, 6, 5),
+    start: DateTime.utc(1997, 9, 5, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 5, 9, 0, 0),
+      DateTime.utc(1997, 10, 3, 9, 0, 0),
+      DateTime.utc(1997, 11, 7, 9, 0, 0),
+      DateTime.utc(1997, 12, 5, 9, 0, 0),
+      DateTime.utc(1998, 1, 2, 9, 0, 0),
+      DateTime.utc(1998, 2, 6, 9, 0, 0),
+      DateTime.utc(1998, 3, 6, 9, 0, 0),
+      DateTime.utc(1998, 4, 3, 9, 0, 0),
+      DateTime.utc(1998, 5, 1, 9, 0, 0),
+      DateTime.utc(1998, 6, 5, 9, 0, 0),
     ],
   );
   testRrule(
@@ -311,15 +317,15 @@ void main() {
         'Monthly on the 1st Friday, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
-      until: LocalDate(1997, 12, 24).atMidnight(),
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday, 1)},
+      until: DateTime.utc(1997, 12, 24),
+      byWeekDays: {ByWeekDayEntry(DateTime.friday, 1)},
     ),
-    start: LocalDateTime(1997, 9, 5, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 5),
-      LocalDate(1997, 10, 3),
-      LocalDate(1997, 11, 7),
-      LocalDate(1997, 12, 5),
+    start: DateTime.utc(1997, 9, 5, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 5, 9, 0, 0),
+      DateTime.utc(1997, 10, 3, 9, 0, 0),
+      DateTime.utc(1997, 11, 7, 9, 0, 0),
+      DateTime.utc(1997, 12, 5, 9, 0, 0),
     ],
   );
   testRrule(
@@ -332,17 +338,17 @@ void main() {
       count: 10,
       interval: 2,
       byWeekDays: {
-        ByWeekDayEntry(DayOfWeek.sunday, 1),
-        ByWeekDayEntry(DayOfWeek.sunday, -1),
+        ByWeekDayEntry(DateTime.sunday, 1),
+        ByWeekDayEntry(DateTime.sunday, -1),
       },
     ),
-    start: LocalDateTime(1997, 9, 7, 9, 0, 0),
-    expectedDates: [
-      ...[7, 28].map((d) => LocalDate(1997, 9, d)),
-      ...[2, 30].map((d) => LocalDate(1997, 11, d)),
-      ...[4, 25].map((d) => LocalDate(1998, 1, d)),
-      ...[1, 29].map((d) => LocalDate(1998, 3, d)),
-      ...[3, 31].map((d) => LocalDate(1998, 5, d)),
+    start: DateTime.utc(1997, 9, 7, 9, 0, 0),
+    expected: [
+      ...[7, 28].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 30].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[4, 25].map((d) => DateTime.utc(1998, 1, d, 9, 0, 0)),
+      ...[1, 29].map((d) => DateTime.utc(1998, 3, d, 9, 0, 0)),
+      ...[3, 31].map((d) => DateTime.utc(1998, 5, d, 9, 0, 0)),
     ],
   );
   testRrule(
@@ -352,16 +358,16 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       count: 6,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, -2)},
+      byWeekDays: {ByWeekDayEntry(DateTime.monday, -2)},
     ),
-    start: LocalDateTime(1997, 9, 22, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 22),
-      LocalDate(1997, 10, 20),
-      LocalDate(1997, 11, 17),
-      LocalDate(1997, 12, 22),
-      LocalDate(1998, 1, 19),
-      LocalDate(1998, 2, 16),
+    start: DateTime.utc(1997, 9, 22, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 22, 9, 0, 0),
+      DateTime.utc(1997, 10, 20, 9, 0, 0),
+      DateTime.utc(1997, 11, 17, 9, 0, 0),
+      DateTime.utc(1997, 12, 22, 9, 0, 0),
+      DateTime.utc(1998, 1, 19, 9, 0, 0),
+      DateTime.utc(1998, 2, 16, 9, 0, 0),
     ],
   );
   testRrule(
@@ -372,14 +378,14 @@ void main() {
       frequency: Frequency.monthly,
       byMonthDays: {-3},
     ),
-    start: LocalDateTime(1997, 9, 28, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 28),
-      LocalDate(1997, 10, 29),
-      LocalDate(1997, 11, 28),
-      LocalDate(1997, 12, 29),
-      LocalDate(1998, 1, 29),
-      LocalDate(1998, 2, 26),
+    start: DateTime.utc(1997, 9, 28, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 28, 9, 0, 0),
+      DateTime.utc(1997, 10, 29, 9, 0, 0),
+      DateTime.utc(1997, 11, 28, 9, 0, 0),
+      DateTime.utc(1997, 12, 29, 9, 0, 0),
+      DateTime.utc(1998, 1, 29, 9, 0, 0),
+      DateTime.utc(1998, 2, 26, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -392,13 +398,13 @@ void main() {
       count: 10,
       byMonthDays: {2, 15},
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...[2, 15].map((d) => LocalDate(1997, 9, d)),
-      ...[2, 15].map((d) => LocalDate(1997, 10, d)),
-      ...[2, 15].map((d) => LocalDate(1997, 11, d)),
-      ...[2, 15].map((d) => LocalDate(1997, 12, d)),
-      ...[2, 15].map((d) => LocalDate(1998, 1, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 15].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 15].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[2, 15].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[2, 15].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
+      ...[2, 15].map((d) => DateTime.utc(1998, 1, d, 9, 0, 0)),
     ],
   );
   testRrule(
@@ -411,14 +417,14 @@ void main() {
       count: 10,
       byMonthDays: {1, -1},
     ),
-    start: LocalDateTime(1997, 9, 30, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 30),
-      ...[1, 31].map((d) => LocalDate(1997, 10, d)),
-      ...[1, 30].map((d) => LocalDate(1997, 11, d)),
-      ...[1, 31].map((d) => LocalDate(1997, 12, d)),
-      ...[1, 31].map((d) => LocalDate(1998, 1, d)),
-      LocalDate(1998, 2, 1),
+    start: DateTime.utc(1997, 9, 30, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 30, 9, 0, 0),
+      ...[1, 31].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[1, 30].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[1, 31].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
+      ...[1, 31].map((d) => DateTime.utc(1998, 1, d, 9, 0, 0)),
+      DateTime.utc(1998, 2, 1, 9, 0, 0),
     ],
   );
   testRrule(
@@ -433,10 +439,10 @@ void main() {
       interval: 18,
       byMonthDays: {10, 11, 12, 13, 14, 15},
     ),
-    start: LocalDateTime(1997, 9, 10, 9, 0, 0),
-    expectedDates: [
-      ...10.to(16).map((d) => LocalDate(1997, 9, d)),
-      ...10.to(14).map((d) => LocalDate(1999, 3, d)),
+    start: DateTime.utc(1997, 9, 10, 9, 0, 0),
+    expected: [
+      ...10.until(16).map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...10.until(14).map((d) => DateTime.utc(1999, 3, d, 9, 0, 0)),
     ],
   );
   testRrule(
@@ -446,14 +452,14 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       interval: 2,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.tuesday)},
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      ...[2, 9, 16, 23, 30].map((d) => LocalDate(1997, 9, d)),
-      ...[4, 11, 18, 25].map((d) => LocalDate(1997, 11, d)),
-      ...[6, 13, 20, 27].map((d) => LocalDate(1998, 1, d)),
-      ...[3, 10, 17, 24, 31].map((d) => LocalDate(1998, 3, d)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...[2, 9, 16, 23, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[4, 11, 18, 25].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[6, 13, 20, 27].map((d) => DateTime.utc(1998, 1, d, 9, 0, 0)),
+      ...[3, 10, 17, 24, 31].map((d) => DateTime.utc(1998, 3, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
@@ -466,9 +472,9 @@ void main() {
       count: 10,
       byMonths: {6, 7},
     ),
-    start: LocalDateTime(1997, 6, 10, 9, 0, 0),
-    expectedDates: 1997.to(2002).expand((y) {
-      return [6, 7].map((m) => LocalDate(y, m, 10));
+    start: DateTime.utc(1997, 6, 10, 9, 0, 0),
+    expected: 1997.until(2002).expand((y) {
+      return [6, 7].map((m) => DateTime.utc(y, m, 10, 9, 0, 0));
     }),
   );
   testRrule(
@@ -482,11 +488,11 @@ void main() {
       interval: 2,
       byMonths: {1, 2, 3},
     ),
-    start: LocalDateTime(1997, 3, 10, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 3, 10),
-      ...1999.to(2004, by: 2).expand((y) {
-        return 1.to(4).map((m) => LocalDate(y, m, 10));
+    start: DateTime.utc(1997, 3, 10, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 3, 10, 9, 0, 0),
+      ...[1999, 2001, 2003].expand((y) {
+        return 1.until(4).map((m) => DateTime.utc(y, m, 10, 9, 0, 0));
       }),
     ],
   );
@@ -501,18 +507,18 @@ void main() {
       interval: 3,
       byYearDays: {1, 100, 200},
     ),
-    start: LocalDateTime(1997, 1, 1, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 1, 1),
-      LocalDate(1997, 4, 10),
-      LocalDate(1997, 7, 19),
-      LocalDate(2000, 1, 1),
-      LocalDate(2000, 4, 9),
-      LocalDate(2000, 7, 18),
-      LocalDate(2003, 1, 1),
-      LocalDate(2003, 4, 10),
-      LocalDate(2003, 7, 19),
-      LocalDate(2006, 1, 1),
+    start: DateTime.utc(1997, 1, 1, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 1, 1, 9, 0, 0),
+      DateTime.utc(1997, 4, 10, 9, 0, 0),
+      DateTime.utc(1997, 7, 19, 9, 0, 0),
+      DateTime.utc(2000, 1, 1, 9, 0, 0),
+      DateTime.utc(2000, 4, 9, 9, 0, 0),
+      DateTime.utc(2000, 7, 18, 9, 0, 0),
+      DateTime.utc(2003, 1, 1, 9, 0, 0),
+      DateTime.utc(2003, 4, 10, 9, 0, 0),
+      DateTime.utc(2003, 7, 19, 9, 0, 0),
+      DateTime.utc(2006, 1, 1, 9, 0, 0),
     ],
   );
   testRrule(
@@ -521,13 +527,13 @@ void main() {
     text: 'Annually on the 20th Monday of the year',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday, 20)},
+      byWeekDays: {ByWeekDayEntry(DateTime.monday, 20)},
     ),
-    start: LocalDateTime(1997, 5, 19, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 5, 19),
-      LocalDate(1998, 5, 18),
-      LocalDate(1999, 5, 17),
+    start: DateTime.utc(1997, 5, 19, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 5, 19, 9, 0, 0),
+      DateTime.utc(1998, 5, 18, 9, 0, 0),
+      DateTime.utc(1999, 5, 17, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -538,14 +544,14 @@ void main() {
     text: 'Annually on Monday in the 20th week of the year',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.monday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.monday)},
       byWeeks: {20},
     ),
-    start: LocalDateTime(1997, 5, 12, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 5, 12),
-      LocalDate(1998, 5, 11),
-      LocalDate(1999, 5, 17),
+    start: DateTime.utc(1997, 5, 12, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 5, 12, 9, 0, 0),
+      DateTime.utc(1998, 5, 11, 9, 0, 0),
+      DateTime.utc(1999, 5, 17, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -556,14 +562,14 @@ void main() {
     text: 'Annually on every Thursday in March',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.thursday)},
       byMonths: {3},
     ),
-    start: LocalDateTime(1997, 3, 13, 9, 0, 0),
-    expectedDates: [
-      ...[13, 20, 27].map((d) => LocalDate(1997, 3, d)),
-      ...[5, 12, 19, 26].map((d) => LocalDate(1998, 3, d)),
-      ...[4, 11, 18, 25].map((d) => LocalDate(1999, 3, d)),
+    start: DateTime.utc(1997, 3, 13, 9, 0, 0),
+    expected: [
+      ...[13, 20, 27].map((d) => DateTime.utc(1997, 3, d, 9, 0, 0)),
+      ...[5, 12, 19, 26].map((d) => DateTime.utc(1998, 3, d, 9, 0, 0)),
+      ...[4, 11, 18, 25].map((d) => DateTime.utc(1999, 3, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
@@ -573,20 +579,20 @@ void main() {
     text: 'Annually on every Thursday in June – August',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.thursday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.thursday)},
       byMonths: {6, 7, 8},
     ),
-    start: LocalDateTime(1997, 6, 5, 9, 0, 0),
-    expectedDates: [
-      ...[5, 12, 19, 26].map((d) => LocalDate(1997, 6, d)),
-      ...[3, 10, 17, 24, 31].map((d) => LocalDate(1997, 7, d)),
-      ...[7, 14, 21, 28].map((d) => LocalDate(1997, 8, d)),
-      ...[4, 11, 18, 25].map((d) => LocalDate(1998, 6, d)),
-      ...[2, 9, 16, 23, 30].map((d) => LocalDate(1998, 7, d)),
-      ...[6, 13, 20, 27].map((d) => LocalDate(1998, 8, d)),
-      ...[3, 10, 17, 24].map((d) => LocalDate(1999, 6, d)),
-      ...[1, 8, 15, 22, 29].map((d) => LocalDate(1999, 7, d)),
-      ...[5, 12, 19, 26].map((d) => LocalDate(1999, 8, d)),
+    start: DateTime.utc(1997, 6, 5, 9, 0, 0),
+    expected: [
+      ...[5, 12, 19, 26].map((d) => DateTime.utc(1997, 6, d, 9, 0, 0)),
+      ...[3, 10, 17, 24, 31].map((d) => DateTime.utc(1997, 7, d, 9, 0, 0)),
+      ...[7, 14, 21, 28].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
+      ...[4, 11, 18, 25].map((d) => DateTime.utc(1998, 6, d, 9, 0, 0)),
+      ...[2, 9, 16, 23, 30].map((d) => DateTime.utc(1998, 7, d, 9, 0, 0)),
+      ...[6, 13, 20, 27].map((d) => DateTime.utc(1998, 8, d, 9, 0, 0)),
+      ...[3, 10, 17, 24].map((d) => DateTime.utc(1999, 6, d, 9, 0, 0)),
+      ...[1, 8, 15, 22, 29].map((d) => DateTime.utc(1999, 7, d, 9, 0, 0)),
+      ...[5, 12, 19, 26].map((d) => DateTime.utc(1999, 8, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
@@ -598,16 +604,16 @@ void main() {
     text: 'Monthly on every Friday that are also the 13th',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.friday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.friday)},
       byMonthDays: {13},
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1998, 2, 13),
-      LocalDate(1998, 3, 13),
-      LocalDate(1998, 11, 13),
-      LocalDate(1999, 8, 13),
-      LocalDate(2000, 10, 13),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      DateTime.utc(1998, 2, 13, 9, 0, 0),
+      DateTime.utc(1998, 3, 13, 9, 0, 0),
+      DateTime.utc(1998, 11, 13, 9, 0, 0),
+      DateTime.utc(1999, 8, 13, 9, 0, 0),
+      DateTime.utc(2000, 10, 13, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -617,21 +623,21 @@ void main() {
     text: 'Monthly on every Saturday that are also the 7th – 13th',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.saturday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.saturday)},
       byMonthDays: {7, 8, 9, 10, 11, 12, 13},
     ),
-    start: LocalDateTime(1997, 9, 13, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 13),
-      LocalDate(1997, 10, 11),
-      LocalDate(1997, 11, 8),
-      LocalDate(1997, 12, 13),
-      LocalDate(1998, 1, 10),
-      LocalDate(1998, 2, 7),
-      LocalDate(1998, 3, 7),
-      LocalDate(1998, 4, 11),
-      LocalDate(1998, 5, 9),
-      LocalDate(1998, 6, 13),
+    start: DateTime.utc(1997, 9, 13, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 13, 9, 0, 0),
+      DateTime.utc(1997, 10, 11, 9, 0, 0),
+      DateTime.utc(1997, 11, 8, 9, 0, 0),
+      DateTime.utc(1997, 12, 13, 9, 0, 0),
+      DateTime.utc(1998, 1, 10, 9, 0, 0),
+      DateTime.utc(1998, 2, 7, 9, 0, 0),
+      DateTime.utc(1998, 3, 7, 9, 0, 0),
+      DateTime.utc(1998, 4, 11, 9, 0, 0),
+      DateTime.utc(1998, 5, 9, 9, 0, 0),
+      DateTime.utc(1998, 6, 13, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -645,15 +651,15 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       interval: 4,
-      byWeekDays: {ByWeekDayEntry(DayOfWeek.tuesday)},
+      byWeekDays: {ByWeekDayEntry(DateTime.tuesday)},
       byMonthDays: {2, 3, 4, 5, 6, 7, 8},
       byMonths: {11},
     ),
-    start: LocalDateTime(1996, 11, 5, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1996, 11, 5),
-      LocalDate(2000, 11, 7),
-      LocalDate(2004, 11, 2),
+    start: DateTime.utc(1996, 11, 5, 9, 0, 0),
+    expected: [
+      DateTime.utc(1996, 11, 5, 9, 0, 0),
+      DateTime.utc(2000, 11, 7, 9, 0, 0),
+      DateTime.utc(2004, 11, 2, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -664,17 +670,17 @@ void main() {
       frequency: Frequency.monthly,
       count: 3,
       byWeekDays: {
-        ByWeekDayEntry(DayOfWeek.tuesday),
-        ByWeekDayEntry(DayOfWeek.wednesday),
-        ByWeekDayEntry(DayOfWeek.thursday),
+        ByWeekDayEntry(DateTime.tuesday),
+        ByWeekDayEntry(DateTime.wednesday),
+        ByWeekDayEntry(DateTime.thursday),
       },
       bySetPositions: {3},
     ),
-    start: LocalDateTime(1997, 9, 4, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 4),
-      LocalDate(1997, 10, 7),
-      LocalDate(1997, 11, 6),
+    start: DateTime.utc(1997, 9, 4, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 4, 9, 0, 0),
+      DateTime.utc(1997, 10, 7, 9, 0, 0),
+      DateTime.utc(1997, 11, 6, 9, 0, 0),
     ],
   );
   testRrule(
@@ -683,23 +689,23 @@ void main() {
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       byWeekDays: {
-        ByWeekDayEntry(DayOfWeek.monday),
-        ByWeekDayEntry(DayOfWeek.tuesday),
-        ByWeekDayEntry(DayOfWeek.wednesday),
-        ByWeekDayEntry(DayOfWeek.thursday),
-        ByWeekDayEntry(DayOfWeek.friday),
+        ByWeekDayEntry(DateTime.monday),
+        ByWeekDayEntry(DateTime.tuesday),
+        ByWeekDayEntry(DateTime.wednesday),
+        ByWeekDayEntry(DateTime.thursday),
+        ByWeekDayEntry(DateTime.friday),
       },
       bySetPositions: {-2},
     ),
-    start: LocalDateTime(1997, 9, 29, 9, 0, 0),
-    expectedDates: [
-      LocalDate(1997, 9, 29),
-      LocalDate(1997, 10, 30),
-      LocalDate(1997, 11, 27),
-      LocalDate(1997, 12, 30),
-      LocalDate(1998, 1, 29),
-      LocalDate(1998, 2, 26),
-      LocalDate(1998, 3, 30),
+    start: DateTime.utc(1997, 9, 29, 9, 0, 0),
+    expected: [
+      DateTime.utc(1997, 9, 29, 9, 0, 0),
+      DateTime.utc(1997, 10, 30, 9, 0, 0),
+      DateTime.utc(1997, 11, 27, 9, 0, 0),
+      DateTime.utc(1997, 12, 30, 9, 0, 0),
+      DateTime.utc(1998, 1, 29, 9, 0, 0),
+      DateTime.utc(1998, 2, 26, 9, 0, 0),
+      DateTime.utc(1998, 3, 30, 9, 0, 0),
     ],
     isInfinite: true,
   );
@@ -709,12 +715,11 @@ void main() {
     string: 'RRULE:FREQ=HOURLY;UNTIL=19970902T170000Z;INTERVAL=3',
     rrule: RecurrenceRule(
       frequency: Frequency.hourly,
-      until: LocalDateTime(1997, 09, 02, 17, 0, 0),
+      until: DateTime.utc(1997, 09, 02, 17, 0, 0),
       interval: 3,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDateTimes:
-        9.to(16, by: 3).map((h) => LocalDateTime(1997, 9, 2, h, 0, 0)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [9, 12, 15].map((h) => DateTime.utc(1997, 9, 2, h, 0, 0)),
   );
   testRrule(
     'Every 15 minutes for 6 occurrences',
@@ -725,15 +730,15 @@ void main() {
       count: 6,
       interval: 15,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDateTimes: [
-      LocalTime(9, 0, 0),
-      LocalTime(9, 15, 0),
-      LocalTime(9, 30, 0),
-      LocalTime(9, 45, 0),
-      LocalTime(10, 0, 0),
-      LocalTime(10, 15, 0),
-    ].map((t) => LocalDate(1997, 9, 2).at(t)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      Duration(hours: 9, minutes: 0),
+      Duration(hours: 9, minutes: 15),
+      Duration(hours: 9, minutes: 30),
+      Duration(hours: 9, minutes: 45),
+      Duration(hours: 10, minutes: 0),
+      Duration(hours: 10, minutes: 15),
+    ].map((t) => DateTime.utc(1997, 9, 2) + t),
   );
   testRrule(
     'Every hour and a half for 4 occurrences',
@@ -744,18 +749,18 @@ void main() {
       count: 4,
       interval: 90,
     ),
-    start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-    expectedDateTimes: [
-      LocalTime(9, 0, 0),
-      LocalTime(10, 30, 0),
-      LocalTime(12, 00, 0),
-      LocalTime(13, 30, 0),
-    ].map((t) => LocalDate(1997, 9, 2).at(t)),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      Duration(hours: 9, minutes: 0),
+      Duration(hours: 10, minutes: 30),
+      Duration(hours: 12, minutes: 0),
+      Duration(hours: 13, minutes: 30),
+    ].map((t) => DateTime.utc(1997, 9, 2) + t),
   );
   group('Every 20 minutes from 9:00 AM to 4:40 PM every day', () {
     final expected = [2, 3].expand((d) {
-      return 9.to(17).expand((h) {
-        return 0.to(41, by: 20).map((m) => LocalDateTime(1997, 9, d, h, m, 0));
+      return 9.until(17).expand((h) {
+        return [0, 20, 40].map((m) => DateTime.utc(1997, 9, d, h, m, 0));
       });
     });
     testRrule(
@@ -767,8 +772,8 @@ void main() {
         byMinutes: {0, 20, 40},
         byHours: {9, 10, 11, 12, 13, 14, 15, 16},
       ),
-      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-      expectedDateTimes: expected,
+      start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+      expected: expected,
       isInfinite: true,
     );
     testRrule(
@@ -779,8 +784,8 @@ void main() {
         interval: 20,
         byHours: {9, 10, 11, 12, 13, 14, 15, 16},
       ),
-      start: LocalDateTime(1997, 9, 2, 9, 0, 0),
-      expectedDateTimes: expected,
+      start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+      expected: expected,
       isInfinite: true,
     );
   });
@@ -796,14 +801,16 @@ void main() {
         count: 4,
         interval: 2,
         byWeekDays: {
-          ByWeekDayEntry(DayOfWeek.tuesday),
-          ByWeekDayEntry(DayOfWeek.sunday)
+          ByWeekDayEntry(DateTime.tuesday),
+          ByWeekDayEntry(DateTime.sunday)
         },
-        weekStart: DayOfWeek.monday,
+        weekStart: DateTime.monday,
       ),
-      start: LocalDateTime(1997, 8, 5, 9, 0, 0),
-      expectedDates: [5, 10, 19, 24].map((d) => LocalDate(1997, 8, d)),
+      start: DateTime.utc(1997, 8, 5, 9, 0, 0),
+      expected: [5, 10, 19, 24].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
     );
+    /*
+    TODO(JonasWanke): Re-add this test when we support WKST again.
     testRrule(
       'with weekStart sunday',
       // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU
@@ -813,14 +820,15 @@ void main() {
         count: 4,
         interval: 2,
         byWeekDays: {
-          ByWeekDayEntry(DayOfWeek.tuesday),
-          ByWeekDayEntry(DayOfWeek.sunday)
+          ByWeekDayEntry(DateTime.tuesday),
+          ByWeekDayEntry(DateTime.sunday)
         },
-        weekStart: DayOfWeek.sunday,
+        weekStart: DateTime.sunday,
       ),
-      start: LocalDateTime(1997, 8, 5, 9, 0, 0),
-      expectedDates: [5, 17, 19, 31].map((d) => LocalDate(1997, 8, d)),
+      start: DateTime.utc(1997, 8, 5, 9, 0, 0),
+      expected: [5, 17, 19, 31].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
     );
+   */
   });
   testRrule(
     'An example where an invalid date (i.e., February 30) is ignored',
@@ -831,13 +839,13 @@ void main() {
       count: 5,
       byMonthDays: {15, 30},
     ),
-    start: LocalDateTime(2007, 1, 15, 9, 0, 0),
-    expectedDates: [
-      LocalDate(2007, 1, 15),
-      LocalDate(2007, 1, 30),
-      LocalDate(2007, 2, 15),
-      LocalDate(2007, 3, 15),
-      LocalDate(2007, 3, 30),
+    start: DateTime.utc(2007, 1, 15, 9, 0, 0),
+    expected: [
+      DateTime.utc(2007, 1, 15, 9, 0, 0),
+      DateTime.utc(2007, 1, 30, 9, 0, 0),
+      DateTime.utc(2007, 2, 15, 9, 0, 0),
+      DateTime.utc(2007, 3, 15, 9, 0, 0),
+      DateTime.utc(2007, 3, 30, 9, 0, 0),
     ],
   );
 }

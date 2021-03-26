@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
 
 import '../../by_week_day_entry.dart';
 import '../../frequency.dart';
 import '../../recurrence_rule.dart';
+import '../../utils.dart';
 import 'ical.dart';
 import 'string.dart';
 
@@ -13,7 +13,7 @@ import 'string.dart';
 class RecurrenceRuleToStringOptions {
   const RecurrenceRuleToStringOptions({
     this.isTimeUtc = false,
-  }) : assert(isTimeUtc != null);
+  });
 
   /// If true, all time strings will be suffixed with a 'Z' to indicate they are
   /// in UTC.
@@ -27,7 +27,7 @@ class RecurrenceRuleToStringOptions {
 class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   const RecurrenceRuleToStringEncoder({
     this.options = const RecurrenceRuleToStringOptions(),
-  }) : assert(options != null);
+  });
 
   static const _byWeekDayEntryEncoder = ByWeekDayEntryToStringEncoder();
 
@@ -41,7 +41,7 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
     if (input.until != null) {
       value
         ..writeKey(recurRulePartUntil)
-        ..writeDateTime(input.until, options);
+        ..writeDateTime(input.until!, options);
     }
 
     value
@@ -68,37 +68,36 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   }
 }
 
-String _frequencyToString(Frequency input) {
-  if (input == null) {
-    return null;
-  }
+String? _frequencyToString(Frequency? input) {
+  if (input == null) return null;
 
   return recurFreqValues.entries.singleWhere((e) => e.value == input).key;
 }
 
-String _weekDayToString(DayOfWeek day) {
-  if (day == null) {
-    return null;
-  }
+String? _weekDayToString(int? dayOfWeek) {
+  assert(dayOfWeek.isValidRruleDayOfWeek);
 
-  return recurWeekDayValues.entries.singleWhere((e) => e.value == day).key;
+  if (dayOfWeek == null) return null;
+
+  return recurWeekDayValues.entries
+      .singleWhere((e) => e.value == dayOfWeek)
+      .key;
 }
 
 extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
   void writeDateTime(
-    LocalDateTime input,
+    DateTime input,
     RecurrenceRuleToStringOptions options,
   ) {
+    assert(input.isValidRruleDateTime);
     assert(
-      input.year <= iCalMaxYear && input.calendarDate.era == Era.common,
+      0 <= input.year && input.year <= iCalMaxYear,
       'The date format used by RRULEs only support four-digit years. '
       'See https://tools.ietf.org/html/rfc5545#section-3.3.4 for more '
       'information.',
     );
-    iCalDateTimePattern.appendFormat(input, this);
-    if (options.isTimeUtc) {
-      write('Z');
-    }
+    write(iCalDateTimePattern.format(input));
+    if (options.isTimeUtc) write('Z');
   }
 
   void writeKey(String key) {
@@ -107,19 +106,15 @@ extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
     write('=');
   }
 
-  void writeSingle(String key, Object value) {
-    if (value == null) {
-      return;
-    }
+  void writeSingle(String key, Object? value) {
+    if (value == null) return;
 
     writeKey(key);
     write(value);
   }
 
   void writeList(String key, Iterable<Object> entries) {
-    if (entries.isEmpty) {
-      return;
-    }
+    if (entries.isEmpty) return;
 
     writeKey(key);
     writeAll(entries, ',');

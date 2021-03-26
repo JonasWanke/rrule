@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
 
 import 'codecs/text/utils.dart';
 import 'codecs/utils.dart';
@@ -10,14 +9,13 @@ import 'iteration/utils.dart';
 @isTestGroup
 void testRrule(
   String description, {
-  @required String string,
-  @required String text,
-  @required RecurrenceRule rrule,
-  @required LocalDateTime start,
-  Iterable<LocalDate> expectedDates,
-  Iterable<LocalDateTime> expectedDateTimes,
+  required String string,
+  required String? text,
+  required RecurrenceRule rrule,
+  required DateTime start,
+  required Iterable<DateTime> expected,
   bool isInfinite = false,
-  @required RruleL10n l10n,
+  required RruleL10n Function() l10n,
 }) {
   group(description, () {
     testStringCodec(
@@ -38,8 +36,7 @@ void testRrule(
       'recurrence',
       rrule: rrule,
       start: start,
-      expectedDates: expectedDates,
-      expectedDateTimes: expectedDateTimes,
+      expected: expected,
       isInfinite: isInfinite,
     );
   });

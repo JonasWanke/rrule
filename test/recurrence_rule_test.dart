@@ -1,6 +1,5 @@
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
 
 void main() {
   group('copyWith', () {
@@ -8,16 +7,16 @@ void main() {
       expect(
         RecurrenceRule(
           frequency: Frequency.daily,
-          until: LocalDateTime(2021, 1, 1, 0, 0, 0),
+          until: DateTime.utc(2021, 1, 1),
         ).copyWith(clearUntil: true).until,
         isNull,
       );
       expect(
         RecurrenceRule(
           frequency: Frequency.daily,
-          until: LocalDateTime(2021, 1, 1, 0, 0, 0),
-        ).copyWith(until: LocalDateTime(2021, 2, 2, 0, 0, 0)).until,
-        LocalDateTime(2021, 2, 2, 0, 0, 0),
+          until: DateTime.utc(2021, 1, 1),
+        ).copyWith(until: DateTime.utc(2021, 2, 2)).until,
+        DateTime.utc(2021, 2, 2),
       );
     });
     test('count can be adjusted', () {

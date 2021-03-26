@@ -1,6 +1,5 @@
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
 
 void main() {
   // Note: There are more tests in `../rrule_ical_test.dart`.
@@ -47,21 +46,21 @@ void main() {
         codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101'),
         RecurrenceRule(
           frequency: Frequency.daily,
-          until: LocalDate(2020, 1, 1).atMidnight(),
+          until: DateTime.utc(2020, 1, 1),
         ),
       );
       expect(
         codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101T123456'),
         RecurrenceRule(
           frequency: Frequency.daily,
-          until: LocalDateTime(2020, 1, 1, 12, 34, 56),
+          until: DateTime.utc(2020, 1, 1, 12, 34, 56),
         ),
       );
       expect(
         codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101T123456Z'),
         RecurrenceRule(
           frequency: Frequency.daily,
-          until: LocalDateTime(2020, 1, 1, 12, 34, 56),
+          until: DateTime.utc(2020, 1, 1, 12, 34, 56),
         ),
       );
     });
@@ -74,13 +73,13 @@ void main() {
         RecurrenceRule(
           frequency: Frequency.yearly,
           byWeekDays: {
-            ByWeekDayEntry(DayOfWeek.monday),
-            ByWeekDayEntry(DayOfWeek.tuesday),
-            ByWeekDayEntry(DayOfWeek.wednesday),
-            ByWeekDayEntry(DayOfWeek.thursday),
-            ByWeekDayEntry(DayOfWeek.friday),
-            ByWeekDayEntry(DayOfWeek.saturday),
-            ByWeekDayEntry(DayOfWeek.sunday),
+            ByWeekDayEntry(DateTime.monday),
+            ByWeekDayEntry(DateTime.tuesday),
+            ByWeekDayEntry(DateTime.wednesday),
+            ByWeekDayEntry(DateTime.thursday),
+            ByWeekDayEntry(DateTime.friday),
+            ByWeekDayEntry(DateTime.saturday),
+            ByWeekDayEntry(DateTime.sunday),
           },
         ),
       );
@@ -89,9 +88,9 @@ void main() {
         RecurrenceRule(
           frequency: Frequency.yearly,
           byWeekDays: {
-            ByWeekDayEntry(DayOfWeek.saturday, -20),
-            ByWeekDayEntry(DayOfWeek.monday, -4),
-            ByWeekDayEntry(DayOfWeek.friday, 53),
+            ByWeekDayEntry(DateTime.saturday, -20),
+            ByWeekDayEntry(DateTime.monday, -4),
+            ByWeekDayEntry(DateTime.friday, 53),
           },
         ),
       );

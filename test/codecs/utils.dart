@@ -6,9 +6,9 @@ import 'package:test/test.dart';
 @isTestGroup
 void testStringCodec<T>(
   String description, {
-  @required Codec<T, String> codec,
-  @required T value,
-  @required String string,
+  required Codec<T, String> codec,
+  required T value,
+  required String string,
 }) {
   group(description, () {
     test('to string', () => expect(codec.encode(value), string));

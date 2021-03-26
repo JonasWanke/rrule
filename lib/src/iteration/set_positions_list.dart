@@ -1,14 +1,16 @@
-import 'package:basics/basics.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
 
 import '../recurrence_rule.dart';
+import '../utils.dart';
 import 'date_set.dart';
 
-Iterable<LocalDateTime> buildSetPositionsList(
+Iterable<DateTime> buildSetPositionsList(
   RecurrenceRule rrule,
   DateSet dateSet,
-  Iterable<LocalTime> timeSet,
+  Iterable<Duration> timeSet,
 ) sync* {
+  assert(timeSet.every((it) => it.isValidRruleTimeOfDay));
+
   final timeList = timeSet.toList(growable: false);
   for (final setPosition in rrule.bySetPositions) {
     int datePosition;
@@ -24,15 +26,12 @@ Iterable<LocalDateTime> buildSetPositionsList(
     }
 
     final dateIndices = <int>[];
-    for (final k in dateSet.start.to(dateSet.end)) {
-      if (dateSet.isIncluded[k]) {
-        dateIndices.add(k);
-      }
+    for (final k in dateSet.start.until(dateSet.end)) {
+      if (dateSet.isIncluded[k]) dateIndices.add(k);
     }
 
     final dateIndex = dateIndices[datePosition % dateIndices.length];
-    final date = dateSet.firstDayOfYear.addDays(dateIndex);
-    final time = timeList[timePosition];
-    yield date.at(time);
+    final date = dateSet.firstDayOfYear + dateIndex.days;
+    yield date + timeList[timePosition];
   }
 }

@@ -1,6 +1,6 @@
-import 'package:basics/basics.dart';
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
@@ -8,38 +8,32 @@ import '../utils.dart';
 
 @immutable
 class DateSet {
-  const DateSet._({
-    @required this.isIncluded,
-    @required this.start,
-    @required this.end,
-    @required this.firstDayOfYear,
-  })  : assert(isIncluded != null),
-        assert(start != null),
-        assert(start >= 0),
-        assert(end != null),
+  DateSet._({
+    required this.isIncluded,
+    required this.start,
+    required this.end,
+    required this.firstDayOfYear,
+  })   : assert(start >= 0),
         assert(start <= end),
-        assert(firstDayOfYear != null);
+        assert(firstDayOfYear.isValidRruleDate);
 
   factory DateSet.create({
-    @required LocalDate base,
+    required DateTime base,
     bool addExtraWeek = false,
     int start = 0,
-    int end,
+    int? end,
   }) {
-    assert(base != null);
-    assert(addExtraWeek != null);
-    assert(start != null);
+    assert(base.isValidRruleDate);
 
-    var length = base.calendar.getDaysInYear(base.year);
-    if (addExtraWeek) {
-      length += TimeConstants.daysPerWeek;
-    }
-    end ??= length;
+    var length = base.daysInYear;
+    if (addExtraWeek) length += DateTime.daysPerWeek;
+
+    final actualEnd = end ?? length;
 
     return DateSet._(
-      isIncluded: List.generate(length, (i) => start <= i && i < end),
+      isIncluded: List.generate(length, (i) => start <= i && i < actualEnd),
       start: start,
-      end: end,
+      end: actualEnd,
       firstDayOfYear: base.copyWith(month: 1, day: 1),
     );
   }
@@ -54,64 +48,67 @@ class DateSet {
   /// Exclusive index of the last `true` value.
   final int end;
 
-  final LocalDate firstDayOfYear;
+  final DateTime firstDayOfYear;
 
-  LocalDate operator [](int index) {
-    if (!isIncluded[index]) {
-      return null;
-    }
+  DateTime? operator [](int index) {
+    if (!isIncluded[index]) return null;
 
-    return firstDayOfYear + Period(days: index);
+    return firstDayOfYear + index.days;
   }
 
-  Iterable<LocalDate> get includedDates =>
-      start.to(end).map((i) => this[i]).where((d) => d != null);
+  Iterable<DateTime> get includedDates =>
+      start.until(end).map((i) => this[i]).whereNotNull();
 }
 
-DateSet makeDateSet(RecurrenceRule rrule, LocalDate base) {
+DateSet makeDateSet(RecurrenceRule rrule, DateTime base) {
+  assert(base.isValidRruleDate);
+
   if (rrule.frequency == Frequency.yearly) {
     return _buildYearlyDateSet(base);
   } else if (rrule.frequency == Frequency.monthly) {
     return _buildMonthlyDateSet(base);
   } else if (rrule.frequency == Frequency.weekly) {
-    return _buildWeeklyDateSet(base, rrule.actualWeekStart);
+    return _buildWeeklyDateSet(base);
   } else {
     assert(rrule.frequency >= Frequency.daily);
     return _buildDailyDateSet(base);
   }
 }
 
-DateSet _buildYearlyDateSet(LocalDate base) => DateSet.create(base: base);
+DateSet _buildYearlyDateSet(DateTime base) {
+  assert(base.isValidRruleDate);
 
-DateSet _buildMonthlyDateSet(LocalDate base) {
+  return DateSet.create(base: base);
+}
+
+DateSet _buildMonthlyDateSet(DateTime base) {
+  assert(base.isValidRruleDate);
+
   return DateSet.create(
     base: base,
-    start: base.adjust(DateAdjusters.startOfMonth).dayOfYear - 1,
-    end: base.adjust(DateAdjusters.endOfMonth).dayOfYear,
+    start: base.firstDayOfMonth.dayOfYear - 1,
+    end: base.lastDayOfMonth.dayOfYear,
   );
 }
 
-DateSet _buildWeeklyDateSet(LocalDate base, DayOfWeek weekStart) {
+DateSet _buildWeeklyDateSet(DateTime base) {
+  assert(base.isValidRruleDate);
+
   // We need to handle cross-year weeks here.
   var i = base.dayOfYear - 1;
   final start = i;
   var current = base;
-  for (final _ in 0.to(TimeConstants.daysPerWeek)) {
+  for (final _ in 0.until(DateTime.daysPerWeek)) {
     i++;
-    current += Period(days: 1);
-    if (current.dayOfWeek == weekStart) {
-      break;
-    }
+    current += 1.days;
+    if (current.weekday == DateTime.monday) break;
   }
-  return DateSet.create(
-    base: base,
-    addExtraWeek: true,
-    start: start,
-    end: i,
-  );
+  return DateSet.create(base: base, addExtraWeek: true, start: start, end: i);
 }
 
-DateSet _buildDailyDateSet(LocalDate base) {
+DateSet _buildDailyDateSet(DateTime base) {
+  assert(base.isValidRruleDate);
+
   final dayOfYear = base.dayOfYear - 1;
   return DateSet.create(base: base, start: dayOfYear, end: dayOfYear + 1);
 }

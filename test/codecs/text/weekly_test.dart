@@ -1,19 +1,16 @@
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
-import 'package:time_machine/time_machine.dart';
 
 import 'utils.dart' as utils;
 
 void main() {
-  setUpAll(TimeMachine.initialize);
-  RruleL10n l10n;
-
-  setUp(() async => l10n = await RruleL10nEn.create());
+  late final RruleL10n l10n;
+  setUpAll(() async => l10n = await RruleL10nEn.create());
 
   @isTest
-  void testText(String text, {@required String string}) =>
-      utils.testText(text, text: text, string: string, l10n: l10n);
+  void testText(String text, {required String string}) =>
+      utils.testText(text, text: text, string: string, l10n: () => l10n);
 
   testText(
     'Weekly on Monday',

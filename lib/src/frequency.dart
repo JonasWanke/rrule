@@ -4,9 +4,7 @@ import 'codecs/string/string.dart';
 
 @immutable
 class Frequency implements Comparable<Frequency> {
-  const Frequency._(this._value, this._string)
-      : assert(_value != null),
-        assert(_string != null);
+  const Frequency._(this._value, this._string);
 
   static const Frequency secondly = Frequency._(6, recurFreqSecondly);
   static const Frequency minutely = Frequency._(5, recurFreqMinutely);

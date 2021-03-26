@@ -1,20 +1,22 @@
-import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
+import '../utils.dart';
 
-LocalDateTime addFrequencyAndInterval(
+DateTime addFrequencyAndInterval(
   RecurrenceRule rrule,
-  LocalDateTime currentStart, {
-  @required bool wereDatesFiltered,
+  DateTime currentStart, {
+  required bool wereDatesFiltered,
 }) {
+  assert(currentStart.isValidRruleDateTime);
+
   if (rrule.frequency == Frequency.yearly) {
     return currentStart._addYears(rrule.actualInterval);
   } else if (rrule.frequency == Frequency.monthly) {
     return currentStart._addMonths(rrule.actualInterval);
   } else if (rrule.frequency == Frequency.weekly) {
-    return currentStart._addWeeks(rrule.actualInterval, rrule.actualWeekStart);
+    return currentStart._addWeeks(rrule.actualInterval);
   } else if (rrule.frequency == Frequency.daily) {
     return currentStart._addDays(rrule.actualInterval);
   } else if (rrule.frequency == Frequency.hourly) {
@@ -40,49 +42,41 @@ LocalDateTime addFrequencyAndInterval(
     );
   }
 
-  assert(false);
-  return null;
+  throw ArgumentError('Unknown frequency: ${rrule.frequency}.');
 }
 
-extension _FrequencyIntervalCalculation on LocalDateTime {
-  LocalDateTime _addYears(int years) => this + Period(years: years);
+extension _FrequencyIntervalCalculation on DateTime {
+  DateTime _addYears(int years) => plusYears(years);
 
-  LocalDateTime _addMonths(int months) => this + Period(months: months);
+  DateTime _addMonths(int months) => plusMonths(months);
 
-  LocalDateTime _addWeeks(int weeks, DayOfWeek weekStart) {
-    final surplusDays =
-        (dayOfWeek.value - weekStart.value) % TimeConstants.daysPerWeek;
-    return this +
-        Period(
-          weeks: weeks,
-          days: -surplusDays,
-        );
+  DateTime _addWeeks(int weeks) {
+    final surplusDays = (weekday - DateTime.monday) % DateTime.daysPerWeek;
+    return this + weeks.weeks - surplusDays.days;
   }
 
-  LocalDateTime _addDays(int days) => this + Period(days: days);
+  DateTime _addDays(int days) => this + days.days;
 
-  LocalDateTime _addHours(int hours, bool wereDatesFiltered, Set<int> byHours) {
+  DateTime _addHours(int hours, bool wereDatesFiltered, Set<int> byHours) {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
-      final timeToLastHour = TimeConstants.hoursPerDay - 1 - newValue.hourOfDay;
+      final timeToLastHour = Duration.hoursPerDay - 1 - newValue.hour;
       final hoursToLastIterationOfDay =
           (timeToLastHour / hours).floor() * hours;
-      newValue += Period(hours: hoursToLastIterationOfDay);
+      newValue += hoursToLastIterationOfDay.hours;
     }
 
     // ignore: literal_only_boolean_expressions
     while (true) {
-      newValue += Period(hours: hours);
+      newValue += hours.hours;
 
-      if (byHours.isEmpty || byHours.contains(newValue.hourOfDay)) {
-        break;
-      }
+      if (byHours.isEmpty || byHours.contains(newValue.hour)) break;
     }
     return newValue;
   }
 
-  LocalDateTime _addMinutes(
+  DateTime _addMinutes(
     int minutes,
     bool wereDatesFiltered,
     Set<int> byHours,
@@ -91,33 +85,33 @@ extension _FrequencyIntervalCalculation on LocalDateTime {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
-      final timeToLastMinute = TimeConstants.minutesPerDay -
+      final timeToLastMinute = Duration.minutesPerDay -
           1 -
-          newValue.hourOfDay * TimeConstants.minutesPerHour -
-          newValue.minuteOfHour;
+          newValue.hour * Duration.minutesPerHour -
+          newValue.minute;
       final minutesToLastIterationOfDay =
           (timeToLastMinute / minutes).floor() * minutes;
-      newValue += Period(minutes: minutesToLastIterationOfDay);
+      newValue += minutesToLastIterationOfDay.minutes;
     }
 
     // ignore: literal_only_boolean_expressions
     while (true) {
-      final hours = minutes ~/ TimeConstants.minutesPerHour;
-      final minutesWithoutHours = minutes % TimeConstants.minutesPerHour;
+      final hours = minutes ~/ Duration.minutesPerHour;
+      final minutesWithoutHours = minutes % Duration.minutesPerHour;
       if (hours > 0) {
         newValue = newValue._addHours(hours, wereDatesFiltered, byHours);
       }
-      newValue += Period(minutes: minutesWithoutHours);
+      newValue += minutesWithoutHours.minutes;
 
-      if ((byHours.isEmpty || byHours.contains(newValue.hourOfDay)) &&
-          (byMinutes.isEmpty || byMinutes.contains(newValue.minuteOfHour))) {
+      if ((byHours.isEmpty || byHours.contains(newValue.hour)) &&
+          (byMinutes.isEmpty || byMinutes.contains(newValue.minute))) {
         break;
       }
     }
     return newValue;
   }
 
-  LocalDateTime _addSeconds(
+  DateTime _addSeconds(
     int seconds,
     bool wereDatesFiltered,
     Set<int> byHours,
@@ -127,20 +121,20 @@ extension _FrequencyIntervalCalculation on LocalDateTime {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
-      final timeToLastMinute = TimeConstants.secondsPerDay -
+      final timeToLastMinute = Duration.secondsPerDay -
           1 -
-          newValue.hourOfDay * TimeConstants.secondsPerHour -
-          newValue.minuteOfHour * TimeConstants.secondsPerMinute -
-          newValue.secondOfMinute;
+          newValue.hour * Duration.secondsPerHour -
+          newValue.minute * Duration.secondsPerMinute -
+          newValue.second;
       final secondsToLastIterationOfDay =
           (timeToLastMinute / seconds).floor() * seconds;
-      newValue += Period(seconds: secondsToLastIterationOfDay);
+      newValue += secondsToLastIterationOfDay.seconds;
     }
 
     // ignore: literal_only_boolean_expressions
     while (true) {
-      final minutes = seconds ~/ TimeConstants.secondsPerMinute;
-      final secondsWithoutMinutes = minutes % TimeConstants.secondsPerMinute;
+      final minutes = seconds ~/ Duration.secondsPerMinute;
+      final secondsWithoutMinutes = minutes % Duration.secondsPerMinute;
       if (minutes > 0) {
         newValue = newValue._addMinutes(
           minutes,
@@ -149,11 +143,11 @@ extension _FrequencyIntervalCalculation on LocalDateTime {
           byMinutes,
         );
       }
-      newValue += Period(seconds: secondsWithoutMinutes);
+      newValue += secondsWithoutMinutes.seconds;
 
-      if ((byHours.isEmpty || byHours.contains(newValue.hourOfDay)) &&
-          (byMinutes.isEmpty || byMinutes.contains(newValue.minuteOfHour)) &&
-          (bySeconds.isEmpty || bySeconds.contains(newValue.secondOfMinute))) {
+      if ((byHours.isEmpty || byHours.contains(newValue.hour)) &&
+          (byMinutes.isEmpty || byMinutes.contains(newValue.minute)) &&
+          (bySeconds.isEmpty || bySeconds.contains(newValue.second))) {
         break;
       }
     }

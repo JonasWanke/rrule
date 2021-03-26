@@ -1,19 +1,25 @@
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
 
 import '../../../frequency.dart';
 import 'l10n.dart';
 
 @immutable
 class RruleL10nEn extends RruleL10n {
-  const RruleL10nEn._(Culture culture) : super(culture);
+  const RruleL10nEn._();
 
-  static Future<RruleL10nEn> create() async =>
-      RruleL10nEn._(await Cultures.getCulture('en'));
+  static Future<RruleL10nEn> create() async {
+    await initializeDateFormatting('en');
+    return RruleL10nEn._();
+  }
+
+  @override
+  String get locale => 'en_US';
 
   @override
   String frequencyInterval(Frequency frequency, int interval) {
-    String plurals({String one, String singular}) {
+    String plurals({required String one, required String singular}) {
       switch (interval) {
         case 1:
           return one;
@@ -32,12 +38,12 @@ class RruleL10nEn extends RruleL10n {
       Frequency.weekly: plurals(one: 'Weekly', singular: 'week'),
       Frequency.monthly: plurals(one: 'Monthly', singular: 'month'),
       Frequency.yearly: plurals(one: 'Annually', singular: 'year'),
-    }[frequency];
+    }[frequency]!;
   }
 
   @override
-  String until(LocalDateTime until) =>
-      ', until ${until.toString('F', culture)}';
+  String until(DateTime until) =>
+      ', until ${formatWithIntl(() => DateFormat.yMMMMEEEEd().add_jms().format(until))}';
 
   @override
   String count(int count) {
@@ -70,9 +76,6 @@ class RruleL10nEn extends RruleL10n {
         return 'that are also in';
       case InOnVariant.instanceOf:
         return 'of';
-      default:
-        assert(false);
-        return null;
     }
   }
 
@@ -80,7 +83,7 @@ class RruleL10nEn extends RruleL10n {
   String onDaysOfWeek(
     String days, {
     bool indicateFrequency = false,
-    DaysOfWeekFrequency frequency = DaysOfWeekFrequency.monthly,
+    DaysOfWeekFrequency? frequency = DaysOfWeekFrequency.monthly,
     InOnVariant variant = InOnVariant.simple,
   }) {
     assert(variant != InOnVariant.also);
@@ -97,13 +100,13 @@ class RruleL10nEn extends RruleL10n {
   String get everyXDaysOfWeekPrefix => 'every ';
   @override
   String nthDaysOfWeek(Iterable<int> occurrences, String daysOfWeek) {
-    if (occurrences.isEmpty) {
-      return daysOfWeek;
-    } else {
-      final ordinals = list(
-          occurrences.map(ordinal).toList(), ListCombination.conjunctiveShort);
-      return 'the $ordinals $daysOfWeek';
-    }
+    if (occurrences.isEmpty) return daysOfWeek;
+
+    final ordinals = list(
+      occurrences.map(ordinal).toList(),
+      ListCombination.conjunctiveShort,
+    );
+    return 'the $ordinals $daysOfWeek';
   }
 
   @override
@@ -135,38 +138,34 @@ class RruleL10nEn extends RruleL10n {
         return 'that are also';
       case InOnVariant.instanceOf:
         return 'of';
-      default:
-        assert(false);
-        return null;
     }
   }
 
   @override
   String list(List<String> items, ListCombination combination) {
-    assert(items != null);
-    assert(combination != null);
-
-    return RruleL10n.defaultList(
-      items,
-      two: {
-        ListCombination.conjunctiveShort: ' & ',
-        ListCombination.conjunctiveLong: ' and ',
-        ListCombination.disjunctive: ' or ',
-      }[combination],
-      end: {
-        ListCombination.conjunctiveShort: ' & ',
-        ListCombination.conjunctiveLong: ', and ',
-        ListCombination.disjunctive: ', or ',
-      }[combination],
-    );
+    String two;
+    String end;
+    switch (combination) {
+      case ListCombination.conjunctiveShort:
+        two = ' & ';
+        end = ' & ';
+        break;
+      case ListCombination.conjunctiveLong:
+        two = ' and ';
+        end = ', and ';
+        break;
+      case ListCombination.disjunctive:
+        two = ' or ';
+        end = ', or ';
+        break;
+    }
+    return RruleL10n.defaultList(items, two: two, end: end);
   }
 
   @override
   String ordinal(int number) {
     assert(number != 0);
-    if (number == -1) {
-      return 'last';
-    }
+    if (number == -1) return 'last';
 
     final n = number.abs();
     String string;

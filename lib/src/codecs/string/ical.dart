@@ -1,23 +1,23 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine_text_patterns.dart';
 
 import '../../utils.dart';
 
 /// Pattern corresponding to the `DATE` rule specified in
 /// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
-final iCalDatePattern = LocalDatePattern.createWithInvariantCulture('yyyyMMdd');
+final iCalDatePattern = DateFormat('yyyyMMdd');
 
 /// Pattern corresponding to the `TIME` rule specified in
 /// [RFC 5545 Section 3.3.12: Time](https://tools.ietf.org/html/rfc5545#section-3.3.12).
-final iCalTimePattern = LocalTimePattern.createWithInvariantCulture('HHmmss');
+final iCalTimePattern = DateFormat('HHmmss');
 
 /// Pattern corresponding to the `DATE-TIME` rule specified in
 /// [RFC 5545 Section 3.3.5: Date-Time](https://tools.ietf.org/html/rfc5545#section-3.3.5).
-final iCalDateTimePattern = LocalDateTimePattern.createWithInvariantCulture(
-    '${iCalDatePattern.patternText}"T"${iCalTimePattern.patternText}');
+final iCalDateTimePattern =
+    DateFormat("${iCalDatePattern.pattern}'T'${iCalTimePattern.pattern}");
 
 /// Maximum year number supported by iCalendar.
 const iCalMaxYear = 9999;
@@ -29,12 +29,10 @@ const iCalMaxYear = 9999;
 @immutable
 class ICalProperty {
   const ICalProperty({
-    @required this.name,
+    required this.name,
     this.parameters = const {},
-    @required this.value,
-  })  : assert(name != null),
-        assert(parameters != null),
-        assert(value != null);
+    required this.value,
+  });
 
   factory ICalProperty.parse(String contentLine) =>
       ICalPropertyStringCodec().decode(contentLine);
@@ -102,7 +100,10 @@ extension _ICalPropertyToStringEncoderStringBuffer on StringBuffer {
     write(';');
     write(name);
     write('=');
-    writeAll(values.map((v) => v.contains(RegExp('[,:;]')) ? '"$v"' : v), ',');
+    writeAll(
+      values.map<String>((v) => v.contains(RegExp('[,:;]')) ? '"$v"' : v),
+      ',',
+    );
   }
 }
 
@@ -147,11 +148,14 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
     final lineBreakMatch = RegExp('[\r\n]').firstMatch(contentLine);
     if (lineBreakMatch != null) {
       throw ICalPropertyFormatException(
-          'Unexpected line break detected', contentLine, lineBreakMatch.start);
+        'Unexpected line break detected',
+        contentLine,
+        lineBreakMatch.start,
+      );
     }
 
     // Add some positive lookaheads to make sure we get everything
-    final name = RegExp(_name).matchAsPrefix('$contentLine(?=[;:])').group(0);
+    final name = RegExp(_name).matchAsPrefix('$contentLine(?=[;:])')!.group(0)!;
 
     var index = name.length;
     final parameters = <String, List<String>>{};
@@ -165,7 +169,7 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
             'Expected parameter after ";" character', contentLine, index);
       }
 
-      final name = match.group(1);
+      final name = match.group(1)!;
       index += name.length;
 
       final values = <String>[];
@@ -180,7 +184,7 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
               'Invalid parameter value', contentLine, index);
         }
 
-        final value = match.group(0);
+        final value = match.group(0)!;
         if (value.startsWith(_dquote)) {
           // value is quoted.
           values.add(value.substring(1, value.length - 1));

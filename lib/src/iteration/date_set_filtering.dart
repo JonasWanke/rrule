@@ -1,5 +1,4 @@
-import 'package:basics/basics.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:supercharged_dart/supercharged_dart.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
@@ -14,8 +13,8 @@ import 'date_set.dart';
 /// - [RecurrenceRule.byMonths]
 bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
   var isFiltered = false;
-  for (final i in dateSet.start.to(dateSet.end)) {
-    final date = dateSet.firstDayOfYear.addDays(i);
+  for (final i in dateSet.start.until(dateSet.end)) {
+    final date = dateSet.firstDayOfYear + i.days;
     final isCurrentFiltered = _isFiltered(rrule, date);
 
     dateSet.isIncluded[i] = !isCurrentFiltered;
@@ -30,7 +29,9 @@ bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
 /// - [RecurrenceRule.byYearDays]
 /// - [RecurrenceRule.byWeeks]
 /// - [RecurrenceRule.byMonths]
-bool _isFiltered(RecurrenceRule rrule, LocalDate date) {
+bool _isFiltered(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
+
   return _isFilteredByMonths(rrule, date) ||
       _isFilteredByWeeks(rrule, date) ||
       _isFilteredByWeekDays(rrule, date) ||
@@ -38,46 +39,43 @@ bool _isFiltered(RecurrenceRule rrule, LocalDate date) {
       _isFilteredByYearDays(rrule, date);
 }
 
-bool _isFilteredByMonths(RecurrenceRule rrule, LocalDate date) =>
-    !rrule.byMonths.isEmptyOrContains(date.monthOfYear);
+bool _isFilteredByMonths(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
 
-bool _isFilteredByWeeks(RecurrenceRule rrule, LocalDate date) {
-  if (rrule.byWeeks.isEmpty) {
-    return false;
-  }
+  return !rrule.byMonths.isEmptyOrContains(date.month);
+}
 
-  final weekOfYear = rrule.weekYearRule.getWeekOfWeekYear(date);
-  final weekYear = rrule.weekYearRule.getWeekYear(date);
-  final weeksInYear =
-      rrule.weekYearRule.getWeeksInWeekYear(weekYear, date.calendar);
-  final negativeWeekOfYear = weekOfYear - weeksInYear;
+bool _isFilteredByWeeks(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
+
+  if (rrule.byWeeks.isEmpty) return false;
+
+  final weekInfo = date.weekInfo;
+  final weeksInYear = WeekInfo.weeksInYear(weekInfo.weekBasedYear);
+  final negativeWeekOfYear = weekInfo.weekOfYear - weeksInYear;
   if (rrule.hasByWeeks &&
-      !rrule.byWeeks.contains(weekOfYear) &&
+      !rrule.byWeeks.contains(weekInfo.weekOfYear) &&
       !rrule.byWeeks.contains(negativeWeekOfYear)) {
     return true;
   }
   return _isFilteredByWeekDays(rrule, date);
 }
 
-bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
-  if (rrule.byWeekDays.isEmpty) {
-    return false;
-  }
+bool _isFilteredByWeekDays(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
 
-  final dayOfWeek = date.dayOfWeek;
+  if (rrule.byWeekDays.isEmpty) return false;
+
+  final dayOfWeek = date.weekday;
   final relevantByWeekDays = rrule.byWeekDays.where((e) => e.day == dayOfWeek);
   final genericByWeekDays = relevantByWeekDays.where((e) => e.hasNoOccurrence);
-  if (genericByWeekDays.isNotEmpty) {
-    // MO, TU, etc. match
-    return false;
-  }
+  // MO, TU, etc. match
+  if (genericByWeekDays.isNotEmpty) return false;
 
   // +3TU, -51TH, etc. match
   final specificByWeekDays =
       relevantByWeekDays.where((e) => e.hasOccurrence).map((e) => e.occurrence);
-  if (specificByWeekDays.isEmpty) {
-    return true;
-  }
+  if (specificByWeekDays.isEmpty) return true;
 
   if (rrule.frequency == Frequency.yearly && rrule.byMonths.isEmpty) {
     assert(
@@ -88,17 +86,16 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
       '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
     );
 
-    var current =
-        LocalDate(date.year, 1, 1).adjust(DateAdjusters.nextOrSame(dayOfWeek));
+    var current = DateTimeRrule.date(date.year, 1, 1).nextOrSame(dayOfWeek);
     var occurrence = 1;
     while (current != date) {
-      current = current + Period(weeks: 1);
+      current = current + 1.weeks;
       occurrence++;
     }
 
     var totalOccurrences = occurrence - 1;
     while (current.year == date.year) {
-      current = current + Period(weeks: 1);
+      current = current + 1.weeks;
       totalOccurrences++;
     }
     final negativeOccurrence = occurrence - 1 - totalOccurrences;
@@ -108,18 +105,16 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
       return true;
     }
   } else if (rrule.frequency == Frequency.monthly) {
-    var current = date
-        .adjust(DateAdjusters.startOfMonth)
-        .adjust(DateAdjusters.nextOrSame(dayOfWeek));
+    var current = date.firstDayOfMonth.nextOrSame(dayOfWeek);
     var occurrence = 1;
     while (current != date) {
-      current = current + Period(weeks: 1);
+      current = current + 1.weeks;
       occurrence++;
     }
 
     var totalOccurrences = occurrence - 1;
-    while (current.monthOfYear == date.monthOfYear) {
-      current = current + Period(weeks: 1);
+    while (current.month == date.month) {
+      current = current + 1.weeks;
       totalOccurrences++;
     }
     final negativeOccurrence = occurrence - 1 - totalOccurrences;
@@ -140,26 +135,22 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, LocalDate date) {
   return false;
 }
 
-bool _isFilteredByMonthDays(RecurrenceRule rrule, LocalDate date) {
-  if (rrule.byMonthDays.isEmpty) {
-    return false;
-  }
+bool _isFilteredByMonthDays(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
 
-  final dayOfMonth = date.dayOfMonth;
-  final daysInMonth = date.calendar.getDaysInMonth(date.year, date.monthOfYear);
-  final negativeDayOfMonth = dayOfMonth - 1 - daysInMonth;
-  return !rrule.byMonthDays.contains(dayOfMonth) &&
+  if (rrule.byMonthDays.isEmpty) return false;
+
+  final negativeDayOfMonth = date.day - 1 - date.daysInMonth;
+  return !rrule.byMonthDays.contains(date.day) &&
       !rrule.byMonthDays.contains(negativeDayOfMonth);
 }
 
-bool _isFilteredByYearDays(RecurrenceRule rrule, LocalDate date) {
-  if (rrule.byYearDays.isEmpty) {
-    return false;
-  }
+bool _isFilteredByYearDays(RecurrenceRule rrule, DateTime date) {
+  assert(date.isValidRruleDate);
 
-  final dayOfYear = date.dayOfYear;
-  final daysInYear = date.calendar.getDaysInYear(date.year);
-  final negativeDayOfYear = dayOfYear - 1 - daysInYear;
-  return !rrule.byYearDays.contains(dayOfYear) &&
+  if (rrule.byYearDays.isEmpty) return false;
+
+  final negativeDayOfYear = date.dayOfYear - 1 - date.daysInYear;
+  return !rrule.byYearDays.contains(date.dayOfYear) &&
       !rrule.byYearDays.contains(negativeDayOfYear);
 }

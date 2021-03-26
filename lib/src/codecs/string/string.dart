@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:time_machine/time_machine.dart';
 
 import '../../by_week_day_entry.dart';
 import '../../frequency.dart';
@@ -17,8 +16,7 @@ class RecurrenceRuleStringCodec extends Codec<RecurrenceRule, String> {
   const RecurrenceRuleStringCodec({
     this.toStringOptions = const RecurrenceRuleToStringOptions(),
     this.fromStringOptions = const RecurrenceRuleFromStringOptions(),
-  })  : assert(toStringOptions != null),
-        assert(fromStringOptions != null);
+  });
 
   final RecurrenceRuleToStringOptions toStringOptions;
   final RecurrenceRuleFromStringOptions fromStringOptions;
@@ -82,11 +80,11 @@ const recurFreqValues = {
 };
 
 const recurWeekDayValues = {
-  'MO': DayOfWeek.monday,
-  'TU': DayOfWeek.tuesday,
-  'WE': DayOfWeek.wednesday,
-  'TH': DayOfWeek.thursday,
-  'FR': DayOfWeek.friday,
-  'SA': DayOfWeek.saturday,
-  'SU': DayOfWeek.sunday,
+  'MO': DateTime.monday,
+  'TU': DateTime.tuesday,
+  'WE': DateTime.wednesday,
+  'TH': DateTime.thursday,
+  'FR': DateTime.friday,
+  'SA': DateTime.saturday,
+  'SU': DateTime.sunday,
 };
