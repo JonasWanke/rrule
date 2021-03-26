@@ -1,7 +1,7 @@
 🔁 Recurrence rule parsing & calculation as defined in the iCalendar RFC
 
-![Build, Test & Lint](https://github.com/JonasWanke/rrule/workflows/Build,%20Test%20&%20Lint/badge.svg) [![Coverage](https://codecov.io/gh/JonasWanke/rrule/branch/master/graph/badge.svg)](https://codecov.io/gh/JonasWanke/rrule)
-
+![Build, Test & Lint](https://github.com/JonasWanke/rrule/workflows/Build,%20Test%20&%20Lint/badge.svg)
+[![Coverage](https://codecov.io/gh/JonasWanke/rrule/branch/master/graph/badge.svg)](https://codecov.io/gh/JonasWanke/rrule)
 
 ## How to use this package
 
@@ -47,7 +47,6 @@ final startingNextYear = instances.where(
 
 > **Note:** Convenience methods or parameters will be added soon to make these limitations easier.
 
-
 ## Machine-readable String conversion
 
 You can convert between [`RecurrenceRule`]s and [iCalendar/RFC 5545][RFC 5545]-compliant `String`s by using [`RecurrenceRuleStringCodec`] or the following convenience methods:
@@ -58,8 +57,8 @@ final rrule = RecurrenceRule.fromString(string);
 
 assert(rrule.toString() == string); // true
 ```
-<sup>(Same RRULE as the first one)</sup>
 
+<sup>(Same RRULE as the first one)</sup>
 
 ## Human-readable Text conversion
 
@@ -75,31 +74,29 @@ final rrule = RecurrenceRule.fromString(
 final text = 'Every other week in December on Tuesday & Thursday';
 assert(rrule.toText(l10n: l10n) == string); // true
 ```
+
 <sup>(Same RRULE as the first one)</sup>
 
 A few more examples:
 
-- `RRULE:INTERVAL=4;FREQ=HOURLY`: Every 4 hours
-- `RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1`: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
-- `RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR`: Weekly on weekdays
-- `RRULE:INTERVAL=2;FREQ=WEEKLY`: Every other week
-- `RRULE:FREQ=MONTHLY;BYDAY=-3TU`: Monthly on the 3rd-to-last Tuesday
-- `RRULE:FREQ=YEARLY;BYDAY=+13FR`: Annually on the 13th Friday of the year
-- `RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE`: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December
+* `RRULE:INTERVAL=4;FREQ=HOURLY`: Every 4 hours
+* `RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1`: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
+* `RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR`: Weekly on weekdays
+* `RRULE:INTERVAL=2;FREQ=WEEKLY`: Every other week
+* `RRULE:FREQ=MONTHLY;BYDAY=-3TU`: Monthly on the 3rd-to-last Tuesday
+* `RRULE:FREQ=YEARLY;BYDAY=+13FR`: Annually on the 13th Friday of the year
+* `RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE`: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December
 
 While this already supports really complex RRULEs, some of them are not (yet) supported. See [`RecurrenceRule.canFullyConvertToText`] for more information.
 
-
 ## Limitations
 
-- leap seconds are not supported (limitation of the [<kbd>time_machine</kbd>] package)
-- only years 0–9999 in the Common Era are supported (limitation of the iCalendar RFC, but if you have a use case this should be easy to extend)
-
+* leap seconds are not supported (limitation of the [<kbd>time_machine</kbd>] package)
+* only years 0–9999 in the Common Era are supported (limitation of the iCalendar RFC, but if you have a use case, this should be easy to extend)
 
 ## Thanks
 
 The recurrence calculation code of `RecurrencRule`s is mostly a partial port of [<kbd>rrule.js</kbd>], though with a lot of modifications to use [<kbd>time_machine</kbd>] and not having to do date/time calculations manually. You can find the license of [<kbd>rrule.js</kbd>] in the file `LICENSE-rrule.js.txt`.
-
 
 [<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
 [<kbd>rrule.js</kbd>]: https://github.com/jakubroztocil/rrule
