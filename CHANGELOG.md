@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 <!-- Template:
 ## [NEW](https://github.com/JonasWanke/rrule/compare/vOLD...vNEW) · 2021-xx-xx
 ### ⚠ BREAKING CHANGES
@@ -16,7 +15,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.2.0...master)
+## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.2.0...main)
 
 ## [0.2.0](https://github.com/JonasWanke/rrule/compare/v0.1.3...v0.2.0) · 2021-03-xx
 
