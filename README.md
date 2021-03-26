@@ -5,8 +5,6 @@
 
 ## How to use this package
 
-> **Note:** This package uses [<kbd>time_machine</kbd>] for handling date and time. See [its README](https://pub.dev/packages/time_machine#flutter-specific-notes) for how to initialize it on Flutter or the web.
-
 Create a [`RecurrenceRule`]:
 
 ```dart
@@ -15,21 +13,22 @@ final rrule = RecurrenceRule(
   frequency: Frequency.weekly,
   interval: 2,
   byWeekDays: {
-    ByWeekDayEntry(DayOfWeek.tuesday),
-    ByWeekDayEntry(DayOfWeek.thursday),
+    ByWeekDayEntry(DateTime.tuesday),
+    ByWeekDayEntry(DateTime.thursday),
   },
   byMonths: {12},
-  weekStart: DayOfWeek.sunday,
 );
 ```
 
 And get its recurrences by evaluating it from a start date:
 
 ```dart
-final Iterable<LocalDateTime> instances = rrule.getInstances(
-  start: LocalDateTime.now(),
+final Iterable<DateTime> instances = rrule.getInstances(
+  start: DateTime.now().toUtc(),
 );
 ```
+
+> All `DateTime`s must be in UTC!
 
 To limit returned instances (besides using `RecurrenceRule.until` or `RecurrenceRule.count`), you can use Dart's default `Iterable` functions:
 
@@ -37,22 +36,20 @@ To limit returned instances (besides using `RecurrenceRule.until` or `Recurrence
 final firstThreeInstances = instances.take(3);
 
 final onlyThisYear = instances.takeWhile(
-  (instance) => instance.year == LocalDate.today().year,
+  (instance) => instance.year == DateTime.now().year,
 );
 
 final startingNextYear = instances.where(
-  (instance) => instance.year > LocalDate.today().year,
+  (instance) => instance.year > DateTime.now().year,
 );
 ```
-
-> **Note:** Convenience methods or parameters will be added soon to make these limitations easier.
 
 ## Machine-readable String conversion
 
 You can convert between [`RecurrenceRule`]s and [iCalendar/RFC 5545][RFC 5545]-compliant `String`s by using [`RecurrenceRuleStringCodec`] or the following convenience methods:
 
 ```dart
-final string = 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12;WKST=SU';
+final string = 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12';
 final rrule = RecurrenceRule.fromString(string);
 
 assert(rrule.toString() == string); // true
@@ -69,7 +66,8 @@ You can convert a [`RecurrenceRule`] to a human-readable `String`s by using [`Re
 final l10n = await RruleL10nEn.create();
 
 final rrule = RecurrenceRule.fromString(
-    'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12;WKST=SU');
+  'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12',
+);
 
 final text = 'Every other week in December on Tuesday & Thursday';
 assert(rrule.toText(l10n: l10n) == string); // true
@@ -91,14 +89,14 @@ While this already supports really complex RRULEs, some of them are not (yet) su
 
 ## Limitations
 
-* leap seconds are not supported (limitation of the [<kbd>time_machine</kbd>] package)
+* custom week starts are not supported (`WKST` in the specification) – Monday is the only valid value (encoded as `MO`)
+* leap seconds are not supported (limitation of Dart's `DateTime`)
 * only years 0–9999 in the Common Era are supported (limitation of the iCalendar RFC, but if you have a use case, this should be easy to extend)
 
 ## Thanks
 
-The recurrence calculation code of `RecurrencRule`s is mostly a partial port of [<kbd>rrule.js</kbd>], though with a lot of modifications to use [<kbd>time_machine</kbd>] and not having to do date/time calculations manually. You can find the license of [<kbd>rrule.js</kbd>] in the file `LICENSE-rrule.js.txt`.
+The recurrence calculation code of `RecurrencRule`s is mostly a partial port of [<kbd>rrule.js</kbd>], though with a lot of modifications to use Dart's `DateTime` and not having to do date/time calculations manually. You can find the license of [<kbd>rrule.js</kbd>] in the file `LICENSE-rrule.js.txt`.
 
-[<kbd>time_machine</kbd>]: https://pub.dev/packages/time_machine
 [<kbd>rrule.js</kbd>]: https://github.com/jakubroztocil/rrule
 [RFC 5545]: https://tools.ietf.org/html/rfc5545
 [`RecurrenceRule`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule-class.html
