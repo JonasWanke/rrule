@@ -17,15 +17,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased](https://github.com/JonasWanke/rrule/compare/v0.2.0...main)
 
-## [0.2.0](https://github.com/JonasWanke/rrule/compare/v0.1.3...v0.2.0) · 2021-03-xx
+## [0.2.0](https://github.com/JonasWanke/rrule/compare/v0.1.3...v0.2.0) · 2021-03-26
 
 ### ⚠ BREAKING CHANGES
-- Dates and DateTimes no longer use [<kbd>time_machine</kbd>](https://pub.dev/packages/time_machine) but `DateTime` instead.
-  All provided `DateTime`s must be in UTC.
+
 - migrate to null-safety
-- remove `RecurrenceSet` as its logic isn't implemented yet
+- Dates and DateTimes no longer use [<kbd>time_machine</kbd>](https://pub.dev/packages/time_machine), but `DateTime` instead.
+  All provided `DateTime`s must be in UTC.
 - remove `recurrenceRule.weekStart` (Monday is now used everywhere) and `recurrenceRule.weekYearRule`
-- remove `RruleL10nEn.create()` – [<kbd>intl</kbd>](https://pub.dev/packages/intl) is now used to format weekdays and months under the hood
+- remove `RecurrenceSet` as its logic isn't implemented yet
 
 
 ## [0.1.3](https://github.com/JonasWanke/rrule/compare/v0.1.2...v0.1.3) · 2021-01-27
