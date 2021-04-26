@@ -48,4 +48,13 @@ void main() {
       );
     });
   });
+
+  test(
+      '#19: No warning for creating a RRULE with BYWEEKNO, but with non-YEARLY frequency',
+      () {
+    expect(
+      () => RecurrenceRule(frequency: Frequency.daily, byWeeks: {1, 2, 3}),
+      throwsA(isA<AssertionError>()),
+    );
+  });
 }

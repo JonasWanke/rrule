@@ -52,14 +52,31 @@ class RecurrenceRule {
               byWeekDays.noneHasOccurrence,
           '[…] the BYDAY rule part MUST NOT be specified with a numeric value '
           'with the FREQ rule part set to YEARLY when the BYWEEKNO rule part '
-          'is specified',
+          'is specified.',
         ),
         byWeekDays = SplayTreeSet.of(byWeekDays),
         assert(byMonthDays.every(_debugCheckIsValidMonthDayEntry)),
+        assert(
+          !(frequency == Frequency.weekly && byMonthDays.isNotEmpty),
+          'The BYMONTHDAY rule part MUST NOT be specified when the FREQ rule '
+          'part is set to WEEKLY.',
+        ),
         byMonthDays = SplayTreeSet.of(byMonthDays),
         assert(byYearDays.every(_debugCheckIsValidDayOfYear)),
+        assert(
+          !([Frequency.daily, Frequency.weekly, Frequency.monthly]
+                  .contains(frequency) &&
+              byYearDays.isNotEmpty),
+          'The BYYEARDAY rule part MUST NOT be specified when the FREQ rule '
+          'part is set to DAILY, WEEKLY, or MONTHLY.',
+        ),
         byYearDays = SplayTreeSet.of(byYearDays),
         assert(byWeeks.every(debugCheckIsValidWeekNumber)),
+        assert(
+          !(frequency != Frequency.yearly && byWeeks.isNotEmpty),
+          '[The BYWEEKNO] rule part MUST NOT be used when the FREQ rule part '
+          'is set to anything other than YEARLY.',
+        ),
         byWeeks = SplayTreeSet.of(byWeeks),
         assert(byMonths.every(_debugCheckIsValidMonthEntry)),
         byMonths = SplayTreeSet.of(byMonths),
