@@ -92,6 +92,35 @@ void main() {
 
       expect(instances.first, DateTime.utc(2020, 6));
     });
+
+    test('should support date before inclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        before: DateTime.utc(2020, 5),
+        includeBefore: true,
+      );
+
+      expect(instances.last, DateTime.utc(2020, 5));
+    });
+
+    test('should support date before exclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        before: DateTime.utc(2020, 5),
+      );
+
+      expect(instances.last, DateTime.utc(2020, 4));
+    });
   });
 
   test(
