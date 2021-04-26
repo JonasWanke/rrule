@@ -1,39 +1,61 @@
 import 'package:meta/meta.dart';
 
-enum CacheMethod { before, after, between }
+import 'utils.dart';
 
-class Cache {
-  final Map<int, List<DateTime>> _before = {};
-  @visibleForTesting
-  Map<int, List<DateTime>> get beforeResults => _before;
+class CacheKey {
+  CacheKey({
+    required this.start,
+    this.after,
+    this.includeAfter = false,
+    this.before,
+    this.includeBefore = false,
+  });
 
-  final Map<int, List<DateTime>> _after = {};
-  @visibleForTesting
-  Map<int, List<DateTime>> get afterResults => _after;
+  DateTime start;
 
-  final Map<int, List<DateTime>> _between = {};
-  @visibleForTesting
-  Map<int, List<DateTime>> get betweenResults => _between;
+  DateTime? after;
 
-  void add(CacheMethod method, int argumentsHash, List<DateTime> data) {
-    switch (method) {
-      case CacheMethod.before:
-        return _before.addAll({argumentsHash: data});
-      case CacheMethod.after:
-        return _after.addAll({argumentsHash: data});
-      case CacheMethod.between:
-        return _between.addAll({argumentsHash: data});
-    }
+  bool includeAfter;
+
+  DateTime? before;
+
+  bool includeBefore;
+
+  @override
+  int get hashCode {
+    return hashList([
+      start,
+      after,
+      includeAfter,
+      before,
+      includeBefore,
+    ]);
   }
 
-  List<DateTime>? get(CacheMethod method, int argumentsHash) {
-    switch (method) {
-      case CacheMethod.before:
-        return _before[argumentsHash];
-      case CacheMethod.after:
-        return _after[argumentsHash];
-      case CacheMethod.between:
-        return _between[argumentsHash];
-    }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+
+    return other is CacheKey &&
+        other.after == after &&
+        other.includeAfter == includeAfter &&
+        other.before == before &&
+        other.includeBefore == includeBefore;
+  }
+}
+
+class Cache {
+  final Map<CacheKey, List<DateTime>> _results = {};
+
+  @visibleForTesting
+  Map<CacheKey, List<DateTime>> get results => _results;
+
+  void add(CacheKey key, List<DateTime> data) {
+    _results.addAll({key: data});
+  }
+
+  List<DateTime>? get(CacheKey key) {
+    return _results[key];
   }
 }

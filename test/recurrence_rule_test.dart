@@ -1,4 +1,5 @@
 import 'package:rrule/rrule.dart';
+import 'package:rrule/src/cache.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -46,6 +47,18 @@ void main() {
             .interval,
         20,
       );
+    });
+  });
+
+  group('cache', () {
+    test('should store instances in the cache', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+      final instances = rrule.getAllInstances(start: DateTime.utc(2020));
+
+      expect(rrule.cache.get(CacheKey(start: DateTime.utc(2020))), instances);
     });
   });
 

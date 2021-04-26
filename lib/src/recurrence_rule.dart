@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 import 'by_week_day_entry.dart';
+import 'cache.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/string.dart';
 import 'codecs/text/encoder.dart';
@@ -30,6 +31,7 @@ class RecurrenceRule {
     Set<int> byMonths = const {},
     Set<int> bySetPositions = const {},
     this.weekStart,
+    this.shouldCacheResults = false,
   })  : assert(count == null || count >= 1),
         assert(until.isValidRruleDateTime),
         assert(until == null || count == null),
@@ -121,38 +123,47 @@ class RecurrenceRule {
 
   /// Corresponds to the `BYSECOND` property.
   final Set<int> bySeconds;
+
   bool get hasBySeconds => bySeconds.isNotEmpty;
 
   /// Corresponds to the `BYMINUTE` property.
   final Set<int> byMinutes;
+
   bool get hasByMinutes => byMinutes.isNotEmpty;
 
   /// Corresponds to the `BYHOUR` property.
   final Set<int> byHours;
+
   bool get hasByHours => byHours.isNotEmpty;
 
   /// Corresponds to the `BYDAY` property.
   final Set<ByWeekDayEntry> byWeekDays;
+
   bool get hasByWeekDays => byWeekDays.isNotEmpty;
 
   /// Corresponds to the `BYMONTHDAY` property.
   final Set<int> byMonthDays;
+
   bool get hasByMonthDays => byMonthDays.isNotEmpty;
 
   /// Corresponds to the `BYYEARDAY` property.
   final Set<int> byYearDays;
+
   bool get hasByYearDays => byYearDays.isNotEmpty;
 
   /// Corresponds to the `BYWEEKNO` property.
   final Set<int> byWeeks;
+
   bool get hasByWeeks => byWeeks.isNotEmpty;
 
   /// Corresponds to the `BYMONTH` property.
   final Set<int> byMonths;
+
   bool get hasByMonths => byMonths.isNotEmpty;
 
   /// Corresponds to the `BYSETPOS` property.
   final Set<int> bySetPositions;
+
   bool get hasBySetPositions => bySetPositions.isNotEmpty;
 
   /// Corresponds to the `WKST` property.
@@ -166,9 +177,65 @@ class RecurrenceRule {
   /// Returns [weekStart] or [DateTime.monday] if that is not set.
   int get actualWeekStart => weekStart ?? DateTime.monday;
 
-  Iterable<DateTime> getInstances({required DateTime start}) {
+  final bool shouldCacheResults;
+
+  final Cache _cache = Cache();
+
+  @visibleForTesting
+  Cache get cache => _cache;
+
+  Iterable<DateTime> getInstances({
+    required DateTime start,
+    DateTime? after,
+    bool includeAfter = false,
+    DateTime? before,
+    bool includeBefore = false,
+  }) {
     assert(start.isValidRruleDateTime);
-    return getRecurrenceRuleInstances(this, start: start);
+    assert(after.isValidRruleDateTime);
+    assert(before.isValidRruleDateTime);
+
+    return getRecurrenceRuleInstances(
+      this,
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    );
+  }
+
+  List<DateTime> getAllInstances({
+    required DateTime start,
+    DateTime? after,
+    bool includeAfter = false,
+    DateTime? before,
+    bool includeBefore = false,
+  }) {
+    final key = CacheKey(
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    );
+
+    final fromCache = _cache.get(key);
+    if (fromCache != null) return fromCache;
+
+    final results = getInstances(
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    ).toList(growable: false);
+
+    if (shouldCacheResults) {
+      _cache.add(key, results);
+    }
+
+    return results;
   }
 
   @override
