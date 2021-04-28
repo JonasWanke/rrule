@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import 'by_week_day_entry.dart';
 import 'codecs/string/decoder.dart';
+import 'codecs/string/encoder.dart';
 import 'codecs/string/string.dart';
 import 'codecs/text/encoder.dart';
 import 'codecs/text/l10n/l10n.dart';
@@ -254,7 +255,11 @@ class RecurrenceRule {
 
   /// Converts this rule to a machine-readable, RFC-5545-compliant string.
   @override
-  String toString() => RecurrenceRuleStringCodec().encode(this);
+  String toString({
+    RecurrenceRuleToStringOptions options =
+        const RecurrenceRuleToStringOptions(),
+  }) =>
+      RecurrenceRuleToStringEncoder(options: options).convert(this);
 
   /// Converts this rule to a human-readable string.
   ///
