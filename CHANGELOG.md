@@ -15,10 +15,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## v0.2.2 · 2021-04-28
+
+### 🎉 New Features
+- feat: expose `RecurrenceRuleToStringOptions` directly in `recurrenceRule.toString(…)` ([`c5291d1`](https://github.com/JonasWanke/rrule/commit/c5291d165b84f6354550cf919fe379f40b3c3d3b)), improves: [#21](https://github.com/JonasWanke/rrule/issues/21)
+
 ## v0.2.1 · 2021-04-26
 
 ### 🐛 Bug Fixes
-- disallow invalid recurrence rule field combinations ([2707922](https://github.com/JonasWanke/rrule/commit/2707922bb6b8860c5118be8c896f680e075dd2e5)), closes: [#19](https://github.com/JonasWanke/rrule/issues/19)
+- disallow invalid recurrence rule field combinations ([`2707922`](https://github.com/JonasWanke/rrule/commit/2707922bb6b8860c5118be8c896f680e075dd2e5)), closes: [#19](https://github.com/JonasWanke/rrule/issues/19)
 
 ## 0.2.0 · 2021-03-26
 
