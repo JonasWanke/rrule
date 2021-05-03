@@ -2,8 +2,9 @@ import 'package:meta/meta.dart';
 
 import 'utils.dart';
 
+@immutable
 class CacheKey {
-  CacheKey({
+  const CacheKey({
     required this.start,
     this.after,
     this.includeAfter = false,
