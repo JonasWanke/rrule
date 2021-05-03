@@ -49,7 +49,7 @@ class Cache {
   Map<CacheKey, List<DateTime>> get results => _results;
 
   void add(CacheKey key, List<DateTime> data) {
-    _results.addAll({key: data});
+    _results[key]= data;
   }
 
   List<DateTime>? get(CacheKey key) {
