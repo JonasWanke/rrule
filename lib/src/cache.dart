@@ -11,15 +11,11 @@ class CacheKey {
     this.includeBefore = false,
   });
 
-  DateTime start;
-
-  DateTime? after;
-
-  bool includeAfter;
-
-  DateTime? before;
-
-  bool includeBefore;
+  final DateTime start;
+  final DateTime? after;
+  final bool includeAfter;
+  final DateTime? before;
+  final bool includeBefore;
 
   @override
   int get hashCode {
