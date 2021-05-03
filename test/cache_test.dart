@@ -11,7 +11,7 @@ void main() {
     expect(cache.results, containsPair(key, results));
   });
 
-  test('should return date from the cache by key', () {
+  test('should return data from the cache by key', () {
     final cache = Cache();
     final key = CacheKey(start: DateTime.now());
     final results = <DateTime>[];
