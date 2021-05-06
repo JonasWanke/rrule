@@ -1,4 +1,5 @@
 import 'package:rrule/rrule.dart';
+import 'package:rrule/src/cache.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -46,6 +47,79 @@ void main() {
             .interval,
         20,
       );
+    });
+  });
+
+  group('cache', () {
+    test('should store instances in the cache', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+        shouldCacheResults: true,
+      );
+      final instances = rrule.getAllInstances(start: DateTime.utc(2020));
+
+      expect(rrule.cache.get(CacheKey(start: DateTime.utc(2020))), instances);
+    });
+  });
+
+  group('getAllInstances', () {
+    test('should support date after inclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        after: DateTime.utc(2020, 5),
+        includeAfter: true,
+      );
+
+      expect(instances.first, DateTime.utc(2020, 5));
+    });
+
+    test('should support date after exclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        after: DateTime.utc(2020, 5),
+      );
+
+      expect(instances.first, DateTime.utc(2020, 6));
+    });
+
+    test('should support date before inclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        before: DateTime.utc(2020, 5),
+        includeBefore: true,
+      );
+
+      expect(instances.last, DateTime.utc(2020, 5));
+    });
+
+    test('should support date before exclusive', () {
+      final rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        until: DateTime.utc(2021),
+      );
+
+      final instances = rrule.getAllInstances(
+        start: DateTime.utc(2020),
+        before: DateTime.utc(2020, 5),
+      );
+
+      expect(instances.last, DateTime.utc(2020, 4));
     });
   });
 

@@ -17,8 +17,16 @@ import 'time_set.dart';
 Iterable<DateTime> getRecurrenceRuleInstances(
   RecurrenceRule rrule, {
   required DateTime start,
+  DateTime? after,
+  bool includeAfter = false,
+  DateTime? before,
+  bool includeBefore = false,
 }) sync* {
   assert(start.isValidRruleDateTime);
+  assert(after.isValidRruleDateTime);
+  assert(before.isValidRruleDateTime);
+  if (after != null) assert(after >= start);
+  if (before != null) assert(before >= start);
 
   rrule = _prepare(rrule, start);
 
@@ -44,7 +52,16 @@ Iterable<DateTime> getRecurrenceRuleInstances(
 
     for (final result in results) {
       if (rrule.until != null && result > rrule.until!) return;
+      if (before != null) {
+        if (!includeBefore && result >= before) return;
+        if (includeBefore && result > before) return;
+      }
+
       if (result < start) continue;
+      if (after != null) {
+        if (!includeAfter && result <= after) continue;
+        if (includeAfter && result < after) continue;
+      }
 
       yield result;
       if (count != null) {

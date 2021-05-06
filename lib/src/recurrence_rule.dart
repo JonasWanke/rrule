@@ -1,9 +1,11 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 import 'by_week_day_entry.dart';
+import 'cache.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/encoder.dart';
 import 'codecs/string/string.dart';
@@ -31,6 +33,7 @@ class RecurrenceRule {
     Set<int> byMonths = const {},
     Set<int> bySetPositions = const {},
     this.weekStart,
+    this.shouldCacheResults = false,
   })  : assert(count == null || count >= 1),
         assert(until.isValidRruleDateTime),
         assert(until == null || count == null),
@@ -167,9 +170,65 @@ class RecurrenceRule {
   /// Returns [weekStart] or [DateTime.monday] if that is not set.
   int get actualWeekStart => weekStart ?? DateTime.monday;
 
-  Iterable<DateTime> getInstances({required DateTime start}) {
+  final bool shouldCacheResults;
+
+  final Cache _cache = Cache();
+
+  @visibleForTesting
+  Cache get cache => _cache;
+
+  Iterable<DateTime> getInstances({
+    required DateTime start,
+    DateTime? after,
+    bool includeAfter = false,
+    DateTime? before,
+    bool includeBefore = false,
+  }) {
     assert(start.isValidRruleDateTime);
-    return getRecurrenceRuleInstances(this, start: start);
+    assert(after.isValidRruleDateTime);
+    assert(before.isValidRruleDateTime);
+
+    return getRecurrenceRuleInstances(
+      this,
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    );
+  }
+
+  List<DateTime> getAllInstances({
+    required DateTime start,
+    DateTime? after,
+    bool includeAfter = false,
+    DateTime? before,
+    bool includeBefore = false,
+  }) {
+    final key = CacheKey(
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    );
+
+    final fromCache = _cache.get(key);
+    if (fromCache != null) return fromCache;
+
+    final results = getInstances(
+      start: start,
+      after: after,
+      includeAfter: includeAfter,
+      before: before,
+      includeBefore: includeBefore,
+    ).toList(growable: false);
+
+    if (shouldCacheResults) {
+      _cache.add(key, results);
+    }
+
+    return results;
   }
 
   @override
