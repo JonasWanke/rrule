@@ -15,6 +15,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## v0.2.3 · 2021-05-06
+
+### 🎉 New Features
+* support optional caching of recurrence rule iterations via `recurrenceRule.shouldCacheResults` and `.getAllInstances(…)` ([#20](https://github.com/JonasWanke/rrule/pull/20)). Thanks to [@polRk](https://github.com/polRk)!
+
 ## v0.2.2 · 2021-04-28
 
 ### 🎉 New Features
