@@ -70,16 +70,19 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, DateTime date) {
 
   final dayOfWeek = date.weekday;
   final relevantByWeekDays = rrule.byWeekDays.where((e) => e.day == dayOfWeek);
-  final genericByWeekDays = relevantByWeekDays.where((e) => e.hasNoOccurrence);
+
   // MO, TU, etc. match
+  final genericByWeekDays = relevantByWeekDays.where((e) => e.hasNoOccurrence);
   if (genericByWeekDays.isNotEmpty) return false;
 
   // +3TU, -51TH, etc. match
-  final specificByWeekDays =
-      relevantByWeekDays.where((e) => e.hasOccurrence).map((e) => e.occurrence);
+  final specificByWeekDays = relevantByWeekDays
+      .where((e) => e.hasOccurrence)
+      .map((e) => e.occurrence!)
+      .toSet();
   if (specificByWeekDays.isEmpty) return true;
 
-  if (rrule.frequency == Frequency.yearly && rrule.byMonths.isEmpty) {
+  if (rrule.frequency == Frequency.yearly) {
     assert(
       rrule.byWeeks.isEmpty,
       '"[…], the BYDAY rule part MUST NOT be specified with a numeric '
@@ -88,43 +91,28 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, DateTime date) {
       '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
     );
 
-    var current = DateTimeRrule.date(date.year, 1, 1).nextOrSame(dayOfWeek);
-    var occurrence = 1;
-    while (current != date) {
-      current = current + 1.weeks;
-      occurrence++;
-    }
-
-    var totalOccurrences = occurrence - 1;
-    while (current.year == date.year) {
-      current = current + 1.weeks;
-      totalOccurrences++;
-    }
-    final negativeOccurrence = occurrence - 1 - totalOccurrences;
-
-    if (!specificByWeekDays.contains(occurrence) &&
-        !specificByWeekDays.contains(negativeOccurrence)) {
-      return true;
+    if (rrule.byMonths.isEmpty) {
+      return _doesOccurrenceMatch(
+        specificByWeekDays,
+        date.firstDayOfYear,
+        date.lastDayOfYear,
+        date,
+      );
+    } else {
+      return _doesOccurrenceMatch(
+        specificByWeekDays,
+        date.firstDayOfMonth,
+        date.lastDayOfMonth,
+        date,
+      );
     }
   } else if (rrule.frequency == Frequency.monthly) {
-    var current = date.firstDayOfMonth.nextOrSame(dayOfWeek);
-    var occurrence = 1;
-    while (current != date) {
-      current = current + 1.weeks;
-      occurrence++;
-    }
-
-    var totalOccurrences = occurrence - 1;
-    while (current.month == date.month) {
-      current = current + 1.weeks;
-      totalOccurrences++;
-    }
-    final negativeOccurrence = occurrence - 1 - totalOccurrences;
-
-    if (!specificByWeekDays.contains(occurrence) &&
-        !specificByWeekDays.contains(negativeOccurrence)) {
-      return true;
-    }
+    return _doesOccurrenceMatch(
+      specificByWeekDays,
+      date.firstDayOfMonth,
+      date.lastDayOfMonth,
+      date,
+    );
   } else {
     assert(
       false,
@@ -134,6 +122,37 @@ bool _isFilteredByWeekDays(RecurrenceRule rrule, DateTime date) {
     );
   }
 
+  return false;
+}
+
+bool _doesOccurrenceMatch(
+  Set<int> occurrences,
+  DateTime firstDateWithinPeriod,
+  DateTime lastDateWithinPeriod,
+  DateTime date,
+) {
+  assert(firstDateWithinPeriod <= date);
+  assert(lastDateWithinPeriod >= date);
+
+  var current = firstDateWithinPeriod.nextOrSame(date.weekday);
+  var occurrence = 1;
+  while (current < date) {
+    current = current + 1.weeks;
+    occurrence++;
+  }
+  assert(current == date);
+
+  var totalOccurrences = occurrence - 1;
+  while (current <= lastDateWithinPeriod) {
+    current = current + 1.weeks;
+    totalOccurrences++;
+  }
+  final negativeOccurrence = occurrence - 1 - totalOccurrences;
+
+  if (!occurrences.contains(occurrence) &&
+      !occurrences.contains(negativeOccurrence)) {
+    return true;
+  }
   return false;
 }
 

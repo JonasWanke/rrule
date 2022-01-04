@@ -1,7 +1,9 @@
 import 'dart:math' as math;
+
 import 'package:supercharged_dart/supercharged_dart.dart';
 
 import 'utils/week.dart';
+
 export 'utils/week.dart';
 
 /// Combines the [Object.hashCode] values of an arbitrary number of objects
@@ -106,6 +108,8 @@ extension DateTimeRrule on DateTime {
   DateTime plusYears(int years) => plusYearsAndMonths(years: years);
   DateTime plusMonths(int months) => plusYearsAndMonths(months: months);
 
+  DateTime get firstDayOfYear => atStartOfDay.copyWith(month: 1, day: 1);
+  DateTime get lastDayOfYear => atStartOfDay.copyWith(month: 12, day: 31);
   DateTime get firstDayOfMonth => atStartOfDay.copyWith(day: 1);
   DateTime get lastDayOfMonth => plusMonths(1).firstDayOfMonth - 1.days;
   int get daysInMonth {

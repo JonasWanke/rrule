@@ -1,5 +1,6 @@
 import 'package:rrule/rrule.dart';
 import 'package:rrule/src/cache.dart';
+import 'package:rrule/src/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -130,5 +131,23 @@ void main() {
       () => RecurrenceRule(frequency: Frequency.daily, byWeeks: {1, 2, 3}),
       throwsA(isA<AssertionError>()),
     );
+  });
+  test(
+      "#29: getting instances for rrule yearly, 'every 2nd tuesday of January' fails",
+      () {
+    const rruleString =
+        'RRULE:FREQ=YEARLY;COUNT=4;INTERVAL=1;BYDAY=2TU;BYMONTH=1';
+    final rrule = RecurrenceRule(
+      frequency: Frequency.yearly,
+      count: 4,
+      interval: 1,
+      byMonths: {1},
+      byWeekDays: {ByWeekDayEntry(DateTime.tuesday, 2)},
+    );
+    expect(RecurrenceRule.fromString(rruleString), rrule);
+
+    final instances =
+        rrule.getAllInstances(start: DateTimeRrule.date(2022, 1, 1));
+    expect(instances.length, 4);
   });
 }
