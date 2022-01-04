@@ -6,11 +6,12 @@ import '../utils.dart';
 import 'date_set.dart';
 
 /// Removes dates that are filtered out by any of the following in place:
-/// - [RecurrenceRule.byWeekDays]
-/// - [RecurrenceRule.byMonthDays]
-/// - [RecurrenceRule.byYearDays]
-/// - [RecurrenceRule.byWeeks]
-/// - [RecurrenceRule.byMonths]
+///
+/// * [RecurrenceRule.byWeekDays]
+/// * [RecurrenceRule.byMonthDays]
+/// * [RecurrenceRule.byYearDays]
+/// * [RecurrenceRule.byWeeks]
+/// * [RecurrenceRule.byMonths]
 bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
   var isFiltered = false;
   for (final i in dateSet.start.until(dateSet.end)) {
@@ -24,11 +25,12 @@ bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
 }
 
 /// Whether [date] is filtered by any of the following:
-/// - [RecurrenceRule.byWeekDays]
-/// - [RecurrenceRule.byMonthDays]
-/// - [RecurrenceRule.byYearDays]
-/// - [RecurrenceRule.byWeeks]
-/// - [RecurrenceRule.byMonths]
+///
+/// * [RecurrenceRule.byWeekDays]
+/// * [RecurrenceRule.byMonthDays]
+/// * [RecurrenceRule.byYearDays]
+/// * [RecurrenceRule.byWeeks]
+/// * [RecurrenceRule.byMonths]
 bool _isFiltered(RecurrenceRule rrule, DateTime date) {
   assert(date.isValidRruleDate);
 
