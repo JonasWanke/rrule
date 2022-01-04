@@ -266,8 +266,7 @@ class RecurrenceRuleFromStringDecoder
     if (oldValue != null) {
       switch (options.duplicatePartBehavior) {
         case RecurrenceRuleDuplicatePartBehavior.exception:
-          // Already handled above.
-          assert(false);
+          assert(false, 'This case is already handled above.');
           break;
         case RecurrenceRuleDuplicatePartBehavior.takeFirst:
           newValue = oldValue;
@@ -328,8 +327,7 @@ class RecurrenceRuleFromStringDecoder
     if (oldValue != null) {
       switch (options.duplicatePartBehavior) {
         case RecurrenceRuleDuplicatePartBehavior.exception:
-          // Already handled above.
-          assert(false);
+          assert(false, 'This case is already handled above.');
           break;
         case RecurrenceRuleDuplicatePartBehavior.takeFirst:
           newValue = oldValue;
@@ -370,7 +368,10 @@ int? _weekDayFromString(String day) => recurWeekDayValues[day];
 class _UntilOrCount {
   _UntilOrCount({this.until, this.count})
       : assert(until.isValidRruleDateTime),
-        assert((until == null) != (count == null));
+        assert(
+          (until == null) != (count == null),
+          'Exactly one of `until` and `count` must be set.',
+        );
 
   final DateTime? until;
   final int? count;

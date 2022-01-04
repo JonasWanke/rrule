@@ -35,7 +35,11 @@ class RecurrenceRule {
     this.shouldCacheResults = false,
   })  : assert(count == null || count >= 1),
         assert(until.isValidRruleDateTime),
-        assert(until == null || count == null),
+        assert(
+          until == null || count == null,
+          'The UNTIL or COUNT rule parts are OPTIONAL, but they MUST NOT occur '
+          'in the same RecurrenceRule.',
+        ),
         assert(interval == null || interval >= 1),
         assert(bySeconds.every(_debugCheckIsValidSecond)),
         bySeconds = SplayTreeSet.of(bySeconds),
@@ -290,9 +294,19 @@ class RecurrenceRule {
     Set<int>? bySetPositions,
   }) {
     assert(until.isValidRruleDateTime);
-    assert(!(clearUntil && until != null));
-    assert(!(clearCount && count != null));
-    assert(!(clearInterval && interval != null));
+    assert(
+      !(clearUntil && until != null),
+      'A new value for `until` must not be specified when `clearUntil` is set.',
+    );
+    assert(
+      !(clearCount && count != null),
+      'A new value for `count` must not be specified when `clearCount` is set.',
+    );
+    assert(
+      !(clearInterval && interval != null),
+      'A new value for `interval` must not be specified when `clearInterval` '
+      'is set.',
+    );
 
     return RecurrenceRule(
       frequency: frequency ?? this.frequency,
@@ -358,8 +372,9 @@ class RecurrenceRule {
 }
 
 /// Validates the `seconds` rule.
+///
+/// We currently don't support leap seconds.
 bool _debugCheckIsValidSecond(int number) {
-  // We currently don't support leap seconds.
   assert(0 <= number && number < Duration.secondsPerMinute);
   return true;
 }
