@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2021-xx-xx
+## NEW · 2022-xx-xx
 ### ⚠ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
@@ -14,6 +14,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗 Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.4 · 2022-01-04
+
+### 🐛 Bug Fixes
+* handle yearly frequency with `byMonths` and `byWeekDays` ([`8646af1`](https://github.com/JonasWanke/rrule/commit/8646af1f4f09c0a39eb73d5d5c0bc5209d8138bd)), closes: [#29](https://github.com/JonasWanke/rrule/issues/29)
 
 ## 0.2.3 · 2021-05-06
 
@@ -32,7 +37,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 0.2.0 · 2021-03-26
 
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 
 - migrate to null-safety
 - Dates and DateTimes no longer use [<kbd>time_machine</kbd>](https://pub.dev/packages/time_machine), but `DateTime` instead.
