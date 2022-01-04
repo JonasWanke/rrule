@@ -50,8 +50,9 @@ class RecurrenceRule {
         assert(
           [Frequency.monthly, Frequency.yearly].contains(frequency) ||
               byWeekDays.noneHasOccurrence,
-          'The BYDAY rule part MUST NOT be specified with a numeric value when '
-          'the FREQ rule part is not set to MONTHLY or YEARLY.',
+          '"The BYDAY rule part MUST NOT be specified with a numeric value '
+          'when the FREQ rule part is not set to MONTHLY or YEARLY." '
+          '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
         ),
         assert(
           frequency != Frequency.yearly ||
