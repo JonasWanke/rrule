@@ -104,7 +104,9 @@ class RecurrenceRuleFromStringDecoder
               if (match == null) {
                 throw FormatException('Cannot parse date or date-time');
               }
-              return _UntilOrCount(until: match.copyWith(isUtc: true));
+              return _UntilOrCount(
+                until: DateTimeRrule(match).copyWith(isUtc: true),
+              );
             },
           );
           break;

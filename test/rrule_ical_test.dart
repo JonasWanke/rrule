@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
-import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:rrule/src/utils.dart';
 import 'package:test/test.dart';
 
 import 'utils.dart' as utils;
@@ -738,7 +738,7 @@ void main() {
       Duration(hours: 9, minutes: 45),
       Duration(hours: 10, minutes: 0),
       Duration(hours: 10, minutes: 15),
-    ].map((t) => DateTime.utc(1997, 9, 2) + t),
+    ].map((t) => DateTime.utc(1997, 9, 2).add(t)),
   );
   testRrule(
     'Every hour and a half for 4 occurrences',
@@ -755,7 +755,7 @@ void main() {
       Duration(hours: 10, minutes: 30),
       Duration(hours: 12, minutes: 0),
       Duration(hours: 13, minutes: 30),
-    ].map((t) => DateTime.utc(1997, 9, 2) + t),
+    ].map((t) => DateTime.utc(1997, 9, 2).add(t)),
   );
   group('Every 20 minutes from 9:00 AM to 4:40 PM every day', () {
     final expected = [2, 3].expand((d) {

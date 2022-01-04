@@ -1,4 +1,4 @@
-import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:time/time.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
@@ -52,10 +52,10 @@ extension _FrequencyIntervalCalculation on DateTime {
 
   DateTime _addWeeks(int weeks) {
     final surplusDays = (weekday - DateTime.monday) % DateTime.daysPerWeek;
-    return this + weeks.weeks - surplusDays.days;
+    return add(weeks.weeks).subtract(surplusDays.days);
   }
 
-  DateTime _addDays(int days) => this + days.days;
+  DateTime _addDays(int days) => add(days.days);
 
   DateTime _addHours(int hours, bool wereDatesFiltered, Set<int> byHours) {
     var newValue = this;
@@ -64,12 +64,12 @@ extension _FrequencyIntervalCalculation on DateTime {
       final timeToLastHour = Duration.hoursPerDay - 1 - newValue.hour;
       final hoursToLastIterationOfDay =
           (timeToLastHour / hours).floor() * hours;
-      newValue += hoursToLastIterationOfDay.hours;
+      newValue.add(hoursToLastIterationOfDay.hours);
     }
 
     // ignore: literal_only_boolean_expressions
     while (true) {
-      newValue += hours.hours;
+      newValue = newValue.add(hours.hours);
 
       if (byHours.isEmpty || byHours.contains(newValue.hour)) break;
     }
@@ -91,7 +91,7 @@ extension _FrequencyIntervalCalculation on DateTime {
           newValue.minute;
       final minutesToLastIterationOfDay =
           (timeToLastMinute / minutes).floor() * minutes;
-      newValue += minutesToLastIterationOfDay.minutes;
+      newValue = newValue.add(minutesToLastIterationOfDay.minutes);
     }
 
     // ignore: literal_only_boolean_expressions
@@ -101,7 +101,7 @@ extension _FrequencyIntervalCalculation on DateTime {
       if (hours > 0) {
         newValue = newValue._addHours(hours, wereDatesFiltered, byHours);
       }
-      newValue += minutesWithoutHours.minutes;
+      newValue = newValue.add(minutesWithoutHours.minutes);
 
       if ((byHours.isEmpty || byHours.contains(newValue.hour)) &&
           (byMinutes.isEmpty || byMinutes.contains(newValue.minute))) {

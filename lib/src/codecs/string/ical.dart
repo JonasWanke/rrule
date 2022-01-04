@@ -90,7 +90,9 @@ class _ICalPropertyToStringEncoder extends Converter<ICalProperty, String> {
       output.writeICalParameter(entry.key, entry.value);
     }
 
-    output..write(':')..write(input.value);
+    output
+      ..write(':')
+      ..write(input.value);
     return output.toString();
   }
 }
