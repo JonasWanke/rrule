@@ -208,6 +208,10 @@ class RecurrenceRule {
     DateTime? before,
     bool includeBefore = false,
   }) {
+    assert(start.isValidRruleDateTime);
+    assert(after.isValidRruleDateTime);
+    assert(before.isValidRruleDateTime);
+
     final key = CacheKey(
       start: start,
       after: after,
