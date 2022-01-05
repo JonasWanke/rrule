@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:time/time.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
@@ -13,7 +13,7 @@ class DateSet {
     required this.start,
     required this.end,
     required this.firstDayOfYear,
-  })   : assert(start >= 0),
+  })  : assert(start >= 0),
         assert(start <= end),
         assert(firstDayOfYear.isValidRruleDate);
 
@@ -34,7 +34,7 @@ class DateSet {
       isIncluded: List.generate(length, (i) => start <= i && i < actualEnd),
       start: start,
       end: actualEnd,
-      firstDayOfYear: base.copyWith(month: 1, day: 1),
+      firstDayOfYear: DateTimeRrule(base).copyWith(month: 1, day: 1),
     );
   }
 
@@ -53,7 +53,7 @@ class DateSet {
   DateTime? operator [](int index) {
     if (!isIncluded[index]) return null;
 
-    return firstDayOfYear + index.days;
+    return firstDayOfYear.add(index.days);
   }
 
   Iterable<DateTime> get includedDates =>
@@ -100,7 +100,7 @@ DateSet _buildWeeklyDateSet(DateTime base) {
   var current = base;
   for (final _ in 0.until(DateTime.daysPerWeek)) {
     i++;
-    current += 1.days;
+    current = current.add(1.days);
     if (current.weekday == DateTime.monday) break;
   }
   return DateSet.create(base: base, addExtraWeek: true, start: start, end: i);

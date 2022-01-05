@@ -1,8 +1,5 @@
 import 'dart:math' as math;
-
-import 'package:supercharged_dart/supercharged_dart.dart';
-
-import 'utils/week.dart';
+import 'package:time/time.dart';
 
 export 'utils/week.dart';
 
@@ -108,19 +105,17 @@ extension DateTimeRrule on DateTime {
   DateTime plusYears(int years) => plusYearsAndMonths(years: years);
   DateTime plusMonths(int months) => plusYearsAndMonths(months: months);
 
-  DateTime get firstDayOfYear => atStartOfDay.copyWith(month: 1, day: 1);
-  DateTime get lastDayOfYear => atStartOfDay.copyWith(month: 12, day: 31);
-  DateTime get firstDayOfMonth => atStartOfDay.copyWith(day: 1);
-  DateTime get lastDayOfMonth => plusMonths(1).firstDayOfMonth - 1.days;
-  int get daysInMonth {
-    final february = isLeapYear ? 29 : 28;
-    return [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
-  }
+  DateTime get firstDayOfYear =>
+      DateTimeRrule(atStartOfDay).copyWith(month: 1, day: 1);
+  DateTime get lastDayOfYear =>
+      DateTimeRrule(atStartOfDay).copyWith(month: 12, day: 31);
+  DateTime get firstDayOfMonth => DateTimeRrule(atStartOfDay).copyWith(day: 1);
+  DateTime get lastDayOfMonth => plusMonths(1).firstDayOfMonth.subtract(1.days);
 
   DateTime nextOrSame(int dayOfWeek) {
     assert(dayOfWeek.isValidRruleDayOfWeek);
 
-    return this + ((dayOfWeek - weekday) % DateTime.daysPerWeek).days;
+    return add(((dayOfWeek - weekday) % DateTime.daysPerWeek).days);
   }
 }
 
@@ -149,8 +144,43 @@ extension NullableDurationRrule on Duration? {
       this == null || (0.days <= this! && this! <= 1.days);
 }
 
-extension IntRrule on int {
-  Duration get weeks => (this * 7).days;
+extension IntRange on int {
+  // Copied from supercharged_dart
+
+  /// Creates an [Iterable<int>] that contains all values from current integer
+  /// until (including) the value [n].
+  ///
+  /// Example:
+  /// ```dart
+  /// 0.rangeTo(5); // [0, 1, 2, 3, 4, 5]
+  /// 3.rangeTo(1); // [3, 2, 1]
+  /// ```
+  Iterable<int> rangeTo(int n) {
+    final count = (n - this).abs() + 1;
+    final direction = (n - this).sign;
+    var i = this - direction;
+    return Iterable.generate(count, (index) {
+      return i += direction;
+    });
+  }
+
+  /// Creates an [Iterable<int>] that contains all values from current integer
+  /// until (excluding) the value [n].
+  ///
+  /// Example:
+  /// ```dart
+  /// 0.until(5); // [0, 1, 2, 3, 4]
+  /// 3.until(1); // [3, 2]
+  /// ```
+  Iterable<int> until(int n) {
+    if (this < n) {
+      return rangeTo(n - 1);
+    } else if (this > n) {
+      return rangeTo(n + 1);
+    } else {
+      return Iterable.empty();
+    }
+  }
 }
 
 extension NullableIntRrule on int? {

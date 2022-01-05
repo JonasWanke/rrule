@@ -1,5 +1,3 @@
-import 'package:supercharged_dart/supercharged_dart.dart';
-
 import '../by_week_day_entry.dart';
 import '../codecs/string/ical.dart';
 import '../frequency.dart';
@@ -46,7 +44,7 @@ Iterable<DateTime> getRecurrenceRuleInstances(
           .where((dt) => start <= dt);
     } else {
       results = dateSet.includedDates.expand((date) {
-        return timeSet.map((time) => date + time);
+        return timeSet.map((time) => date.add(time));
       });
     }
 

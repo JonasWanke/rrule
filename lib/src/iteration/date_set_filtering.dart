@@ -1,4 +1,4 @@
-import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:time/time.dart';
 
 import '../frequency.dart';
 import '../recurrence_rule.dart';
@@ -15,7 +15,7 @@ import 'date_set.dart';
 bool removeFilteredDates(RecurrenceRule rrule, DateSet dateSet) {
   var isFiltered = false;
   for (final i in dateSet.start.until(dateSet.end)) {
-    final date = dateSet.firstDayOfYear + i.days;
+    final date = dateSet.firstDayOfYear.add(i.days);
     final isCurrentFiltered = _isFiltered(rrule, date);
 
     dateSet.isIncluded[i] = !isCurrentFiltered;

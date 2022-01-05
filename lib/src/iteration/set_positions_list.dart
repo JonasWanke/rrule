@@ -1,4 +1,4 @@
-import 'package:supercharged_dart/supercharged_dart.dart';
+import 'package:time/time.dart';
 
 import '../recurrence_rule.dart';
 import '../utils.dart';
@@ -31,7 +31,7 @@ Iterable<DateTime> buildSetPositionsList(
     }
 
     final dateIndex = dateIndices[datePosition % dateIndices.length];
-    final date = dateSet.firstDayOfYear + dateIndex.days;
+    final date = dateSet.firstDayOfYear.add(dateIndex.days);
     yield date + timeList[timePosition];
   }
 }

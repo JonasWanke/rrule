@@ -85,13 +85,19 @@ abstract class RruleL10n {
         return '${items.first}$two${items[1]}';
       default:
         final output = StringBuffer(items.first);
-        output..write(start)..write(items[1]);
+        output
+          ..write(start)
+          ..write(items[1]);
 
         for (final entry in items.sublist(2, items.length - 1)) {
-          output..write(middle)..write(entry);
+          output
+            ..write(middle)
+            ..write(entry);
         }
 
-        output..write(end)..write(items.last);
+        output
+          ..write(end)
+          ..write(items.last);
         return output.toString();
     }
   }
