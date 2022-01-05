@@ -6,14 +6,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 <!-- Template:
 ## NEW · 2022-xx-xx
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
 ### 🐛 Bug Fixes
 ### 📜 Documentation updates
-### 🏗 Refactoring
+### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.5 · 2022-01-05
+
+### 📦 Build & CI
+* remove dependency on the deprecated [<kbd>supercharged_dart</kbd>](https://pub.dev/packages/supercharged_dart) ([#27](https://github.com/JonasWanke/rrule/pull/27)). Thanks to [@thomassth](https://github.com/thomassth)!
 
 ## 0.2.4 · 2022-01-04
 
