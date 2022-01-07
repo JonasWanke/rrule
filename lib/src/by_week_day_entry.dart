@@ -53,7 +53,7 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
     final data = <String, dynamic>{};
     data['day'] = day;
     data['occurrence'] = occurrence;
-    return data;
+    return data..removeWhere((key, dynamic value) => value == null);
   }
 }
 

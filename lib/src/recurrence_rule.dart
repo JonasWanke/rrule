@@ -380,7 +380,6 @@ class RecurrenceRule {
     if (json == null) {
       throw ArgumentError('The json object is null');
     }
-
     Set<int> _listToSet(List<dynamic>? list) {
       if (list == null) {
         return {};
@@ -396,7 +395,9 @@ class RecurrenceRule {
       } else {
         final finalList = list.cast<Map<String, int>>();
         final entries = <ByWeekDayEntry>{};
-        finalList.map((e) => entries.add(ByWeekDayEntry.fromJson(e)));
+        for (final element in finalList) {
+          entries.add(ByWeekDayEntry.fromJson(element));
+        }
         return entries;
       }
     }
@@ -426,7 +427,7 @@ class RecurrenceRule {
   // TODO(GoldenSoju): Set has to be changed to List in order for method channel to accept it. Check if that is the best way to solve it.
   // TODO(GoldenSoju): Until has to be changed to int/long. Check how to solve this the best way.
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'recurrenceFrequency': frequencyToInt(frequency),
+        'frequency': frequencyToInt(frequency),
         'until': until?.millisecondsSinceEpoch,
         'count': count,
         'interval': interval,
@@ -441,8 +442,23 @@ class RecurrenceRule {
         'byMonths': byMonths.toList(),
         'bySetPositions': bySetPositions.toList(),
         'weekStart': actualWeekStart,
-        'shouldCacheResults': shouldCacheResults,
-      };
+      }..removeWhere((key, dynamic value) {
+          if (value is int?) {
+            if (value == null) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (value is List?) {
+            if (value!.isEmpty) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        });
 }
 
 /// Validates the `seconds` rule.
