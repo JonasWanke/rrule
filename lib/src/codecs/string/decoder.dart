@@ -82,7 +82,7 @@ class RecurrenceRuleFromStringDecoder
             name,
             value,
             oldValue: frequency,
-            parse: () => _frequencyFromString(value),
+            parse: () => frequencyFromString(value),
           );
           break;
         case recurRulePartUntil:
@@ -359,7 +359,28 @@ class RecurrenceRuleFromStringDecoder
   }
 }
 
-Frequency? _frequencyFromString(String input) => recurFreqValues[input];
+Frequency? intToFrequency(int? input) {
+  if (input == null) return null;
+  switch (input) {
+    case 6:
+      return Frequency.secondly;
+    case 5:
+      return Frequency.minutely;
+    case 4:
+      return Frequency.hourly;
+    case 3:
+      return Frequency.daily;
+    case 2:
+      return Frequency.weekly;
+    case 1:
+      return Frequency.monthly;
+    case 0:
+      return Frequency.yearly;
+  }
+}
+
+Frequency? frequencyFromString(String input) => recurFreqValues[input];
+
 int? _weekDayFromString(String day) => recurWeekDayValues[day];
 
 /// Helper class to reuse the logic of

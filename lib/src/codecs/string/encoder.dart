@@ -74,6 +74,27 @@ String? _frequencyToString(Frequency? input) {
   return recurFreqValues.entries.singleWhere((e) => e.value == input).key;
 }
 
+int? frequencyToInt(Frequency? input) {
+  if (input == null) return null;
+  final recurFrequency = input.toString();
+  switch (recurFrequency) {
+    case recurFreqSecondly:
+      return 6;
+    case recurFreqMinutely:
+      return 5;
+    case recurFreqHourly:
+      return 4;
+    case recurFreqDaily:
+      return 3;
+    case recurFreqWeekly:
+      return 2;
+    case recurFreqMonthly:
+      return 1;
+    case recurFreqYearly:
+      return 0;
+  }
+}
+
 String? _weekDayToString(int? dayOfWeek) {
   assert(dayOfWeek.isValidRruleDayOfWeek);
 

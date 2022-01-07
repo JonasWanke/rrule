@@ -375,6 +375,74 @@ class RecurrenceRule {
     }
     return true;
   }
+
+  factory RecurrenceRule.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      throw ArgumentError('The json object is null');
+    }
+
+    Set<int> _listToSet(List<dynamic>? list) {
+      if (list == null) {
+        return {};
+      } else {
+        final finalList = list.cast<int>();
+        return finalList.toSet();
+      }
+    }
+
+    Set<ByWeekDayEntry> _listToWeekdayEntrySet(List<dynamic>? list) {
+      if (list == null) {
+        return {};
+      } else {
+        final finalList = list.cast<Map<String, int>>();
+        final entries = <ByWeekDayEntry>{};
+        finalList.map((e) => entries.add(ByWeekDayEntry.fromJson(e)));
+        return entries;
+      }
+    }
+
+    final _until = json['until'] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json['until'] as int,
+            isUtc: true);
+    return RecurrenceRule(
+      frequency: intToFrequency(json['frequency'] as int?) ?? Frequency.yearly,
+      until: _until,
+      count: json['count'] as int?,
+      interval: json['interval'] as int?,
+      bySeconds: _listToSet(json['bySeconds'] as List<dynamic>?),
+      byMinutes: _listToSet(json['byMinutes'] as List<dynamic>?),
+      byHours: _listToSet(json['byHours'] as List<dynamic>?),
+      byWeekDays: _listToWeekdayEntrySet(json['byWeekDays'] as List<dynamic>?),
+      byMonthDays: _listToSet(json['byMonthDays'] as List<dynamic>?),
+      byYearDays: _listToSet(json['byYearDays'] as List<dynamic>?),
+      byWeeks: _listToSet(json['byWeeks'] as List<dynamic>?),
+      byMonths: _listToSet(json['byMonths'] as List<dynamic>?),
+      bySetPositions: _listToSet(json['bySetPositions'] as List<dynamic>?),
+      weekStart: json['weekStart'] as int? ?? DateTime.monday,
+    );
+  }
+
+  // TODO(GoldenSoju): Set has to be changed to List in order for method channel to accept it. Check if that is the best way to solve it.
+  // TODO(GoldenSoju): Until has to be changed to int/long. Check how to solve this the best way.
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'recurrenceFrequency': frequencyToInt(frequency),
+        'until': until?.millisecondsSinceEpoch,
+        'count': count,
+        'interval': interval,
+        'bySeconds': bySeconds.toList(),
+        'byMinutes': byMinutes.toList(),
+        'byHours': byHours.toList(),
+        'byWeekDays':
+            byWeekDays.map((weekDayEntry) => weekDayEntry.toJson()).toList(),
+        'byMonthDays': byMonthDays.toList(),
+        'byYearDays': byYearDays.toList(),
+        'byWeeks': byWeeks.toList(),
+        'byMonths': byMonths.toList(),
+        'bySetPositions': bySetPositions.toList(),
+        'weekStart': actualWeekStart,
+        'shouldCacheResults': shouldCacheResults,
+      };
 }
 
 /// Validates the `seconds` rule.

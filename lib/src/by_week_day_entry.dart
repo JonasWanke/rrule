@@ -41,6 +41,20 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
 
   @override
   String toString() => ByWeekDayEntryStringCodec().encode(this);
+
+  factory ByWeekDayEntry.fromJson(Map<String, int?>? json) {
+    if (json == null) {
+      throw ArgumentError('The json object is null');
+    }
+    return ByWeekDayEntry(json['day']!, json['occurrence']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['day'] = day;
+    data['occurrence'] = occurrence;
+    return data;
+  }
 }
 
 extension ByWeekDayEntryIterable on Iterable<ByWeekDayEntry> {
