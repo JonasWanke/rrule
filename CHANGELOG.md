@@ -15,10 +15,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.6 · 2022-01-17
+
+### 🎉 New Features
+* support jCal ([`77ca2cb`](https://github.com/JonasWanke/rrule/commit/77ca2cb808d68d98078801e90569c4230696a8fc)), closes: [#3](https://github.com/JonasWanke/rrule/issues/3)
+
 ## 0.2.5 · 2022-01-05
 
 ### 📦 Build & CI
-* remove dependency on the deprecated [<kbd>supercharged_dart</kbd>](https://pub.dev/packages/supercharged_dart) ([#27](https://github.com/JonasWanke/rrule/pull/27)). Thanks to [@thomassth](https://github.com/thomassth)!
+* remove dependency on the discontinued [<kbd>supercharged_dart</kbd>](https://pub.dev/packages/supercharged_dart) ([#27](https://github.com/JonasWanke/rrule/pull/27)). Thanks to [@thomassth](https://github.com/thomassth)!
 
 ## 0.2.4 · 2022-01-04
 
