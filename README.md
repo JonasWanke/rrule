@@ -87,6 +87,24 @@ A few more examples:
 
 While this already supports really complex RRULEs, some of them are not (yet) supported. See [`RecurrenceRule.canFullyConvertToText`] for more information.
 
+## JSON conversion
+
+You can convert between [`RecurrenceRule`]s and [jCal/RFC 7265][RFC 7265]-compliant JSON using the following convenience methods:
+
+```dart
+final json = <String, dynamic>{
+  'freq': 'WEEKLY',
+  'interval': 2,
+  'byday': ['TU', 'TH'],
+  'bymonth': [12],
+};
+final rrule = RecurrenceRule.fromJson(json);
+
+expect(rrule.toJson(), json);
+```
+
+<sup>(Same RRULE as the first one)</sup>
+
 ## Limitations
 
 * custom week starts are not supported (`WKST` in the specification) – Monday is the only valid value (encoded as `MO`)
@@ -98,7 +116,8 @@ While this already supports really complex RRULEs, some of them are not (yet) su
 The recurrence calculation code of `RecurrencRule`s is mostly a partial port of [<kbd>rrule.js</kbd>], though with a lot of modifications to use Dart's `DateTime` and not having to do date/time calculations manually. You can find the license of [<kbd>rrule.js</kbd>] in the file `LICENSE-rrule.js.txt`.
 
 [<kbd>rrule.js</kbd>]: https://github.com/jakubroztocil/rrule
-[RFC 5545]: https://tools.ietf.org/html/rfc5545
+[RFC 5545]: https://datatracker.ietf.org/doc/html/rfc5545
+[RFC 7265]: https://datatracker.ietf.org/doc/html/rfc7265
 [`RecurrenceRule`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule-class.html
 [`RecurrenceRule.canFullyConvertToText`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule/canFullyConvertToText.html
 [`RecurrenceRule.toText()`]: https://pub.dev/documentation/rrule/latest/rrule/RecurrenceRule/toText.html
