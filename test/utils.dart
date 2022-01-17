@@ -26,6 +26,7 @@ void testRrule(
       value: rrule,
       string: string,
     );
+    testJsonCodec('JsonCodec', rrule);
 
     // TODO(JonasWanke): Remove the condition when all properties are supported.
     if (text != null) {

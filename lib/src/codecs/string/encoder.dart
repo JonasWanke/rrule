@@ -36,7 +36,7 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   @override
   String convert(RecurrenceRule input) {
     final value = StringBuffer(
-        '$recurRulePartFreq=${_frequencyToString(input.frequency)}');
+        '$recurRulePartFreq=${frequencyToString(input.frequency)}');
 
     if (input.until != null) {
       value
@@ -58,8 +58,10 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
       ..writeList(recurRulePartByYearDay, input.byYearDays)
       ..writeList(recurRulePartByWeekNo, input.byWeeks)
       ..writeList(recurRulePartByMonth, input.byMonths)
-      ..writeList(recurRulePartBySetPos, input.bySetPositions)
-      ..writeSingle(recurRulePartWkSt, _weekDayToString(input.weekStart));
+      ..writeList(recurRulePartBySetPos, input.bySetPositions);
+    if (input.weekStart != null) {
+      value.writeSingle(recurRulePartWkSt, weekDayToString(input.weekStart!));
+    }
 
     return ICalPropertyStringCodec().encode(ICalProperty(
       name: rruleName,
@@ -68,16 +70,14 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   }
 }
 
-String? _frequencyToString(Frequency? input) {
+String? frequencyToString(Frequency? input) {
   if (input == null) return null;
 
   return recurFreqValues.entries.singleWhere((e) => e.value == input).key;
 }
 
-String? _weekDayToString(int? dayOfWeek) {
+String weekDayToString(int dayOfWeek) {
   assert(dayOfWeek.isValidRruleDayOfWeek);
-
-  if (dayOfWeek == null) return null;
 
   return recurWeekDayValues.entries
       .singleWhere((e) => e.value == dayOfWeek)
@@ -127,5 +127,5 @@ class ByWeekDayEntryToStringEncoder extends Converter<ByWeekDayEntry, String> {
 
   @override
   String convert(ByWeekDayEntry input) =>
-      '${input.occurrence ?? ''}${_weekDayToString(input.day)}';
+      '${input.occurrence ?? ''}${weekDayToString(input.day)}';
 }

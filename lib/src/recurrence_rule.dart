@@ -5,9 +5,10 @@ import 'package:meta/meta.dart';
 
 import 'by_week_day_entry.dart';
 import 'cache.dart';
+import 'codecs/json/decoder.dart';
+import 'codecs/json/encoder.dart';
 import 'codecs/string/decoder.dart';
 import 'codecs/string/encoder.dart';
-import 'codecs/string/string.dart';
 import 'codecs/text/encoder.dart';
 import 'codecs/text/l10n/l10n.dart';
 import 'frequency.dart';
@@ -107,9 +108,11 @@ class RecurrenceRule {
     String input, {
     RecurrenceRuleFromStringOptions options =
         const RecurrenceRuleFromStringOptions(),
-  }) {
-    return RecurrenceRuleStringCodec(fromStringOptions: options).decode(input);
-  }
+  }) =>
+      RecurrenceRuleFromStringDecoder(options: options).convert(input);
+
+  factory RecurrenceRule.fromJson(Map<String, dynamic> json) =>
+      RecurrenceRuleFromJsonDecoder().convert(json);
 
   /// Corresponds to the `FREQ` property.
   final Frequency frequency;
@@ -351,6 +354,12 @@ class RecurrenceRule {
 
     return RecurrenceRuleToTextEncoder(l10n).convert(this);
   }
+
+  /// Converts this rule to a machine-readable, RFC-7265-compliant string.
+  Map<String, dynamic> toJson({
+    RecurrenceRuleToJsonOptions options = const RecurrenceRuleToJsonOptions(),
+  }) =>
+      RecurrenceRuleToJsonEncoder(options: options).convert(this);
 
   /// Whether this rule can be converted to a human-readable string.
   ///
