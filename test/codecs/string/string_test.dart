@@ -2,7 +2,7 @@ import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
 
 void main() {
-  // Note: There are more tests in `../rrule_ical_test.dart`.
+  // There are more tests in `../../rrule_ical_test.dart`.
 
   group('from string', () {
     test('throws on missing frequency', () {
