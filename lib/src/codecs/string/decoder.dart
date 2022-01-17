@@ -82,7 +82,7 @@ class RecurrenceRuleFromStringDecoder
             name,
             value,
             oldValue: frequency,
-            parse: () => _frequencyFromString(value),
+            parse: () => frequencyFromString(value),
           );
           break;
         case recurRulePartUntil:
@@ -96,13 +96,14 @@ class RecurrenceRuleFromStringDecoder
               final normalizedValue = value.endsWith('Z')
                   ? value.substring(0, value.length - 1)
                   : value;
-              final match = normalizedValue.length == 8
-                  ? DateTime.tryParse(normalizedValue)
-                  : normalizedValue.length == 15
+              final match =
+                  normalizedValue.length == 8 || normalizedValue.length == 15
                       ? DateTime.tryParse(normalizedValue)
                       : null;
               if (match == null) {
-                throw FormatException('Cannot parse date or date-time');
+                throw FormatException(
+                  'Cannot parse date or date-time: "$value".',
+                );
               }
               return _UntilOrCount(
                 until: DateTimeRrule(match).copyWith(isUtc: true),
@@ -216,7 +217,7 @@ class RecurrenceRuleFromStringDecoder
             name,
             value,
             oldValue: weekStart,
-            parse: () => _weekDayFromString(value),
+            parse: () => weekDayFromString(value),
           );
           if (weekStart != null && weekStart != DateTime.monday) {
             throw FormatException(
@@ -359,8 +360,22 @@ class RecurrenceRuleFromStringDecoder
   }
 }
 
-Frequency? _frequencyFromString(String input) => recurFreqValues[input];
-int? _weekDayFromString(String day) => recurWeekDayValues[day];
+Frequency frequencyFromString(String input) {
+  final match = recurFreqValues[input];
+  if (match != null) return match;
+
+  throw FormatException('Invalid frequency: "$input".');
+}
+
+int weekDayFromString(String string) {
+  final match = recurWeekDayValues[string];
+  if (match != null) return match;
+
+  throw FormatException(
+    'Invalid day of week: "$string". Allowed values are '
+    '${recurWeekDayValues.keys.join(',')}.',
+  );
+}
 
 /// Helper class to reuse the logic of
 /// [RecurrenceRuleFromStringDecoder._parseSimplePart] for
@@ -404,14 +419,6 @@ class ByWeekDayEntryFromStringDecoder
     }
 
     final dayMatch = match.group(3);
-    final weekDay = _weekDayFromString(dayMatch!);
-    if (weekDay == null) {
-      throw FormatException(
-        'Invalid day of week: "$dayMatch"; allowed values are '
-        '${recurWeekDayValues.keys.join(',')}.',
-      );
-    }
-
-    return ByWeekDayEntry(weekDay, occurrence);
+    return ByWeekDayEntry(weekDayFromString(dayMatch!), occurrence);
   }
 }
