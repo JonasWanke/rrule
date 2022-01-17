@@ -15,6 +15,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.7 · 2022-01-17
+
+### 📜 Documentation updates
+* add README section about jCal/JSON support ([`2130c72`](https://github.com/JonasWanke/rrule/commit/2130c72381732838007a24313cd2fb3f120a641d))
+
 ## 0.2.6 · 2022-01-17
 
 ### 🎉 New Features
