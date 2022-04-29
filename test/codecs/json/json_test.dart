@@ -26,6 +26,25 @@ void main() {
   );
 
   testJsonCodec(
+    'Decode JSON containing lists of type `List<dynamic>`',
+    RecurrenceRule(
+      frequency: Frequency.yearly,
+      count: 5,
+      byWeekDays: {
+        ByWeekDayEntry(DateTime.sunday, -1),
+        ByWeekDayEntry(DateTime.monday, 2),
+      },
+      byMonths: {10},
+    ),
+    json: <String, dynamic>{
+      'freq': 'YEARLY',
+      'count': 5,
+      'byday': <dynamic>['-1SU', '2MO'],
+      'bymonth': [10],
+    },
+  );
+
+  testJsonCodec(
     'Every other month on the 1st, 15th & last day, until Tuesday, October 1, 2013 12:00:00 AM',
     RecurrenceRule(
       frequency: Frequency.monthly,
