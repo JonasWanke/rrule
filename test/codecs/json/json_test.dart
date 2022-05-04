@@ -40,7 +40,7 @@ void main() {
       'freq': 'YEARLY',
       'count': 5,
       'byday': <dynamic>['-1SU', '2MO'],
-      'bymonth': [10],
+      'bymonth': <dynamic>[10],
     },
   );
 
