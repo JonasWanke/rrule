@@ -25,6 +25,13 @@ void main() {
     string: 'RRULE:FREQ=MONTHLY;INTERVAL=4;BYDAY=MO',
   );
 
+  // https://github.com/JonasWanke/rrule/issues/13
+  testText(
+    'Monthly on the last day',
+    string:
+        'RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU',
+  );
+
   // 0/1 digits in the comment before a text function mean whether each of
   // bySetPositions, byMonths, byMonthDays & byWeekDays (in that order) is
   // included.

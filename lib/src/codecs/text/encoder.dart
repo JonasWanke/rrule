@@ -17,6 +17,8 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
 
   @override
   String convert(RecurrenceRule input) {
+    input = _normalize(input);
+
     final frequencyIntervalString =
         l10n.frequencyInterval(input.frequency, input.actualInterval);
     final output = StringBuffer(frequencyIntervalString);
@@ -56,6 +58,35 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     }
 
     return output.toString();
+  }
+
+  RecurrenceRule _normalize(RecurrenceRule input) {
+    // Incomplete!
+    input = input.copyWith(clearInterval: input.interval == 1);
+
+    if (input.frequency == Frequency.monthly) {
+      final byEveryWeekDay = {
+        for (final weekDay in DateTime.monday.rangeTo(DateTime.sunday))
+          ByWeekDayEntry(weekDay),
+      };
+      if (!input.hasBySeconds &&
+          !input.hasByMinutes &&
+          !input.hasByHours &&
+          DeepCollectionEquality.unordered()
+              .equals(input.byWeekDays, byEveryWeekDay) &&
+          !input.hasByMonthDays &&
+          !input.hasByYearDays &&
+          !input.hasByWeeks &&
+          !input.hasByMonths &&
+          input.hasBySetPositions) {
+        input = input.copyWith(
+          byWeekDays: {},
+          byMonthDays: input.bySetPositions,
+          bySetPositions: {},
+        );
+      }
+    }
+    return input;
   }
 
   void _convertDaily(RecurrenceRule input, StringBuffer output) {
