@@ -56,12 +56,15 @@ Iterable<DateTime> getRecurrenceRuleInstances(
       }
 
       if (result < start) continue;
+
+      var isInRange = true;
       if (after != null) {
-        if (!includeAfter && result <= after) continue;
-        if (includeAfter && result < after) continue;
+        if (!includeAfter && result <= after) isInRange = false;
+        if (includeAfter && result < after) isInRange = false;
       }
 
-      yield result;
+      if (isInRange) yield result;
+
       if (count != null) {
         count--;
         if (count <= 0) return;

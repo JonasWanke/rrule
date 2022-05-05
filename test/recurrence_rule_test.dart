@@ -125,29 +125,52 @@ void main() {
   });
 
   test(
-      '#19: No warning for creating a RRULE with BYWEEKNO, but with non-YEARLY frequency',
-      () {
-    expect(
-      () => RecurrenceRule(frequency: Frequency.daily, byWeeks: {1, 2, 3}),
-      throwsA(isA<AssertionError>()),
-    );
-  });
+    '#19: No warning for creating a RRULE with BYWEEKNO, but with non-YEARLY frequency',
+    () {
+      expect(
+        () => RecurrenceRule(frequency: Frequency.daily, byWeeks: {1, 2, 3}),
+        throwsA(isA<AssertionError>()),
+      );
+    },
+  );
   test(
-      "#29: getting instances for rrule yearly, 'every 2nd tuesday of January' fails",
-      () {
-    const rruleString =
-        'RRULE:FREQ=YEARLY;COUNT=4;INTERVAL=1;BYDAY=2TU;BYMONTH=1';
-    final rrule = RecurrenceRule(
-      frequency: Frequency.yearly,
-      count: 4,
-      interval: 1,
-      byMonths: {1},
-      byWeekDays: {ByWeekDayEntry(DateTime.tuesday, 2)},
-    );
-    expect(RecurrenceRule.fromString(rruleString), rrule);
+    '#25: Generating date with count parameter for the same day return unexpected result',
+    () {
+      final rrule =
+          RecurrenceRule.fromString('RRULE:FREQ=DAILY;COUNT=5;INTERVAL=1');
+      final start = DateTime.parse('2021-06-17 19:00:00.000Z');
+      final after = DateTime.parse('2021-06-24 04:00:00.000Z');
+      final before = DateTime.parse('2021-06-25 03:59:59.000Z');
+      final instances = rrule
+          .getInstances(
+            start: start,
+            after: after,
+            includeAfter: true,
+            before: before,
+            includeBefore: true,
+          )
+          .toList();
 
-    final instances =
-        rrule.getAllInstances(start: DateTimeRrule.date(2022, 1, 1));
-    expect(instances.length, 4);
-  });
+      expect(instances.length, 0);
+    },
+  );
+  test(
+    "#29: getting instances for rrule yearly, 'every 2nd tuesday of January' fails",
+    () {
+      const rruleString =
+          'RRULE:FREQ=YEARLY;COUNT=4;INTERVAL=1;BYDAY=2TU;BYMONTH=1';
+      final rrule = RecurrenceRule(
+        frequency: Frequency.yearly,
+        count: 4,
+        interval: 1,
+        byMonths: {1},
+        byWeekDays: {ByWeekDayEntry(DateTime.tuesday, 2)},
+      );
+      expect(RecurrenceRule.fromString(rruleString), rrule);
+
+      final instances =
+          rrule.getAllInstances(start: DateTimeRrule.date(2022, 1, 1));
+      expect(instances.length, 4);
+    },
+  );
 }
