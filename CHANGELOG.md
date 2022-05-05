@@ -15,6 +15,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.8 · 2022-05-05
+
+### 🐛 Bug Fixes
+* support `List<dynamic>` when decoding JSON ([#32](https://github.com/JonasWanke/rrule/pull/32)), closes: [#31](https://github.com/JonasWanke/rrule/issues/31). Thanks to [@nshoura](https://github.com/nshoura)!
+* Add simple normalization before encoding to text ([`204085d`](https://github.com/JonasWanke/rrule/commit/204085d8478a13cec456759801b9869b842fcfed)), closes: [#13](https://github.com/JonasWanke/rrule/issues/13)
+* Update count even if not between after and before ([`a01e5dd`](https://github.com/JonasWanke/rrule/commit/a01e5ddd2b26d3f86299d6ec8603ee1cc6c9df60)), closes: [#25](https://github.com/JonasWanke/rrule/issues/25)
+
 ## 0.2.7 · 2022-01-17
 
 ### 📜 Documentation updates
