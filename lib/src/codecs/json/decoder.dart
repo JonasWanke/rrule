@@ -70,6 +70,12 @@ class RecurrenceRuleFromJsonDecoder
       return {parse(json)};
     } else if (json is List<T>) {
       return json.map(parse).toSet();
+    } else if (json is List) {
+      try {
+        return json.cast<T>().map(parse).toSet();
+      } catch(e, st) {
+        throw FormatException('Invalid JSON in `$name`: $e\n\n$st');
+      }
     } else {
       throw FormatException('Invalid JSON in `$name`.');
     }
