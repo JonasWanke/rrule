@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:time/time.dart';
 
 export 'utils/week.dart';
@@ -104,13 +105,6 @@ extension DateTimeRrule on DateTime {
 
   DateTime plusYears(int years) => plusYearsAndMonths(years: years);
   DateTime plusMonths(int months) => plusYearsAndMonths(months: months);
-
-  DateTime get firstDayOfYear =>
-      DateTimeRrule(atStartOfDay).copyWith(month: 1, day: 1);
-  DateTime get lastDayOfYear =>
-      DateTimeRrule(atStartOfDay).copyWith(month: 12, day: 31);
-  DateTime get firstDayOfMonth => DateTimeRrule(atStartOfDay).copyWith(day: 1);
-  DateTime get lastDayOfMonth => plusMonths(1).firstDayOfMonth.subtract(1.days);
 
   DateTime nextOrSame(int dayOfWeek) {
     assert(dayOfWeek.isValidRruleDayOfWeek);
