@@ -15,6 +15,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.9 · 2022-06-08
+
+### 🐛 Bug Fixes
+* remove extensions conflicting with [<kbd>time</kbd>](https://pub.dev/packages/time) [v2.1.1](https://pub.dev/packages/time/changelog#211) ([`883523a`](https://github.com/JonasWanke/rrule/commit/883523a3ac5522d8ab0b14cb65e2ff43bcfc524e)), closes: [#36](https://github.com/JonasWanke/rrule/issues/36)
+
 ## 0.2.8 · 2022-05-05
 
 ### 🐛 Bug Fixes
