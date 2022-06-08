@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:time/time.dart';
 
 import '../utils.dart';
 
@@ -12,7 +13,6 @@ extension DateTimeWeekInfoRrule on DateTime {
     return offsets[month - 1] + day;
   }
 
-  bool get isLeapYear => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
   int get daysInYear => isLeapYear ? 366 : 365;
 }
 
