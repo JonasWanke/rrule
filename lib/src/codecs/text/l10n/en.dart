@@ -43,7 +43,7 @@ class RruleL10nEn extends RruleL10n {
 
   @override
   String until(DateTime until) =>
-      ', until ${formatWithIntl(() => DateFormat.yMMMMEEEEd().add_jms().format(until))}';
+      ', until ${formatWithIntl(() => DateFormat.yMMMMEEEEd().add_jms().format(until.toLocal()))}';
 
   @override
   String count(int count) {
