@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 
-import 'utils.dart';
-
 @immutable
 class CacheKey {
   const CacheKey({
@@ -19,15 +17,8 @@ class CacheKey {
   final bool includeBefore;
 
   @override
-  int get hashCode {
-    return hashList([
-      start,
-      after,
-      includeAfter,
-      before,
-      includeBefore,
-    ]);
-  }
+  int get hashCode =>
+      Object.hash(start, after, includeAfter, before, includeBefore);
 
   @override
   bool operator ==(Object other) {

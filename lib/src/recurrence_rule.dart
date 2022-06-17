@@ -245,7 +245,7 @@ class RecurrenceRule {
 
   @override
   int get hashCode {
-    return hashList([
+    return Object.hash(
       frequency,
       until,
       count,
@@ -259,7 +259,7 @@ class RecurrenceRule {
       byWeeks,
       byMonths,
       bySetPositions,
-    ]);
+    );
   }
 
   @override

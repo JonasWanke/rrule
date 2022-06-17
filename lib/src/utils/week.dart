@@ -67,7 +67,7 @@ class WeekInfo implements Comparable<WeekInfo> {
   }
 
   @override
-  int get hashCode => hashList([weekBasedYear, weekOfYear]);
+  int get hashCode => Object.hash(weekBasedYear, weekOfYear);
 
   @override
   bool operator ==(Object other) {

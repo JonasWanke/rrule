@@ -4,8 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
-import '../../utils.dart';
-
 /// Pattern corresponding to the `DATE` rule specified in
 /// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
 final iCalDatePattern = DateFormat('yyyyMMdd');
@@ -42,7 +40,7 @@ class ICalProperty {
   final String value;
 
   @override
-  int get hashCode => hashList([name, parameters, value]);
+  int get hashCode => Object.hash(name, parameters, value);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {

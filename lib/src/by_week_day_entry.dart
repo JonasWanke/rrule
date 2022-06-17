@@ -28,7 +28,7 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
   }
 
   @override
-  int get hashCode => hashList([day, occurrence]);
+  int get hashCode => Object.hash(day, occurrence);
 
   @override
   bool operator ==(Object other) {
