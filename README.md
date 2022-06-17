@@ -29,7 +29,7 @@ final Iterable<DateTime> instances = rrule.getInstances(
 ```
 
 > ⚠️ <kbd>rrule</kbd> doesn't care about any time-zone-related stuff.
-> All supplied `DateTime`s must have `isUtc` set to `true` (because UTC doesn't have complications like summer and winter time), but the actual time zone is then ignored when, e.g., generating human-readable text.
+> All supplied `DateTime`s must have `isUtc` set to `true` (because UTC doesn't have complications like summer and winter time), but the actual time zone is then ignored, e.g., when generating human-readable text.
 >
 > If you have a `DateTime` instance in the local time zone, you can use <kbd>rrule</kbd>'s helper `dateTime.copyWith(isUtc: true)` which keeps the date and time but sets `isUtc` to true.
 > To convert the generated instances back to your local time zone, you can use `dateTime.copyWith(isUtc: false)`.
