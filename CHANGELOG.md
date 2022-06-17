@@ -15,6 +15,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.10 · 2022-06-17
+
+### 🎉 New Features
+* export `dateTime.copyWith(isUtc: …, …)` ([`ccc2828`](https://github.com/JonasWanke/rrule/commit/ccc28288d4a5c9a36e6eb8fa18f0d7f153902b69)), closes: [#39](https://github.com/JonasWanke/rrule/issues/39)
+
+### 📜 Documentation updates
+* clarify time zone handling in README ([`ccc2828`](https://github.com/JonasWanke/rrule/commit/ccc28288d4a5c9a36e6eb8fa18f0d7f153902b69)), closes: [#39](https://github.com/JonasWanke/rrule/issues/39)
+
+### 📦 Build & CI
+* update dependency on [<kbd>time</kbd>](https://pub.dev/packages/time) to required [^2.1.1](https://pub.dev/packages/time/changelog#211) ([`8755f27`](https://github.com/JonasWanke/rrule/commit/8755f277c23479c3d789dbc331ed84e6824f9b3d)), closes: [#37](https://github.com/JonasWanke/rrule/issues/37)
+
 ## 0.2.9 · 2022-06-08
 
 ### 🐛 Bug Fixes
