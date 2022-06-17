@@ -169,7 +169,7 @@ void main() {
       expect(RecurrenceRule.fromString(rruleString), rrule);
 
       final instances =
-          rrule.getAllInstances(start: DateTimeRrule.date(2022, 1, 1));
+          rrule.getAllInstances(start: InternalDateTimeRrule.date(2022, 1, 1));
       expect(instances.length, 4);
     },
   );

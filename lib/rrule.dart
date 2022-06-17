@@ -5,3 +5,4 @@ export 'src/codecs/string/string.dart' show RecurrenceRuleStringCodec;
 export 'src/codecs/text/l10n/l10n.dart';
 export 'src/frequency.dart' show Frequency;
 export 'src/recurrence_rule.dart' show RecurrenceRule;
+export 'src/utils.dart' show DateTimeRrule;

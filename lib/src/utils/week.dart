@@ -33,7 +33,7 @@ class WeekInfo implements Comparable<WeekInfo> {
       // belongs to the preceding (week-based) year.
       return WeekInfo(
         year - 1,
-        DateTimeRrule.date(year - 1, 12, 31).weekInfo.weekOfYear,
+        InternalDateTimeRrule.date(year - 1, 12, 31).weekInfo.weekOfYear,
       );
     }
 
@@ -56,7 +56,7 @@ class WeekInfo implements Comparable<WeekInfo> {
     // number of 28 December, because it is the only date that is always in the
     // last week of the year since it is a week before 4 January which is always
     // in the first week of the following year."
-    return DateTimeRrule.date(year, 12, 28).weekInfo.weekOfYear;
+    return InternalDateTimeRrule.date(year, 12, 28).weekInfo.weekOfYear;
   }
 
   @override

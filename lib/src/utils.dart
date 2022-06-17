@@ -24,6 +24,30 @@ int hashList(Iterable<Object?>? arguments) {
 }
 
 extension DateTimeRrule on DateTime {
+  DateTime copyWith({
+    int? year,
+    int? month,
+    int? day,
+    int? hour,
+    int? minute,
+    int? second,
+    int? millisecond,
+    bool? isUtc,
+  }) {
+    return InternalDateTimeRrule.create(
+      year: year ?? this.year,
+      month: month ?? this.month,
+      day: day ?? this.day,
+      hour: hour ?? this.hour,
+      minute: minute ?? this.minute,
+      second: second ?? this.second,
+      millisecond: millisecond ?? this.millisecond,
+      isUtc: isUtc ?? this.isUtc,
+    );
+  }
+}
+
+extension InternalDateTimeRrule on DateTime {
   static DateTime create({
     required int year,
     int month = 1,
@@ -46,28 +70,6 @@ extension DateTimeRrule on DateTime {
     return date;
   }
 
-  DateTime copyWith({
-    int? year,
-    int? month,
-    int? day,
-    int? hour,
-    int? minute,
-    int? second,
-    int? millisecond,
-    bool? isUtc,
-  }) {
-    return DateTimeRrule.create(
-      year: year ?? this.year,
-      month: month ?? this.month,
-      day: day ?? this.day,
-      hour: hour ?? this.hour,
-      minute: minute ?? this.minute,
-      second: second ?? this.second,
-      millisecond: millisecond ?? this.millisecond,
-      isUtc: isUtc ?? this.isUtc,
-    );
-  }
-
   bool operator <(DateTime other) => isBefore(other);
   bool operator <=(DateTime other) =>
       isBefore(other) || isAtSameMomentAs(other);
@@ -76,11 +78,11 @@ extension DateTimeRrule on DateTime {
 
   Duration get timeOfDay => difference(atStartOfDay);
 
-  DateTime get atStartOfDay =>
-      copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+  DateTime get atStartOfDay => DateTimeRrule(this)
+      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
   bool get isAtStartOfDay => this == atStartOfDay;
-  DateTime get atEndOfDay =>
-      copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+  DateTime get atEndOfDay => DateTimeRrule(this)
+      .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   bool get isAtEndOfDay => this == atEndOfDay;
 
   static DateTime today() {
@@ -89,13 +91,14 @@ extension DateTimeRrule on DateTime {
     return date;
   }
 
-  bool get isToday => atStartOfDay == DateTimeRrule.today();
+  bool get isToday => atStartOfDay == InternalDateTimeRrule.today();
 
   DateTime plusYearsAndMonths({int years = 0, int months = 0}) {
     final targetYear = year + years + (month + months) ~/ 12;
     final targetMonth = (month + months) % 12;
-    final startOfTargetMonth = DateTimeRrule.date(targetYear, targetMonth);
-    return copyWith(
+    final startOfTargetMonth =
+        InternalDateTimeRrule.date(targetYear, targetMonth);
+    return DateTimeRrule(this).copyWith(
       year: targetYear,
       month: targetMonth,
       // Quietly force the day of month to the nearest sane value.
