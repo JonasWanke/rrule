@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2022-xx-xx
+## NEW · 2023-xx-xx
+
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
@@ -14,6 +15,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.11 · 2023-01-24
+
+### 📦 Build & CI
+* upgrade to Dart `>=2.18.0 <3.0.0` ([`160f22b`](https://github.com/JonasWanke/rrule/commit/160f22bf2da09f083f6fd99bed552fb0f549549e))
+* update `intl` to `^0.18.0` ([`ed3f68d`](https://github.com/JonasWanke/rrule/commit/ed3f68d8cbada3ce18997defd223ffad96dc8877)), closes: [#45](https://github.com/JonasWanke/rrule/issues/45)
 
 ## 0.2.10 · 2022-06-17
 
