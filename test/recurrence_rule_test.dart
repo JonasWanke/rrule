@@ -173,4 +173,23 @@ void main() {
       expect(instances.length, 4);
     },
   );
+  test(
+    '#46: Start DateTime with microseconds should not skip first instance',
+    () {
+      final rrule = RecurrenceRule(frequency: Frequency.daily);
+
+      final start = DateTime.utc(
+        2023,
+        03,
+        16,
+        00,
+        00,
+        00,
+        123, // milliseconds
+      );
+      final instances = rrule.getInstances(start: start);
+
+      expect(instances.first, equals(start));
+    },
+  );
 }
