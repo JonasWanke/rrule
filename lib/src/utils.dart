@@ -23,6 +23,7 @@ extension DateTimeRrule on DateTime {
       minute: minute ?? this.minute,
       second: second ?? this.second,
       millisecond: millisecond ?? this.millisecond,
+      // Microseconds are not supported on web: https://github.com/dart-lang/sdk/issues/44876
       isUtc: isUtc ?? this.isUtc,
     );
   }
