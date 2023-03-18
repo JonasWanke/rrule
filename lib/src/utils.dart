@@ -109,12 +109,15 @@ extension DurationRrule on Duration {
       hours: hourOfDay ?? this.hourOfDay,
       minutes: minuteOfHour ?? this.minuteOfHour,
       seconds: secondOfMinute ?? this.secondOfMinute,
+      microseconds: microsecondOfSecond,
     );
   }
 
   int get hourOfDay => inHours;
   int get minuteOfHour => inMinutes % Duration.minutesPerHour;
   int get secondOfMinute => inSeconds % Duration.secondsPerMinute;
+  int get microsecondOfSecond =>
+      inMicroseconds % Duration.microsecondsPerSecond;
 }
 
 extension NullableDurationRrule on Duration? {
