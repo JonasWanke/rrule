@@ -7,6 +7,7 @@ import 'package:rrule/src/codecs/json/encoder.dart';
 import 'package:test/test.dart';
 
 @isTestGroup
+// ignore: avoid-top-level-members-in-tests
 void testStringCodec<T>(
   String description, {
   required Codec<T, String> codec,
@@ -20,6 +21,7 @@ void testStringCodec<T>(
 }
 
 @isTest
+// ignore: avoid-top-level-members-in-tests
 void testJsonCodec(
   String description,
   RecurrenceRule value, {

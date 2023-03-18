@@ -36,7 +36,8 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
   @override
   String convert(RecurrenceRule input) {
     final value = StringBuffer(
-        '$recurRulePartFreq=${frequencyToString(input.frequency)}');
+      '$recurRulePartFreq=${frequencyToString(input.frequency)}',
+    );
 
     if (input.until != null) {
       value

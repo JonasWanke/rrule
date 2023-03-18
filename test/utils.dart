@@ -7,6 +7,7 @@ import 'codecs/utils.dart';
 import 'iteration/utils.dart';
 
 @isTestGroup
+// ignore: avoid-top-level-members-in-tests
 void testRrule(
   String description, {
   required String string,

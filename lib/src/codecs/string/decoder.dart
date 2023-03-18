@@ -50,7 +50,8 @@ class RecurrenceRuleFromStringDecoder
     final property = const ICalPropertyStringCodec().decode(input);
     if (property.name.toUpperCase() != 'RRULE') {
       throw FormatException(
-          'Content line is not an RRULE but a ${property.name}!');
+        'Content line is not an RRULE but a ${property.name}!',
+      );
     }
 
     Frequency? frequency;
@@ -302,7 +303,8 @@ class RecurrenceRuleFromStringDecoder
         final valueToCheck = allowNegative ? parsed.abs() : parsed;
         if (min > valueToCheck || valueToCheck > max) {
           throw FormatException(
-              'Value must be in range ${allowNegative ? '±' : ''}$min–$max');
+            'Value must be in range ${allowNegative ? '±' : ''}$min–$max',
+          );
         }
         return parsed;
       },
@@ -324,7 +326,8 @@ class RecurrenceRuleFromStringDecoder
       }
     } on FormatException catch (e) {
       throw FormatException(
-          'Invalid entry in RRULE part $name: "$value" (Exception: $e)');
+        'Invalid entry in RRULE part $name: "$value" (Exception: $e)',
+      );
     }
 
     if (oldValue != null) {

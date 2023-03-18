@@ -3,6 +3,7 @@ import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
 
 @isTest
+// ignore: avoid-top-level-members-in-tests
 void testRecurring(
   String description, {
   required RecurrenceRule rrule,

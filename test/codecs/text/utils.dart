@@ -4,6 +4,7 @@ import 'package:rrule/src/codecs/text/encoder.dart';
 import 'package:test/test.dart';
 
 @isTest
+// ignore: avoid-top-level-members-in-tests
 void testText(
   String description, {
   required String text,

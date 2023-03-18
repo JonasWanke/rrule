@@ -790,26 +790,26 @@ void main() {
     );
   });
   group(
-      'An example where the days generated makes a difference because of WKST',
-      () {
-    testRrule(
-      'with weekStart monday',
-      // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO
-      string: 'RRULE:FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=MO',
-      rrule: RecurrenceRule(
-        frequency: Frequency.weekly,
-        count: 4,
-        interval: 2,
-        byWeekDays: {
-          ByWeekDayEntry(DateTime.tuesday),
-          ByWeekDayEntry(DateTime.sunday)
-        },
-        weekStart: DateTime.monday,
-      ),
-      start: DateTime.utc(1997, 8, 5, 9, 0, 0),
-      expected: [5, 10, 19, 24].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
-    );
-    /*
+    'An example where the days generated makes a difference because of WKST',
+    () {
+      testRrule(
+        'with weekStart monday',
+        // RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO
+        string: 'RRULE:FREQ=WEEKLY;COUNT=4;INTERVAL=2;BYDAY=TU,SU;WKST=MO',
+        rrule: RecurrenceRule(
+          frequency: Frequency.weekly,
+          count: 4,
+          interval: 2,
+          byWeekDays: {
+            ByWeekDayEntry(DateTime.tuesday),
+            ByWeekDayEntry(DateTime.sunday),
+          },
+          weekStart: DateTime.monday,
+        ),
+        start: DateTime.utc(1997, 8, 5, 9, 0, 0),
+        expected: [5, 10, 19, 24].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
+      );
+      /*
     TODO(JonasWanke): Re-add this test when we support WKST again.
     testRrule(
       'with weekStart sunday',
@@ -821,7 +821,7 @@ void main() {
         interval: 2,
         byWeekDays: {
           ByWeekDayEntry(DateTime.tuesday),
-          ByWeekDayEntry(DateTime.sunday)
+          ByWeekDayEntry(DateTime.sunday),
         },
         weekStart: DateTime.sunday,
       ),
@@ -829,7 +829,8 @@ void main() {
       expected: [5, 17, 19, 31].map((d) => DateTime.utc(1997, 8, d, 9, 0, 0)),
     );
    */
-  });
+    },
+  );
   testRrule(
     'An example where an invalid date (i.e., February 30) is ignored',
     string: 'RRULE:FREQ=MONTHLY;COUNT=5;BYMONTHDAY=15,30',

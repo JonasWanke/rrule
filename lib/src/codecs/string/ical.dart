@@ -170,7 +170,10 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
       final match = RegExp('$_param(?=[;:])').matchAsPrefix(contentLine, index);
       if (match == null) {
         throw ICalPropertyFormatException(
-            'Expected parameter after ";" character', contentLine, index);
+          'Expected parameter after ";" character',
+          contentLine,
+          index,
+        );
       }
 
       final name = match.group(1)!;
@@ -185,7 +188,10 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
             RegExp('$_paramValue(?=[,;:])').matchAsPrefix(contentLine, index);
         if (match == null) {
           throw ICalPropertyFormatException(
-              'Invalid parameter value', contentLine, index);
+            'Invalid parameter value',
+            contentLine,
+            index,
+          );
         }
 
         final value = match.group(0)!;

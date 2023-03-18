@@ -26,7 +26,7 @@ class WeekInfo implements Comparable<WeekInfo> {
 
     // Algorithm from https://en.wikipedia.org/wiki/ISO_week_date#Algorithms
     final year = date.year;
-    final weekOfYear = (10 + date.dayOfYear - date.weekday) ~/ 7;
+    final weekOfYear = (date.dayOfYear + 10 - date.weekday) ~/ 7;
 
     if (weekOfYear == 0) {
       // If the week number thus obtained equals 0, it means that the given date
