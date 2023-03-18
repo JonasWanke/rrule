@@ -11,7 +11,7 @@ void testText(
   required RruleL10n Function() l10n,
 }) {
   test(description, () async {
-    final stringCodec = RecurrenceRuleStringCodec();
+    const stringCodec = RecurrenceRuleStringCodec();
     final rrule = stringCodec.decode(string);
 
     // TODO(JonasWanke): use codec directly when supporting fromText()

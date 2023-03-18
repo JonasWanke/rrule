@@ -6,7 +6,7 @@ void main() {
 
   group('from string', () {
     test('throws on missing frequency', () {
-      final codec = RecurrenceRuleStringCodec();
+      const codec = RecurrenceRuleStringCodec();
 
       expect(
         () => codec.decode('RRULE:COUNT=3;COUNT=6'),
@@ -19,7 +19,7 @@ void main() {
     });
 
     test('throws on duplicate parts', () {
-      final codec = RecurrenceRuleStringCodec();
+      const codec = RecurrenceRuleStringCodec();
 
       expect(
         () => codec.decode('RRULE:FREQ=DAILY,COUNT=3;COUNT=6'),
@@ -40,7 +40,7 @@ void main() {
     });
 
     test('parses dates', () {
-      final codec = RecurrenceRuleStringCodec();
+      const codec = RecurrenceRuleStringCodec();
 
       expect(
         codec.decode('RRULE:FREQ=DAILY;UNTIL=20200101'),
@@ -66,7 +66,7 @@ void main() {
     });
 
     test('parses week day entries', () {
-      final codec = RecurrenceRuleStringCodec();
+      const codec = RecurrenceRuleStringCodec();
 
       expect(
         codec.decode('RRULE:FREQ=YEARLY;BYDAY=MO,TU,WE,TH,FR,SA,SU'),

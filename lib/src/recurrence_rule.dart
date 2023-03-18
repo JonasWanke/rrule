@@ -112,7 +112,7 @@ class RecurrenceRule {
       RecurrenceRuleFromStringDecoder(options: options).convert(input);
 
   factory RecurrenceRule.fromJson(Map<String, dynamic> json) =>
-      RecurrenceRuleFromJsonDecoder().convert(json);
+      const RecurrenceRuleFromJsonDecoder().convert(json);
 
   /// Corresponds to the `FREQ` property.
   final Frequency frequency;

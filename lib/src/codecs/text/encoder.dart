@@ -72,7 +72,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       if (!input.hasBySeconds &&
           !input.hasByMinutes &&
           !input.hasByHours &&
-          DeepCollectionEquality.unordered()
+          const DeepCollectionEquality.unordered()
               .equals(input.byWeekDays, byEveryWeekDay) &&
           !input.hasByMonthDays &&
           !input.hasByYearDays &&

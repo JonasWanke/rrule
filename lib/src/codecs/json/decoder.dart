@@ -17,7 +17,7 @@ class RecurrenceRuleFromJsonDecoder
     final rawUntil = input['until'] as String?;
     final rawCount = input['count'] as int?;
     if (rawUntil != null && rawCount != null) {
-      throw FormatException('Both `until` and `count` are specified.');
+      throw const FormatException('Both `until` and `count` are specified.');
     }
     final rawWeekStart = input['wkst'] as String?;
     return RecurrenceRule(

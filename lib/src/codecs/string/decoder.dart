@@ -47,7 +47,7 @@ class RecurrenceRuleFromStringDecoder
 
   @override
   RecurrenceRule convert(String input) {
-    final property = ICalPropertyStringCodec().decode(input);
+    final property = const ICalPropertyStringCodec().decode(input);
     if (property.name.toUpperCase() != 'RRULE') {
       throw FormatException(
           'Content line is not an RRULE but a ${property.name}!');
@@ -229,7 +229,7 @@ class RecurrenceRuleFromStringDecoder
     }
 
     if (frequency == null) {
-      throw FormatException('Frequency was not provided in RRULE');
+      throw const FormatException('Frequency was not provided in RRULE');
     }
 
     return RecurrenceRule(
@@ -412,7 +412,7 @@ class ByWeekDayEntryFromStringDecoder
     if (numberMatch != null) {
       occurrence = int.parse(numberMatch);
       if (1 > occurrence || occurrence > 53) {
-        throw FormatException('Value must be in range ±1–53');
+        throw const FormatException('Value must be in range ±1–53');
       }
 
       if (match.group(1) == '-') occurrence = -occurrence;

@@ -11,7 +11,7 @@ class RruleL10nEn extends RruleL10n {
 
   static Future<RruleL10nEn> create() async {
     await initializeDateFormatting('en');
-    return RruleL10nEn._();
+    return const RruleL10nEn._();
   }
 
   @override

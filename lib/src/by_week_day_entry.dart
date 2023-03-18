@@ -40,7 +40,7 @@ class ByWeekDayEntry implements Comparable<ByWeekDayEntry> {
   }
 
   @override
-  String toString() => ByWeekDayEntryStringCodec().encode(this);
+  String toString() => const ByWeekDayEntryStringCodec().encode(this);
 }
 
 extension ByWeekDayEntryIterable on Iterable<ByWeekDayEntry> {

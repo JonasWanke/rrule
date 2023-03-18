@@ -8,8 +8,8 @@ void main() {
     group('Codec', () {
       testStringCodec(
         'line with complex parameters',
-        codec: ICalPropertyStringCodec(),
-        value: ICalProperty(
+        codec: const ICalPropertyStringCodec(),
+        value: const ICalProperty(
           name: 'RRULE',
           parameters: {
             'a': ['b'],
@@ -22,22 +22,22 @@ void main() {
 
       test('simple unfolding', () {
         expect(
-          ICalPropertyStringCodec()
+          const ICalPropertyStringCodec()
               .decode('na\r\n me:\r\n\tvalu\r\n  e\r\n \t'),
-          ICalProperty(name: 'name', value: 'value'),
+          const ICalProperty(name: 'name', value: 'value'),
         );
       });
       test('detects invalid newlines', () {
         expect(
-          () => ICalPropertyStringCodec().decode('na\rme:nvalue'),
+          () => const ICalPropertyStringCodec().decode('na\rme:nvalue'),
           throwsFormatException,
         );
         expect(
-          () => ICalPropertyStringCodec().decode('name:val\nue'),
+          () => const ICalPropertyStringCodec().decode('name:val\nue'),
           throwsFormatException,
         );
         expect(
-          () => ICalPropertyStringCodec().decode('name:\r\nvalue'),
+          () => const ICalPropertyStringCodec().decode('name:\r\nvalue'),
           throwsFormatException,
         );
       });

@@ -20,7 +20,7 @@ void testRrule(
   group(description, () {
     testStringCodec(
       'StringCodec',
-      codec: RecurrenceRuleStringCodec(
+      codec: const RecurrenceRuleStringCodec(
         toStringOptions: RecurrenceRuleToStringOptions(isTimeUtc: true),
       ),
       value: rrule,

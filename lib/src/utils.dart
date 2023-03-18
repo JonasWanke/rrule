@@ -159,7 +159,7 @@ extension IntRange on int {
     } else if (this > n) {
       return rangeTo(n + 1);
     } else {
-      return Iterable.empty();
+      return const Iterable.empty();
     }
   }
 }

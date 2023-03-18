@@ -128,7 +128,10 @@ void main() {
     '#19: No warning for creating a RRULE with BYWEEKNO, but with non-YEARLY frequency',
     () {
       expect(
-        () => RecurrenceRule(frequency: Frequency.daily, byWeeks: {1, 2, 3}),
+        () => RecurrenceRule(
+          frequency: Frequency.daily,
+          byWeeks: const {1, 2, 3},
+        ),
         throwsA(isA<AssertionError>()),
       );
     },
@@ -163,7 +166,7 @@ void main() {
         frequency: Frequency.yearly,
         count: 4,
         interval: 1,
-        byMonths: {1},
+        byMonths: const {1},
         byWeekDays: {ByWeekDayEntry(DateTime.tuesday, 2)},
       );
       expect(RecurrenceRule.fromString(rruleString), rrule);

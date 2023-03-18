@@ -36,11 +36,11 @@ class ByWeekDayEntryStringCodec extends Codec<ByWeekDayEntry, String> {
 
   @override
   Converter<ByWeekDayEntry, String> get encoder =>
-      ByWeekDayEntryToStringEncoder();
+      const ByWeekDayEntryToStringEncoder();
 
   @override
   Converter<String, ByWeekDayEntry> get decoder =>
-      ByWeekDayEntryFromStringDecoder();
+      const ByWeekDayEntryFromStringDecoder();
 }
 
 /// Name of the `RRULE` property as defined in [RFC 5545 Section 3.8.5.3](https://tools.ietf.org/html/rfc5545#section-3.8.5.3).

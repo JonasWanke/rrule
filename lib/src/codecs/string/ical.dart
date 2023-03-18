@@ -33,7 +33,7 @@ class ICalProperty {
   });
 
   factory ICalProperty.parse(String contentLine) =>
-      ICalPropertyStringCodec().decode(contentLine);
+      const ICalPropertyStringCodec().decode(contentLine);
 
   final String name;
   final Map<String, List<String>> parameters;
@@ -51,17 +51,20 @@ class ICalProperty {
     }
     return other is ICalProperty &&
         other.name == name &&
-        DeepCollectionEquality().equals(other.parameters, parameters) &&
+        const DeepCollectionEquality().equals(other.parameters, parameters) &&
         other.value == value;
   }
 
   @override
-  String toString() => ICalPropertyStringCodec().encode(this);
+  String toString() => const ICalPropertyStringCodec().encode(this);
 }
 
 class ICalPropertyFormatException extends FormatException {
-  const ICalPropertyFormatException(String message, String source, int offset)
-      : super(message, source, offset);
+  const ICalPropertyFormatException(
+    super.message,
+    String super.source,
+    int super.offset,
+  );
 }
 
 @immutable
@@ -69,11 +72,12 @@ class ICalPropertyStringCodec extends Codec<ICalProperty, String> {
   const ICalPropertyStringCodec();
 
   @override
-  Converter<ICalProperty, String> get encoder => _ICalPropertyToStringEncoder();
+  Converter<ICalProperty, String> get encoder =>
+      const _ICalPropertyToStringEncoder();
 
   @override
   Converter<String, ICalProperty> get decoder =>
-      _ICalPropertyFromStringDecoder();
+      const _ICalPropertyFromStringDecoder();
 }
 
 @immutable
