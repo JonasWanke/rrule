@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.12 · 2023-03-18
+
+### 🐛 Bug Fixes
+* `RecurrenceRule`s will no longer skip the first instance if the start time contains milliseconds/microseconds ([#47](https://github.com/JonasWanke/rrule/pull/47)), closes: [#46](https://github.com/JonasWanke/rrule/issues/46). Thanks to [@plammens](https://github.com/plammens)!
+
 ## 0.2.11 · 2023-01-24
 
 ### 📦 Build & CI
