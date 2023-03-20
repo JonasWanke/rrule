@@ -61,10 +61,10 @@ jobs:
         continue-on-error: true
 
       - name: Install ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         if: github.event_name == 'pull_request'
         with:
-          ruby-version: '2.6'
+          ruby-version: '2.7'
       - name: Install ruby gems
         run: |
           gem install bundler
