@@ -13,6 +13,7 @@ extension DateTimeRrule on DateTime {
     int? minute,
     int? second,
     int? millisecond,
+    int? microsecond,
     bool? isUtc,
   }) {
     return InternalDateTimeRrule.create(
@@ -23,7 +24,7 @@ extension DateTimeRrule on DateTime {
       minute: minute ?? this.minute,
       second: second ?? this.second,
       millisecond: millisecond ?? this.millisecond,
-      // Microseconds are not supported on web: https://github.com/dart-lang/sdk/issues/44876
+      microsecond: microsecond ?? this.microsecond,
       isUtc: isUtc ?? this.isUtc,
     );
   }
@@ -38,10 +39,20 @@ extension InternalDateTimeRrule on DateTime {
     int minute = 0,
     int second = 0,
     int millisecond = 0,
+    int microsecond = 0,
     bool isUtc = true,
   }) {
     final constructor = isUtc ? DateTime.utc : DateTime.new;
-    return constructor(year, month, day, hour, minute, second, millisecond);
+    return constructor(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+    );
   }
 
   static DateTime date(int year, [int month = 1, int day = 1]) {
