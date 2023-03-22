@@ -16,6 +16,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.13 · 2023-03-22
+
+### 🐛 Bug Fixes
+* copy microseconds as well in `dateTime.copyWith(…)` ([#49](https://github.com/JonasWanke/rrule/pull/49)), closes: [#48](https://github.com/JonasWanke/rrule/issues/48). Thanks to [@plammens](https://github.com/plammens)!
+
+### 📦 Build & CI
+* widen <kbd>intl</kbd> dependency to `>=0.17.0 <0.19.0` ([`84cb5d3`](https://github.com/JonasWanke/rrule/commit/84cb5d31862a8d3152f01f35d5f6d892306483f0)), closes: [#51](https://github.com/JonasWanke/rrule/issues/51)
+
 ## 0.2.12 · 2023-03-18
 
 ### 🐛 Bug Fixes
