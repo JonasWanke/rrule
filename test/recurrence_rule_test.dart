@@ -189,10 +189,19 @@ void main() {
         00,
         00,
         123, // milliseconds
+        456, // microseconds
       );
       final instances = rrule.getInstances(start: start);
 
       expect(instances.first, equals(start));
     },
   );
+  test('#48: DateTime.copyWith should preserve microseconds', () {
+    final start = DateTime(2023, 03, 20, 00, 00, 00, 0, 123);
+
+    expect(
+      start.copyWith(isUtc: true).copyWith(isUtc: false),
+      equals(start),
+    );
+  });
 }
