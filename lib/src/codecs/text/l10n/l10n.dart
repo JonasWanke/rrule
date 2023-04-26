@@ -103,6 +103,10 @@ abstract class RruleL10n {
   }
 
   String ordinal(int number);
+
+  String timeOfDay(int? hour, int? minute, int? second);
+
+  String atTimesOfDay(List<String> timesOfDay);
 }
 
 enum InOnVariant { simple, also, instanceOf }

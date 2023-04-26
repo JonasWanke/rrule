@@ -107,4 +107,20 @@ void main() {
     string:
         'RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,TH',
   );
+
+  // Time of day.
+
+  testText(
+    'Daily at 8:30 & 12:30',
+    string: 'RRULE:FREQ=DAILY;BYHOUR=8,12;BYMINUTE=30',
+  );
+
+  test('canConvertToText is true when byHours is specified', () async {
+    final rrule = RecurrenceRule(frequency: Frequency.daily, byHours: {8});
+    expect(rrule.canFullyConvertToText, isTrue);
+    expect(
+      rrule.toText(l10n: await RruleL10nEn.create()),
+      equals('Daily at 8'),
+    );
+  });
 }
