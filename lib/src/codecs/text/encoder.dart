@@ -52,7 +52,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     }
 
     if (input.until != null) {
-      output.write(l10n.until(input.until!));
+      output.write(l10n.until(input.until!, input.frequency));
     } else if (input.count != null) {
       output.write(l10n.count(input.count!));
     }
@@ -455,9 +455,11 @@ extension on Iterable<ByWeekDayEntry> {
 
     final mapped = <String>[];
 
-    final containsAllWeekdays = l10n.weekdays.every(raw.contains);
-    if (containsAllWeekdays) {
-      mapped.add(l10n.weekdaysString);
+    late final containsAllWeekdays = l10n.weekdays.every(raw.contains);
+    if (l10n.weekdaysString != null &&
+        l10n.weekdaysString != '' &&
+        containsAllWeekdays) {
+      mapped.add(l10n.weekdaysString!);
       raw.removeWhere((d) => l10n.weekdays.contains(d));
     }
 

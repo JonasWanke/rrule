@@ -20,7 +20,7 @@ abstract class RruleL10n {
       Intl.withLocale(locale, formatter) as String;
 
   String frequencyInterval(Frequency frequency, int interval);
-  String until(DateTime until);
+  String until(DateTime until, Frequency frequency);
   String count(int count);
   String range(String start, String end) => '$start – $end';
 
@@ -45,7 +45,7 @@ abstract class RruleL10n {
     DaysOfWeekFrequency? frequency = DaysOfWeekFrequency.monthly,
     InOnVariant variant = InOnVariant.simple,
   });
-  String get weekdaysString;
+  String? get weekdaysString;
   String get everyXDaysOfWeekPrefix;
   String dayOfWeek(int dayOfWeek) {
     assert(dayOfWeek.isValidRruleDayOfWeek);
