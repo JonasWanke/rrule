@@ -456,9 +456,7 @@ extension on Iterable<ByWeekDayEntry> {
     final mapped = <String>[];
 
     late final containsAllWeekdays = l10n.weekdays.every(raw.contains);
-    if (l10n.weekdaysString != null &&
-        l10n.weekdaysString != '' &&
-        containsAllWeekdays) {
+    if (l10n.weekdaysString != null && containsAllWeekdays) {
       mapped.add(l10n.weekdaysString!);
       raw.removeWhere((d) => l10n.weekdays.contains(d));
     }
