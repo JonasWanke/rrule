@@ -50,7 +50,7 @@ void main() {
     string: 'RRULE:FREQ=WEEKLY;COUNT=20',
   );
   testText(
-    'Weekly, until Monday, January 1, 2007 8:00:00 AM',
+    'Weekly, until Monday, January 1, 2007 8:00:00 AM',
     string: 'RRULE:FREQ=WEEKLY;UNTIL=20070101T080000Z',
   );
   testText(

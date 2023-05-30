@@ -50,7 +50,7 @@ void main() {
   testRrule(
     'Daily until December 24, 1997',
     string: 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z',
-    text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
+    text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       until: DateTime.utc(1997, 12, 24),
@@ -110,7 +110,7 @@ void main() {
       string:
           'RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=1',
       text:
-          'Annually on weekdays, every Saturday & Sunday in January, until Monday, January 31, 2000 2:00:00 PM',
+          'Annually on weekdays, every Saturday & Sunday in January, until Monday, January 31, 2000 2:00:00 PM',
       rrule: RecurrenceRule(
         frequency: Frequency.yearly,
         until: DateTime.utc(2000, 01, 31, 14, 0, 0),
@@ -131,7 +131,7 @@ void main() {
     testRrule(
       'with frequency daily',
       string: 'RRULE:FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1',
-      text: 'Daily in January, until Monday, January 31, 2000 2:00:00 PM',
+      text: 'Daily in January, until Monday, January 31, 2000 2:00:00 PM',
       rrule: RecurrenceRule(
         frequency: Frequency.daily,
         until: DateTime.utc(2000, 01, 31, 14, 0, 0),
@@ -159,7 +159,7 @@ void main() {
   testRrule(
     'Weekly until December 24, 1997',
     string: 'RRULE:FREQ=WEEKLY;UNTIL=19971224T000000Z',
-    text: 'Weekly, until Wednesday, December 24, 1997 12:00:00 AM',
+    text: 'Weekly, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       until: DateTime.utc(1997, 12, 24),
@@ -205,7 +205,7 @@ void main() {
       // RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH
       string: 'RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;BYDAY=TU,TH;WKST=SU',
       text:
-          'Weekly on Tuesday & Thursday, until Tuesday, October 7, 1997 12:00:00 AM',
+          'Weekly on Tuesday & Thursday, until Tuesday, October 7, 1997 12:00:00 AM',
       rrule: RecurrenceRule(
         frequency: Frequency.weekly,
         until: DateTime.utc(1997, 10, 07),
@@ -242,7 +242,7 @@ void main() {
     string:
         'RRULE:FREQ=WEEKLY;UNTIL=19971224T000000Z;INTERVAL=2;BYDAY=MO,WE,FR;WKST=SU',
     text:
-        'Every other week on Monday, Wednesday & Friday, until Wednesday, December 24, 1997 12:00:00 AM',
+        'Every other week on Monday, Wednesday & Friday, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.weekly,
       until: DateTime.utc(1997, 12, 24),
@@ -314,7 +314,7 @@ void main() {
     'Monthly on the first Friday until December 24, 1997',
     string: 'RRULE:FREQ=MONTHLY;UNTIL=19971224T000000Z;BYDAY=1FR',
     text:
-        'Monthly on the 1st Friday, until Wednesday, December 24, 1997 12:00:00 AM',
+        'Monthly on the 1st Friday, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       until: DateTime.utc(1997, 12, 24),
@@ -710,7 +710,7 @@ void main() {
     isInfinite: true,
   );
   testRrule(
-    'Every 3 hours from 9:00 AM to 5:00 PM on a specific day',
+    'Every 3 hours from 9:00 AM to 5:00 PM on a specific day',
     // RRULE:FREQ=HOURLY;INTERVAL=3;UNTIL=19970902T170000Z
     string: 'RRULE:FREQ=HOURLY;UNTIL=19970902T170000Z;INTERVAL=3',
     rrule: RecurrenceRule(
@@ -757,7 +757,7 @@ void main() {
       const Duration(hours: 13, minutes: 30),
     ].map((t) => DateTime.utc(1997, 9, 2).add(t)),
   );
-  group('Every 20 minutes from 9:00 AM to 4:40 PM every day', () {
+  group('Every 20 minutes from 9:00 AM to 4:40 PM every day', () {
     final expected = [2, 3].expand((d) {
       return 9.until(17).expand((h) {
         return [0, 20, 40].map((m) => DateTime.utc(1997, 9, d, h, m, 0));
