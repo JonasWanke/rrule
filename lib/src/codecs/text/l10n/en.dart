@@ -42,7 +42,7 @@ class RruleL10nEn extends RruleL10n {
   }
 
   @override
-  String until(DateTime until) =>
+  String until(DateTime until, Frequency frequency) =>
       ', until ${formatWithIntl(() => DateFormat.yMMMMEEEEd().add_jms().format(until))}';
 
   @override
@@ -95,7 +95,7 @@ class RruleL10nEn extends RruleL10n {
   }
 
   @override
-  String get weekdaysString => 'weekdays';
+  String? get weekdaysString => 'weekdays';
   @override
   String get everyXDaysOfWeekPrefix => 'every ';
   @override
