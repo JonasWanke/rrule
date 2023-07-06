@@ -73,14 +73,10 @@ void main() {
     ),
     start: DateTime.utc(1997, 9, 2, 9, 0, 0),
     expected: [
-      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-          .map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
-      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-          .map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
-      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
-          .map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
-      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31]
-          .map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
+      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30].map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30].map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29].map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31].map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
     ],
     isInfinite: true,
   );
@@ -107,10 +103,8 @@ void main() {
     testRrule(
       'with frequency yearly',
       // RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA
-      string:
-          'RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=1',
-      text:
-          'Annually on weekdays, every Saturday & Sunday in January, until Monday, January 31, 2000 2:00:00 PM',
+      string: 'RRULE:FREQ=YEARLY;UNTIL=20000131T140000Z;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=1',
+      text: 'Annually on weekdays, every Saturday & Sunday in January, until Monday, January 31, 2000 2:00:00 PM',
       rrule: RecurrenceRule(
         frequency: Frequency.yearly,
         until: DateTime.utc(2000, 01, 31, 14, 0, 0),
@@ -313,8 +307,7 @@ void main() {
   testRrule(
     'Monthly on the first Friday until December 24, 1997',
     string: 'RRULE:FREQ=MONTHLY;UNTIL=19971224T000000Z;BYDAY=1FR',
-    text:
-        'Monthly on the 1st Friday, until Wednesday, December 24, 1997 12:00:00 AM',
+    text: 'Monthly on the 1st Friday, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
       until: DateTime.utc(1997, 12, 24),
@@ -430,8 +423,7 @@ void main() {
   testRrule(
     'Every 18 months on the 10th thru 15th of the month for 10 occurrences',
     // RRULE:FREQ=MONTHLY;INTERVAL=18;COUNT=10;BYMONTHDAY=10,11,12,13,14,15
-    string:
-        'RRULE:FREQ=MONTHLY;COUNT=10;INTERVAL=18;BYMONTHDAY=10,11,12,13,14,15',
+    string: 'RRULE:FREQ=MONTHLY;COUNT=10;INTERVAL=18;BYMONTHDAY=10,11,12,13,14,15',
     text: 'Every 18 months on the 10th – 15th, 10 times',
     rrule: RecurrenceRule(
       frequency: Frequency.monthly,
@@ -644,10 +636,8 @@ void main() {
   testRrule(
     'Every 4 years, the first Tuesday after a Monday in November, forever (U.S. Presidential Election day)',
     // RRULE:FREQ=YEARLY;INTERVAL=4;BYMONTH=11;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8
-    string:
-        'RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8;BYMONTH=11',
-    text:
-        'Every 4 years on every Tuesday that are also the 2nd – 8th day of the month and that are also in November',
+    string: 'RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8;BYMONTH=11',
+    text: 'Every 4 years on every Tuesday that are also the 2nd – 8th day of the month and that are also in November',
     rrule: RecurrenceRule(
       frequency: Frequency.yearly,
       interval: 4,
@@ -769,8 +759,8 @@ void main() {
       string: 'RRULE:FREQ=DAILY;BYMINUTE=0,20,40;BYHOUR=9,10,11,12,13,14,15,16',
       rrule: RecurrenceRule(
         frequency: Frequency.daily,
-        byMinutes: const {0, 20, 40},
-        byHours: const {9, 10, 11, 12, 13, 14, 15, 16},
+        byMinutes: const [0, 20, 40],
+        byHours: const [9, 10, 11, 12, 13, 14, 15, 16],
       ),
       start: DateTime.utc(1997, 9, 2, 9, 0, 0),
       expected: expected,
@@ -782,7 +772,7 @@ void main() {
       rrule: RecurrenceRule(
         frequency: Frequency.minutely,
         interval: 20,
-        byHours: const {9, 10, 11, 12, 13, 14, 15, 16},
+        byHours: const [9, 10, 11, 12, 13, 14, 15, 16],
       ),
       start: DateTime.utc(1997, 9, 2, 9, 0, 0),
       expected: expected,

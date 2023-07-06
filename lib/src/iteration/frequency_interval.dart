@@ -57,13 +57,12 @@ extension _FrequencyIntervalCalculation on DateTime {
 
   DateTime _addDays(int days) => add(days.days);
 
-  DateTime _addHours(int hours, bool wereDatesFiltered, Set<int> byHours) {
+  DateTime _addHours(int hours, bool wereDatesFiltered, List<int> byHours) {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
       final timeToLastHour = Duration.hoursPerDay - 1 - newValue.hour;
-      final hoursToLastIterationOfDay =
-          (timeToLastHour / hours).floor() * hours;
+      final hoursToLastIterationOfDay = (timeToLastHour / hours).floor() * hours;
       newValue.add(hoursToLastIterationOfDay.hours);
     }
 
@@ -79,18 +78,14 @@ extension _FrequencyIntervalCalculation on DateTime {
   DateTime _addMinutes(
     int minutes,
     bool wereDatesFiltered,
-    Set<int> byHours,
-    Set<int> byMinutes,
+    List<int> byHours,
+    List<int> byMinutes,
   ) {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
-      final timeToLastMinute = Duration.minutesPerDay -
-          1 -
-          newValue.hour * Duration.minutesPerHour -
-          newValue.minute;
-      final minutesToLastIterationOfDay =
-          (timeToLastMinute / minutes).floor() * minutes;
+      final timeToLastMinute = Duration.minutesPerDay - 1 - newValue.hour * Duration.minutesPerHour - newValue.minute;
+      final minutesToLastIterationOfDay = (timeToLastMinute / minutes).floor() * minutes;
       newValue = newValue.add(minutesToLastIterationOfDay.minutes);
     }
 
@@ -114,9 +109,9 @@ extension _FrequencyIntervalCalculation on DateTime {
   DateTime _addSeconds(
     int seconds,
     bool wereDatesFiltered,
-    Set<int> byHours,
-    Set<int> byMinutes,
-    Set<int> bySeconds,
+    List<int> byHours,
+    List<int> byMinutes,
+    List<int> bySeconds,
   ) {
     var newValue = this;
     if (wereDatesFiltered) {
@@ -126,8 +121,7 @@ extension _FrequencyIntervalCalculation on DateTime {
           newValue.hour * Duration.secondsPerHour -
           newValue.minute * Duration.secondsPerMinute -
           newValue.second;
-      final secondsToLastIterationOfDay =
-          (timeToLastMinute / seconds).floor() * seconds;
+      final secondsToLastIterationOfDay = (timeToLastMinute / seconds).floor() * seconds;
       newValue += secondsToLastIterationOfDay.seconds;
     }
 

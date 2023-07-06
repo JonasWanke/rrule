@@ -17,8 +17,7 @@ class RecurrenceRuleFromStringOptions {
   });
 
   const RecurrenceRuleFromStringOptions.lenient({
-    RecurrenceRuleDuplicatePartBehavior duplicatePartBehavior =
-        RecurrenceRuleDuplicatePartBehavior.mergePreferLast,
+    RecurrenceRuleDuplicatePartBehavior duplicatePartBehavior = RecurrenceRuleDuplicatePartBehavior.mergePreferLast,
   }) : this(duplicatePartBehavior: duplicatePartBehavior);
 
   final RecurrenceRuleDuplicatePartBehavior duplicatePartBehavior;
@@ -35,8 +34,7 @@ enum RecurrenceRuleDuplicatePartBehavior {
 }
 
 @immutable
-class RecurrenceRuleFromStringDecoder
-    extends Converter<String, RecurrenceRule> {
+class RecurrenceRuleFromStringDecoder extends Converter<String, RecurrenceRule> {
   const RecurrenceRuleFromStringDecoder({
     this.options = const RecurrenceRuleFromStringOptions(),
   });
@@ -57,9 +55,9 @@ class RecurrenceRuleFromStringDecoder
     Frequency? frequency;
     _UntilOrCount? untilOrCount;
     int? interval;
-    Set<int>? bySeconds;
-    Set<int>? byMinutes;
-    Set<int>? byHours;
+    List<int>? bySeconds;
+    List<int>? byMinutes;
+    List<int>? byHours;
     Set<ByWeekDayEntry>? byWeekDays;
     Set<int>? byMonthDays;
     Set<int>? byYearDays;
@@ -94,13 +92,10 @@ class RecurrenceRuleFromStringDecoder
             parse: () {
               // Remove the optional "Z" suffix indicating a time in UTC as we
               // ignore time zones.
-              final normalizedValue = value.endsWith('Z')
-                  ? value.substring(0, value.length - 1)
-                  : value;
-              final match =
-                  normalizedValue.length == 8 || normalizedValue.length == 15
-                      ? DateTime.tryParse(normalizedValue)
-                      : null;
+              final normalizedValue = value.endsWith('Z') ? value.substring(0, value.length - 1) : value;
+              final match = normalizedValue.length == 8 || normalizedValue.length == 15
+                  ? DateTime.tryParse(normalizedValue)
+                  : null;
               if (match == null) {
                 throw FormatException(
                   'Cannot parse date or date-time: "$value".',
@@ -129,7 +124,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartBySecond:
-          bySeconds = _parseIntSetPart(
+          bySeconds = _parseIntListPart(
             name,
             value,
             oldValue: bySeconds,
@@ -140,7 +135,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByMinute:
-          byMinutes = _parseIntSetPart(
+          byMinutes = _parseIntListPart(
             name,
             value,
             oldValue: byMinutes,
@@ -150,7 +145,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByHour:
-          byHours = _parseIntSetPart(
+          byHours = _parseIntListPart(
             name,
             value,
             oldValue: byHours,
@@ -238,9 +233,9 @@ class RecurrenceRuleFromStringDecoder
       until: untilOrCount?.until,
       count: untilOrCount?.count,
       interval: interval,
-      bySeconds: bySeconds ?? {},
-      byMinutes: byMinutes ?? {},
-      byHours: byHours ?? {},
+      bySeconds: bySeconds ?? [],
+      byMinutes: byMinutes ?? [],
+      byHours: byHours ?? [],
       byWeekDays: byWeekDays ?? {},
       byMonthDays: byMonthDays ?? {},
       byYearDays: byYearDays ?? {},
@@ -311,6 +306,31 @@ class RecurrenceRuleFromStringDecoder
     );
   }
 
+  List<int> _parseIntListPart(
+    String name,
+    String value, {
+    required List<int>? oldValue,
+    required int min,
+    required int max,
+    bool allowNegative = true,
+  }) {
+    return _parseListPart(
+      name,
+      value,
+      oldValue: oldValue,
+      parse: (e) {
+        final parsed = int.parse(e);
+        final valueToCheck = allowNegative ? parsed.abs() : parsed;
+        if (min > valueToCheck || valueToCheck > max) {
+          throw FormatException(
+            'Value must be in range ${allowNegative ? '±' : ''}$min–$max',
+          );
+        }
+        return parsed;
+      },
+    );
+  }
+
   Set<T> _parseSetPart<T>(
     String name,
     String value, {
@@ -349,10 +369,46 @@ class RecurrenceRuleFromStringDecoder
     return newValue;
   }
 
+  List<T> _parseListPart<T>(
+    String name,
+    String value, {
+    required List<T>? oldValue,
+    required T Function(String value) parse,
+  }) {
+    _checkDuplicatePart(name, oldValue);
+
+    var newValue = <T>[];
+    try {
+      for (final entry in value.split(',')) {
+        newValue.add(parse(entry));
+      }
+    } on FormatException catch (e) {
+      throw FormatException(
+        'Invalid entry in RRULE part $name: "$value" (Exception: $e)',
+      );
+    }
+
+    if (oldValue != null) {
+      switch (options.duplicatePartBehavior) {
+        case RecurrenceRuleDuplicatePartBehavior.exception:
+          assert(false, 'This case is already handled above.');
+          break;
+        case RecurrenceRuleDuplicatePartBehavior.takeFirst:
+          newValue = oldValue;
+          break;
+        case RecurrenceRuleDuplicatePartBehavior.takeLast:
+          // We already prefer the new value.
+          break;
+        case RecurrenceRuleDuplicatePartBehavior.mergePreferLast:
+          newValue.addAll(oldValue);
+          break;
+      }
+    }
+    return newValue;
+  }
+
   void _checkDuplicatePart(String name, Object? oldValue) {
-    if (oldValue != null &&
-        options.duplicatePartBehavior ==
-            RecurrenceRuleDuplicatePartBehavior.exception) {
+    if (oldValue != null && options.duplicatePartBehavior == RecurrenceRuleDuplicatePartBehavior.exception) {
       if (name == recurRulePartUntil || name == recurRulePartCount) {
         throw FormatException('Duplicate part while parsing RRULE: $name '
             '(Only one of `UNTIL` and `COUNT` may be set.)');
@@ -398,14 +454,12 @@ class _UntilOrCount {
 }
 
 @immutable
-class ByWeekDayEntryFromStringDecoder
-    extends Converter<String, ByWeekDayEntry> {
+class ByWeekDayEntryFromStringDecoder extends Converter<String, ByWeekDayEntry> {
   const ByWeekDayEntryFromStringDecoder();
 
   @override
   ByWeekDayEntry convert(String input) {
-    final match =
-        RegExp('(?:(\\+|-)?([0-9]{1,2}))?([A-Za-z]{2})\$').matchAsPrefix(input);
+    final match = RegExp('(?:(\\+|-)?([0-9]{1,2}))?([A-Za-z]{2})\$').matchAsPrefix(input);
     if (match == null) {
       throw FormatException('Cannot parse $input');
     }

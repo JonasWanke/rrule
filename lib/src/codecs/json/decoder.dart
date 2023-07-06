@@ -6,8 +6,7 @@ import '../../recurrence_rule.dart';
 import '../string/decoder.dart';
 
 @immutable
-class RecurrenceRuleFromJsonDecoder
-    extends Converter<Map<String, dynamic>, RecurrenceRule> {
+class RecurrenceRuleFromJsonDecoder extends Converter<Map<String, dynamic>, RecurrenceRule> {
   const RecurrenceRuleFromJsonDecoder();
 
   static const _byWeekDayEntryDecoder = ByWeekDayEntryFromStringDecoder();
@@ -25,11 +24,10 @@ class RecurrenceRuleFromJsonDecoder
       until: rawUntil == null ? null : _parseDateTime(rawUntil),
       count: rawCount,
       interval: input['interval'] as int?,
-      bySeconds: _parseIntSet('bysecond', input['bysecond']),
-      byMinutes: _parseIntSet('byminute', input['byminute']),
-      byHours: _parseIntSet('byhour', input['byhour']),
-      byWeekDays:
-          _parseSet('byday', input['byday'], _byWeekDayEntryDecoder.convert),
+      bySeconds: _parseIntList('bysecond', input['bysecond']),
+      byMinutes: _parseIntList('byminute', input['byminute']),
+      byHours: _parseIntList('byhour', input['byhour']),
+      byWeekDays: _parseSet('byday', input['byday'], _byWeekDayEntryDecoder.convert),
       byMonthDays: _parseIntSet('bymonthday', input['bymonthday']),
       byYearDays: _parseIntSet('byyearday', input['byyearday']),
       byWeeks: _parseIntSet('byweekno', input['byweekno']),
@@ -61,8 +59,7 @@ class RecurrenceRuleFromJsonDecoder
     );
   }
 
-  Set<int> _parseIntSet(String name, dynamic json) =>
-      _parseSet<int, int>(name, json, (it) => it);
+  Set<int> _parseIntSet(String name, dynamic json) => _parseSet<int, int>(name, json, (it) => it);
   Set<R> _parseSet<T, R>(String name, dynamic json, R Function(T) parse) {
     if (json == null) {
       return const {};
@@ -73,6 +70,26 @@ class RecurrenceRuleFromJsonDecoder
     } else if (json is List) {
       try {
         return json.cast<T>().map(parse).toSet();
+      } catch (e, st) {
+        throw FormatException('Invalid JSON in `$name`: $e\n\n$st');
+      }
+    } else {
+      throw FormatException('Invalid JSON in `$name`.');
+    }
+  }
+
+  List<int> _parseIntList(String name, dynamic json) => _parseList<int, int>(name, json, (it) => it);
+
+  List<R> _parseList<T, R>(String name, dynamic json, R Function(T) parse) {
+    if (json == null) {
+      return const [];
+    } else if (json is T) {
+      return [parse(json)];
+    } else if (json is List<T>) {
+      return json.map(parse).toList();
+    } else if (json is List) {
+      try {
+        return json.cast<T>().map(parse).toList();
       } catch (e, st) {
         throw FormatException('Invalid JSON in `$name`: $e\n\n$st');
       }

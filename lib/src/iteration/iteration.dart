@@ -40,8 +40,7 @@ Iterable<DateTime> getRecurrenceRuleInstances(
 
     Iterable<DateTime> results;
     if (rrule.hasBySetPositions) {
-      results = buildSetPositionsList(rrule, dateSet, timeSet)
-          .where((dt) => start <= dt);
+      results = buildSetPositionsList(rrule, dateSet, timeSet).where((dt) => start <= dt);
     } else {
       results = dateSet.includedDates.expand((date) {
         return timeSet.map((time) => date.add(time));
@@ -87,40 +86,26 @@ Iterable<DateTime> getRecurrenceRuleInstances(
 RecurrenceRule _prepare(RecurrenceRule rrule, DateTime start) {
   assert(start.isValidRruleDateTime);
 
-  final byDatesEmpty = rrule.byWeekDays.isEmpty &&
-      rrule.byMonthDays.isEmpty &&
-      rrule.byYearDays.isEmpty &&
-      rrule.byWeeks.isEmpty;
+  final byDatesEmpty =
+      rrule.byWeekDays.isEmpty && rrule.byMonthDays.isEmpty && rrule.byYearDays.isEmpty && rrule.byWeeks.isEmpty;
 
   return RecurrenceRule(
     frequency: rrule.frequency,
     until: rrule.until,
     count: rrule.count,
     interval: rrule.interval,
-    bySeconds: rrule.bySeconds.isEmpty && rrule.frequency < Frequency.secondly
-        ? {start.second}
-        : rrule.bySeconds,
-    byMinutes: rrule.byMinutes.isEmpty && rrule.frequency < Frequency.minutely
-        ? {start.minute}
-        : rrule.byMinutes,
-    byHours: rrule.byHours.isEmpty && rrule.frequency < Frequency.hourly
-        ? {start.hour}
-        : rrule.byHours,
-    byWeekDays: byDatesEmpty && rrule.frequency == Frequency.weekly
-        ? {ByWeekDayEntry(start.weekday)}
-        : rrule.byWeekDays,
-    byMonthDays: byDatesEmpty &&
-            (rrule.frequency == Frequency.monthly ||
-                rrule.frequency == Frequency.yearly)
+    bySeconds: rrule.bySeconds.isEmpty && rrule.frequency < Frequency.secondly ? [start.second] : rrule.bySeconds,
+    byMinutes: rrule.byMinutes.isEmpty && rrule.frequency < Frequency.minutely ? [start.minute] : rrule.byMinutes,
+    byHours: rrule.byHours.isEmpty && rrule.frequency < Frequency.hourly ? [start.hour] : rrule.byHours,
+    byWeekDays:
+        byDatesEmpty && rrule.frequency == Frequency.weekly ? {ByWeekDayEntry(start.weekday)} : rrule.byWeekDays,
+    byMonthDays: byDatesEmpty && (rrule.frequency == Frequency.monthly || rrule.frequency == Frequency.yearly)
         ? {start.day}
         : rrule.byMonthDays,
     byYearDays: rrule.byYearDays,
     byWeeks: rrule.byWeeks,
-    byMonths: byDatesEmpty &&
-            rrule.frequency == Frequency.yearly &&
-            rrule.byMonths.isEmpty
-        ? {start.month}
-        : rrule.byMonths,
+    byMonths:
+        byDatesEmpty && rrule.frequency == Frequency.yearly && rrule.byMonths.isEmpty ? {start.month} : rrule.byMonths,
     bySetPositions: rrule.bySetPositions,
     weekStart: rrule.weekStart,
   );

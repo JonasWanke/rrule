@@ -23,9 +23,9 @@ class RecurrenceRule {
     this.until,
     this.count,
     this.interval,
-    Set<int> bySeconds = const {},
-    Set<int> byMinutes = const {},
-    Set<int> byHours = const {},
+    List<int> bySeconds = const [],
+    List<int> byMinutes = const [],
+    List<int> byHours = const [],
     Set<ByWeekDayEntry> byWeekDays = const {},
     Set<int> byMonthDays = const {},
     Set<int> byYearDays = const {},
@@ -43,22 +43,19 @@ class RecurrenceRule {
         ),
         assert(interval == null || interval >= 1),
         assert(bySeconds.every(_debugCheckIsValidSecond)),
-        bySeconds = SplayTreeSet.of(bySeconds),
+        bySeconds = List.of(bySeconds),
         assert(byMinutes.every(_debugCheckIsValidMinute)),
-        byMinutes = SplayTreeSet.of(byMinutes),
+        byMinutes = List.of(byMinutes),
         assert(byHours.every(_debugCheckIsValidHour)),
-        byHours = SplayTreeSet.of(byHours),
+        byHours = List.of(byHours),
         assert(
-          [Frequency.monthly, Frequency.yearly].contains(frequency) ||
-              byWeekDays.noneHasOccurrence,
+          [Frequency.monthly, Frequency.yearly].contains(frequency) || byWeekDays.noneHasOccurrence,
           '"The BYDAY rule part MUST NOT be specified with a numeric value '
           'when the FREQ rule part is not set to MONTHLY or YEARLY." '
           '— https://tools.ietf.org/html/rfc5545#section-3.3.10',
         ),
         assert(
-          frequency != Frequency.yearly ||
-              byWeeks.isEmpty ||
-              byWeekDays.noneHasOccurrence,
+          frequency != Frequency.yearly || byWeeks.isEmpty || byWeekDays.noneHasOccurrence,
           '[…] the BYDAY rule part MUST NOT be specified with a numeric value '
           'with the FREQ rule part set to YEARLY when the BYWEEKNO rule part '
           'is specified.',
@@ -73,9 +70,7 @@ class RecurrenceRule {
         byMonthDays = SplayTreeSet.of(byMonthDays),
         assert(byYearDays.every(_debugCheckIsValidDayOfYear)),
         assert(
-          !([Frequency.daily, Frequency.weekly, Frequency.monthly]
-                  .contains(frequency) &&
-              byYearDays.isNotEmpty),
+          !([Frequency.daily, Frequency.weekly, Frequency.monthly].contains(frequency) && byYearDays.isNotEmpty),
           'The BYYEARDAY rule part MUST NOT be specified when the FREQ rule '
           'part is set to DAILY, WEEKLY, or MONTHLY.',
         ),
@@ -95,8 +90,8 @@ class RecurrenceRule {
               [
                 // This comment is to keep the formatting of the lines below.
                 bySeconds, byMinutes, byHours,
-                byWeekDays, byMonthDays, byYearDays,
-                byWeeks, byMonths,
+                byWeekDays.toList(), byMonthDays.toList(), byYearDays.toList(),
+                byWeeks.toList(), byMonths.toList(),
               ].any((by) => by.isNotEmpty),
           '[BYSETPOS] MUST only be used in conjunction with another BYxxx rule '
           'part.',
@@ -106,13 +101,11 @@ class RecurrenceRule {
 
   factory RecurrenceRule.fromString(
     String input, {
-    RecurrenceRuleFromStringOptions options =
-        const RecurrenceRuleFromStringOptions(),
+    RecurrenceRuleFromStringOptions options = const RecurrenceRuleFromStringOptions(),
   }) =>
       RecurrenceRuleFromStringDecoder(options: options).convert(input);
 
-  factory RecurrenceRule.fromJson(Map<String, dynamic> json) =>
-      const RecurrenceRuleFromJsonDecoder().convert(json);
+  factory RecurrenceRule.fromJson(Map<String, dynamic> json) => const RecurrenceRuleFromJsonDecoder().convert(json);
 
   /// Corresponds to the `FREQ` property.
   final Frequency frequency;
@@ -132,15 +125,15 @@ class RecurrenceRule {
   int get actualInterval => interval ?? 1;
 
   /// Corresponds to the `BYSECOND` property.
-  final Set<int> bySeconds;
+  final List<int> bySeconds;
   bool get hasBySeconds => bySeconds.isNotEmpty;
 
   /// Corresponds to the `BYMINUTE` property.
-  final Set<int> byMinutes;
+  final List<int> byMinutes;
   bool get hasByMinutes => byMinutes.isNotEmpty;
 
   /// Corresponds to the `BYHOUR` property.
-  final Set<int> byHours;
+  final List<int> byHours;
   bool get hasByHours => byHours.isNotEmpty;
 
   /// Corresponds to the `BYDAY` property.
@@ -292,9 +285,9 @@ class RecurrenceRule {
     bool clearCount = false,
     int? interval,
     bool clearInterval = false,
-    Set<int>? bySeconds,
-    Set<int>? byMinutes,
-    Set<int>? byHours,
+    List<int>? bySeconds,
+    List<int>? byMinutes,
+    List<int>? byHours,
     Set<ByWeekDayEntry>? byWeekDays,
     Set<int>? byMonthDays,
     Set<int>? byYearDays,
@@ -337,8 +330,7 @@ class RecurrenceRule {
   /// Converts this rule to a machine-readable, RFC-5545-compliant string.
   @override
   String toString({
-    RecurrenceRuleToStringOptions options =
-        const RecurrenceRuleToStringOptions(),
+    RecurrenceRuleToStringOptions options = const RecurrenceRuleToStringOptions(),
   }) =>
       RecurrenceRuleToStringEncoder(options: options).convert(this);
 
