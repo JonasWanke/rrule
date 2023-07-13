@@ -13,7 +13,10 @@ dependencies:
   time: ^2.1.1
 
 dev_dependencies:
-  dart_code_metrics: ^5.0.1
-  flutter_lints: ^2.0.1
+  supernova:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova
+      ref: 622728f6ed745c8d9c3744293cdc157f7bdb3833
   test: ^1.16.8
   # test_coverage: ^0.5.0
