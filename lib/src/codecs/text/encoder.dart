@@ -80,9 +80,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           !input.hasByMonths &&
           input.hasBySetPositions) {
         input = input.copyWith(
-          byWeekDays: {},
+          byWeekDays: [],
           byMonthDays: input.bySetPositions,
-          bySetPositions: {},
+          bySetPositions: [],
         );
       }
     }

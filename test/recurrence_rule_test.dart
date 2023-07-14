@@ -130,7 +130,7 @@ void main() {
       expect(
         () => RecurrenceRule(
           frequency: Frequency.daily,
-          byWeeks: const {1, 2, 3},
+          byWeeks: const [1, 2, 3],
         ),
         throwsA(isA<AssertionError>()),
       );
@@ -166,8 +166,8 @@ void main() {
         frequency: Frequency.yearly,
         count: 4,
         interval: 1,
-        byMonths: const {1},
-        byWeekDays: {ByWeekDayEntry(DateTime.tuesday, 2)},
+        byMonths: const [1],
+        byWeekDays: [ByWeekDayEntry(DateTime.tuesday, 2)],
       );
       expect(RecurrenceRule.fromString(rruleString), rrule);
 

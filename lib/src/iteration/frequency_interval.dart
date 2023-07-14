@@ -62,7 +62,8 @@ extension _FrequencyIntervalCalculation on DateTime {
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
       final timeToLastHour = Duration.hoursPerDay - 1 - newValue.hour;
-      final hoursToLastIterationOfDay = (timeToLastHour / hours).floor() * hours;
+      final hoursToLastIterationOfDay =
+          (timeToLastHour / hours).floor() * hours;
       newValue.add(hoursToLastIterationOfDay.hours);
     }
 
@@ -84,8 +85,12 @@ extension _FrequencyIntervalCalculation on DateTime {
     var newValue = this;
     if (wereDatesFiltered) {
       // Jump to one iteration before next day.
-      final timeToLastMinute = Duration.minutesPerDay - 1 - newValue.hour * Duration.minutesPerHour - newValue.minute;
-      final minutesToLastIterationOfDay = (timeToLastMinute / minutes).floor() * minutes;
+      final timeToLastMinute = Duration.minutesPerDay -
+          1 -
+          newValue.hour * Duration.minutesPerHour -
+          newValue.minute;
+      final minutesToLastIterationOfDay =
+          (timeToLastMinute / minutes).floor() * minutes;
       newValue = newValue.add(minutesToLastIterationOfDay.minutes);
     }
 
@@ -121,7 +126,8 @@ extension _FrequencyIntervalCalculation on DateTime {
           newValue.hour * Duration.secondsPerHour -
           newValue.minute * Duration.secondsPerMinute -
           newValue.second;
-      final secondsToLastIterationOfDay = (timeToLastMinute / seconds).floor() * seconds;
+      final secondsToLastIterationOfDay =
+          (timeToLastMinute / seconds).floor() * seconds;
       newValue += secondsToLastIterationOfDay.seconds;
     }
 
