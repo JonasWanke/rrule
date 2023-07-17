@@ -1,7 +1,7 @@
 name: rrule
 description: Recurrence rule parsing & calculation as defined in the iCalendar RFC
 version: 0.2.13
-homepage: https://github.com/JonasWanke/rrule
+repository: https://github.com/JonasWanke/rrule
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
@@ -13,7 +13,10 @@ dependencies:
   time: ^2.1.1
 
 dev_dependencies:
-  dart_code_metrics: ^5.0.1
-  flutter_lints: ^2.0.1
+  supernova:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova
+      ref: 622728f6ed745c8d9c3744293cdc157f7bdb3833
   test: ^1.16.8
   # test_coverage: ^0.5.0
