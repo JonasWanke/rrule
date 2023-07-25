@@ -57,15 +57,15 @@ class RecurrenceRuleFromStringDecoder
     Frequency? frequency;
     _UntilOrCount? untilOrCount;
     int? interval;
-    Set<int>? bySeconds;
-    Set<int>? byMinutes;
-    Set<int>? byHours;
-    Set<ByWeekDayEntry>? byWeekDays;
-    Set<int>? byMonthDays;
-    Set<int>? byYearDays;
-    Set<int>? byWeeks;
-    Set<int>? byMonths;
-    Set<int>? bySetPositions;
+    List<int>? bySeconds;
+    List<int>? byMinutes;
+    List<int>? byHours;
+    List<ByWeekDayEntry>? byWeekDays;
+    List<int>? byMonthDays;
+    List<int>? byYearDays;
+    List<int>? byWeeks;
+    List<int>? byMonths;
+    List<int>? bySetPositions;
     int? weekStart;
     for (final part in property.value.split(';')) {
       if (part.isEmpty) {
@@ -129,7 +129,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartBySecond:
-          bySeconds = _parseIntSetPart(
+          bySeconds = _parseIntListPart(
             name,
             value,
             oldValue: bySeconds,
@@ -140,7 +140,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByMinute:
-          byMinutes = _parseIntSetPart(
+          byMinutes = _parseIntListPart(
             name,
             value,
             oldValue: byMinutes,
@@ -150,7 +150,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByHour:
-          byHours = _parseIntSetPart(
+          byHours = _parseIntListPart(
             name,
             value,
             oldValue: byHours,
@@ -160,7 +160,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByDay:
-          byWeekDays = _parseSetPart(
+          byWeekDays = _parseListPart(
             name,
             value,
             oldValue: byWeekDays,
@@ -168,7 +168,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByMonthDay:
-          byMonthDays = _parseIntSetPart(
+          byMonthDays = _parseIntListPart(
             name,
             value,
             oldValue: byMonthDays,
@@ -177,7 +177,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByYearDay:
-          byYearDays = _parseIntSetPart(
+          byYearDays = _parseIntListPart(
             name,
             value,
             oldValue: byYearDays,
@@ -186,7 +186,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByWeekNo:
-          byWeeks = _parseIntSetPart(
+          byWeeks = _parseIntListPart(
             name,
             value,
             oldValue: byWeeks,
@@ -195,7 +195,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartByMonth:
-          byMonths = _parseIntSetPart(
+          byMonths = _parseIntListPart(
             name,
             value,
             oldValue: byMonths,
@@ -205,7 +205,7 @@ class RecurrenceRuleFromStringDecoder
           );
           break;
         case recurRulePartBySetPos:
-          bySetPositions = _parseIntSetPart(
+          bySetPositions = _parseIntListPart(
             name,
             value,
             oldValue: bySetPositions,
@@ -238,15 +238,15 @@ class RecurrenceRuleFromStringDecoder
       until: untilOrCount?.until,
       count: untilOrCount?.count,
       interval: interval,
-      bySeconds: bySeconds ?? {},
-      byMinutes: byMinutes ?? {},
-      byHours: byHours ?? {},
-      byWeekDays: byWeekDays ?? {},
-      byMonthDays: byMonthDays ?? {},
-      byYearDays: byYearDays ?? {},
-      byWeeks: byWeeks ?? {},
-      byMonths: byMonths ?? {},
-      bySetPositions: bySetPositions ?? {},
+      bySeconds: bySeconds ?? [],
+      byMinutes: byMinutes ?? [],
+      byHours: byHours ?? [],
+      byWeekDays: byWeekDays ?? [],
+      byMonthDays: byMonthDays ?? [],
+      byYearDays: byYearDays ?? [],
+      byWeeks: byWeeks ?? [],
+      byMonths: byMonths ?? [],
+      bySetPositions: bySetPositions ?? [],
     );
   }
 
@@ -286,15 +286,15 @@ class RecurrenceRuleFromStringDecoder
     return newValue;
   }
 
-  Set<int> _parseIntSetPart(
+  List<int> _parseIntListPart(
     String name,
     String value, {
-    required Set<int>? oldValue,
+    required List<int>? oldValue,
     required int min,
     required int max,
     bool allowNegative = true,
   }) {
-    return _parseSetPart(
+    return _parseListPart(
       name,
       value,
       oldValue: oldValue,
@@ -311,15 +311,15 @@ class RecurrenceRuleFromStringDecoder
     );
   }
 
-  Set<T> _parseSetPart<T>(
+  List<T> _parseListPart<T>(
     String name,
     String value, {
-    required Set<T>? oldValue,
+    required List<T>? oldValue,
     required T Function(String value) parse,
   }) {
     _checkDuplicatePart(name, oldValue);
 
-    var newValue = <T>{};
+    var newValue = <T>[];
     try {
       for (final entry in value.split(',')) {
         newValue.add(parse(entry));

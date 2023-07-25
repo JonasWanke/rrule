@@ -25,16 +25,16 @@ class RecurrenceRuleFromJsonDecoder
       until: rawUntil == null ? null : _parseDateTime(rawUntil),
       count: rawCount,
       interval: input['interval'] as int?,
-      bySeconds: _parseIntSet('bysecond', input['bysecond']),
-      byMinutes: _parseIntSet('byminute', input['byminute']),
-      byHours: _parseIntSet('byhour', input['byhour']),
+      bySeconds: _parseIntList('bysecond', input['bysecond']),
+      byMinutes: _parseIntList('byminute', input['byminute']),
+      byHours: _parseIntList('byhour', input['byhour']),
       byWeekDays:
-          _parseSet('byday', input['byday'], _byWeekDayEntryDecoder.convert),
-      byMonthDays: _parseIntSet('bymonthday', input['bymonthday']),
-      byYearDays: _parseIntSet('byyearday', input['byyearday']),
-      byWeeks: _parseIntSet('byweekno', input['byweekno']),
-      byMonths: _parseIntSet('bymonth', input['bymonth']),
-      bySetPositions: _parseIntSet('bysetpos', input['bysetpos']),
+          _parseList('byday', input['byday'], _byWeekDayEntryDecoder.convert),
+      byMonthDays: _parseIntList('bymonthday', input['bymonthday']),
+      byYearDays: _parseIntList('byyearday', input['byyearday']),
+      byWeeks: _parseIntList('byweekno', input['byweekno']),
+      byMonths: _parseIntList('bymonth', input['bymonth']),
+      bySetPositions: _parseIntList('bysetpos', input['bysetpos']),
       weekStart: rawWeekStart == null ? null : weekDayFromString(rawWeekStart),
     );
   }
@@ -61,18 +61,19 @@ class RecurrenceRuleFromJsonDecoder
     );
   }
 
-  Set<int> _parseIntSet(String name, dynamic json) =>
-      _parseSet<int, int>(name, json, (it) => it);
-  Set<R> _parseSet<T, R>(String name, dynamic json, R Function(T) parse) {
+  List<int> _parseIntList(String name, dynamic json) =>
+      _parseList<int, int>(name, json, (it) => it);
+
+  List<R> _parseList<T, R>(String name, dynamic json, R Function(T) parse) {
     if (json == null) {
-      return const {};
+      return const [];
     } else if (json is T) {
-      return {parse(json)};
+      return [parse(json)];
     } else if (json is List<T>) {
-      return json.map(parse).toSet();
+      return json.map(parse).toList();
     } else if (json is List) {
       try {
-        return json.cast<T>().map(parse).toSet();
+        return json.cast<T>().map(parse).toList();
       } catch (e, st) {
         throw FormatException('Invalid JSON in `$name`: $e\n\n$st');
       }

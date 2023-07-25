@@ -10,11 +10,11 @@ void main() {
     RecurrenceRule(
       frequency: Frequency.yearly,
       count: 5,
-      byWeekDays: {
+      byWeekDays: [
         ByWeekDayEntry(DateTime.sunday, -1),
         ByWeekDayEntry(DateTime.monday, 2),
-      },
-      byMonths: const {10},
+      ],
+      byMonths: const [10],
     ),
     json: <String, dynamic>{
       'freq': 'YEARLY',
@@ -30,11 +30,11 @@ void main() {
     RecurrenceRule(
       frequency: Frequency.yearly,
       count: 5,
-      byWeekDays: {
+      byWeekDays: [
         ByWeekDayEntry(DateTime.sunday, -1),
         ByWeekDayEntry(DateTime.monday, 2),
-      },
-      byMonths: const {10},
+      ],
+      byMonths: const [10],
     ),
     json: <String, dynamic>{
       'freq': 'YEARLY',
@@ -49,7 +49,7 @@ void main() {
     RecurrenceRule(
       frequency: Frequency.monthly,
       interval: 2,
-      byMonthDays: const {1, 15, -1},
+      byMonthDays: const [1, 15, -1],
       until: DateTime.utc(2013, 10, 1),
     ),
     json: <String, dynamic>{
@@ -57,8 +57,7 @@ void main() {
       // 'until': '2013-10-01'
       'until': '2013-10-01T00:00:00',
       'interval': 2,
-      // 'bymonthday': [1, 15, -1],
-      'bymonthday': [-1, 1, 15],
+      'bymonthday': [1, 15, -1],
     },
   );
 }

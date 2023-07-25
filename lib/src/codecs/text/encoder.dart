@@ -65,10 +65,10 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     input = input.copyWith(clearInterval: input.interval == 1);
 
     if (input.frequency == Frequency.monthly) {
-      final byEveryWeekDay = {
+      final byEveryWeekDay = [
         for (final weekDay in DateTime.monday.rangeTo(DateTime.sunday))
           ByWeekDayEntry(weekDay),
-      };
+      ];
       if (!input.hasBySeconds &&
           !input.hasByMinutes &&
           !input.hasByHours &&
@@ -80,9 +80,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           !input.hasByMonths &&
           input.hasBySetPositions) {
         input = input.copyWith(
-          byWeekDays: {},
+          byWeekDays: [],
           byMonthDays: input.bySetPositions,
-          bySetPositions: {},
+          bySetPositions: [],
         );
       }
     }

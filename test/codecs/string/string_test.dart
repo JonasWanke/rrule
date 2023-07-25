@@ -72,7 +72,7 @@ void main() {
         codec.decode('RRULE:FREQ=YEARLY;BYDAY=MO,TU,WE,TH,FR,SA,SU'),
         RecurrenceRule(
           frequency: Frequency.yearly,
-          byWeekDays: {
+          byWeekDays: [
             ByWeekDayEntry(DateTime.monday),
             ByWeekDayEntry(DateTime.tuesday),
             ByWeekDayEntry(DateTime.wednesday),
@@ -80,18 +80,18 @@ void main() {
             ByWeekDayEntry(DateTime.friday),
             ByWeekDayEntry(DateTime.saturday),
             ByWeekDayEntry(DateTime.sunday),
-          },
+          ],
         ),
       );
       expect(
         codec.decode('RRULE:FREQ=YEARLY;BYDAY=-20SA,-4MO,53FR'),
         RecurrenceRule(
           frequency: Frequency.yearly,
-          byWeekDays: {
+          byWeekDays: [
             ByWeekDayEntry(DateTime.saturday, -20),
             ByWeekDayEntry(DateTime.monday, -4),
             ByWeekDayEntry(DateTime.friday, 53),
-          },
+          ],
         ),
       );
 

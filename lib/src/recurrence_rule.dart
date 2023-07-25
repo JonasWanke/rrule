@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -23,15 +21,15 @@ class RecurrenceRule {
     this.until,
     this.count,
     this.interval,
-    Set<int> bySeconds = const {},
-    Set<int> byMinutes = const {},
-    Set<int> byHours = const {},
-    Set<ByWeekDayEntry> byWeekDays = const {},
-    Set<int> byMonthDays = const {},
-    Set<int> byYearDays = const {},
-    Set<int> byWeeks = const {},
-    Set<int> byMonths = const {},
-    Set<int> bySetPositions = const {},
+    this.bySeconds = const [],
+    this.byMinutes = const [],
+    this.byHours = const [],
+    this.byWeekDays = const [],
+    this.byMonthDays = const [],
+    this.byYearDays = const [],
+    this.byWeeks = const [],
+    this.byMonths = const [],
+    this.bySetPositions = const [],
     this.weekStart,
     this.shouldCacheResults = false,
   })  : assert(count == null || count >= 1),
@@ -43,11 +41,8 @@ class RecurrenceRule {
         ),
         assert(interval == null || interval >= 1),
         assert(bySeconds.every(_debugCheckIsValidSecond)),
-        bySeconds = SplayTreeSet.of(bySeconds),
         assert(byMinutes.every(_debugCheckIsValidMinute)),
-        byMinutes = SplayTreeSet.of(byMinutes),
         assert(byHours.every(_debugCheckIsValidHour)),
-        byHours = SplayTreeSet.of(byHours),
         assert(
           [Frequency.monthly, Frequency.yearly].contains(frequency) ||
               byWeekDays.noneHasOccurrence,
@@ -63,14 +58,12 @@ class RecurrenceRule {
           'with the FREQ rule part set to YEARLY when the BYWEEKNO rule part '
           'is specified.',
         ),
-        byWeekDays = SplayTreeSet.of(byWeekDays),
         assert(byMonthDays.every(_debugCheckIsValidMonthDayEntry)),
         assert(
           !(frequency == Frequency.weekly && byMonthDays.isNotEmpty),
           'The BYMONTHDAY rule part MUST NOT be specified when the FREQ rule '
           'part is set to WEEKLY.',
         ),
-        byMonthDays = SplayTreeSet.of(byMonthDays),
         assert(byYearDays.every(_debugCheckIsValidDayOfYear)),
         assert(
           !([Frequency.daily, Frequency.weekly, Frequency.monthly]
@@ -79,16 +72,13 @@ class RecurrenceRule {
           'The BYYEARDAY rule part MUST NOT be specified when the FREQ rule '
           'part is set to DAILY, WEEKLY, or MONTHLY.',
         ),
-        byYearDays = SplayTreeSet.of(byYearDays),
         assert(byWeeks.every(debugCheckIsValidWeekNumber)),
         assert(
           !(frequency != Frequency.yearly && byWeeks.isNotEmpty),
           '[The BYWEEKNO] rule part MUST NOT be used when the FREQ rule part '
           'is set to anything other than YEARLY.',
         ),
-        byWeeks = SplayTreeSet.of(byWeeks),
         assert(byMonths.every(_debugCheckIsValidMonthEntry)),
-        byMonths = SplayTreeSet.of(byMonths),
         assert(bySetPositions.every(_debugCheckIsValidDayOfYear)),
         assert(
           bySetPositions.isEmpty ||
@@ -101,7 +91,6 @@ class RecurrenceRule {
           '[BYSETPOS] MUST only be used in conjunction with another BYxxx rule '
           'part.',
         ),
-        bySetPositions = SplayTreeSet.of(bySetPositions),
         assert(weekStart == null || weekStart == DateTime.monday);
 
   factory RecurrenceRule.fromString(
@@ -132,39 +121,39 @@ class RecurrenceRule {
   int get actualInterval => interval ?? 1;
 
   /// Corresponds to the `BYSECOND` property.
-  final Set<int> bySeconds;
+  final List<int> bySeconds;
   bool get hasBySeconds => bySeconds.isNotEmpty;
 
   /// Corresponds to the `BYMINUTE` property.
-  final Set<int> byMinutes;
+  final List<int> byMinutes;
   bool get hasByMinutes => byMinutes.isNotEmpty;
 
   /// Corresponds to the `BYHOUR` property.
-  final Set<int> byHours;
+  final List<int> byHours;
   bool get hasByHours => byHours.isNotEmpty;
 
   /// Corresponds to the `BYDAY` property.
-  final Set<ByWeekDayEntry> byWeekDays;
+  final List<ByWeekDayEntry> byWeekDays;
   bool get hasByWeekDays => byWeekDays.isNotEmpty;
 
   /// Corresponds to the `BYMONTHDAY` property.
-  final Set<int> byMonthDays;
+  final List<int> byMonthDays;
   bool get hasByMonthDays => byMonthDays.isNotEmpty;
 
   /// Corresponds to the `BYYEARDAY` property.
-  final Set<int> byYearDays;
+  final List<int> byYearDays;
   bool get hasByYearDays => byYearDays.isNotEmpty;
 
   /// Corresponds to the `BYWEEKNO` property.
-  final Set<int> byWeeks;
+  final List<int> byWeeks;
   bool get hasByWeeks => byWeeks.isNotEmpty;
 
   /// Corresponds to the `BYMONTH` property.
-  final Set<int> byMonths;
+  final List<int> byMonths;
   bool get hasByMonths => byMonths.isNotEmpty;
 
   /// Corresponds to the `BYSETPOS` property.
-  final Set<int> bySetPositions;
+  final List<int> bySetPositions;
   bool get hasBySetPositions => bySetPositions.isNotEmpty;
 
   /// Corresponds to the `WKST` property.
@@ -292,15 +281,15 @@ class RecurrenceRule {
     bool clearCount = false,
     int? interval,
     bool clearInterval = false,
-    Set<int>? bySeconds,
-    Set<int>? byMinutes,
-    Set<int>? byHours,
-    Set<ByWeekDayEntry>? byWeekDays,
-    Set<int>? byMonthDays,
-    Set<int>? byYearDays,
-    Set<int>? byWeeks,
-    Set<int>? byMonths,
-    Set<int>? bySetPositions,
+    List<int>? bySeconds,
+    List<int>? byMinutes,
+    List<int>? byHours,
+    List<ByWeekDayEntry>? byWeekDays,
+    List<int>? byMonthDays,
+    List<int>? byYearDays,
+    List<int>? byWeeks,
+    List<int>? byMonths,
+    List<int>? bySetPositions,
   }) {
     assert(until.isValidRruleDateTime);
     assert(

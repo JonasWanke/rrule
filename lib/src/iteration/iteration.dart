@@ -98,28 +98,28 @@ RecurrenceRule _prepare(RecurrenceRule rrule, DateTime start) {
     count: rrule.count,
     interval: rrule.interval,
     bySeconds: rrule.bySeconds.isEmpty && rrule.frequency < Frequency.secondly
-        ? {start.second}
+        ? [start.second]
         : rrule.bySeconds,
     byMinutes: rrule.byMinutes.isEmpty && rrule.frequency < Frequency.minutely
-        ? {start.minute}
+        ? [start.minute]
         : rrule.byMinutes,
     byHours: rrule.byHours.isEmpty && rrule.frequency < Frequency.hourly
-        ? {start.hour}
+        ? [start.hour]
         : rrule.byHours,
     byWeekDays: byDatesEmpty && rrule.frequency == Frequency.weekly
-        ? {ByWeekDayEntry(start.weekday)}
+        ? [ByWeekDayEntry(start.weekday)]
         : rrule.byWeekDays,
     byMonthDays: byDatesEmpty &&
             (rrule.frequency == Frequency.monthly ||
                 rrule.frequency == Frequency.yearly)
-        ? {start.day}
+        ? [start.day]
         : rrule.byMonthDays,
     byYearDays: rrule.byYearDays,
     byWeeks: rrule.byWeeks,
     byMonths: byDatesEmpty &&
             rrule.frequency == Frequency.yearly &&
             rrule.byMonths.isEmpty
-        ? {start.month}
+        ? [start.month]
         : rrule.byMonths,
     bySetPositions: rrule.bySetPositions,
     weekStart: rrule.weekStart,
