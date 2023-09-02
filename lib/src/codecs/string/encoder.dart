@@ -85,6 +85,40 @@ String weekDayToString(int dayOfWeek) {
       .key;
 }
 
+extension _RecurrenceRuleDateString on DateTime {
+  /// Pattern corresponding to the `DATE-TIME` rule specified in
+  /// [RFC 5545 Section 3.3.5: Date-Time](https://tools.ietf.org/html/rfc5545#section-3.3.5).
+  // It is based on DateTime.toIso8601String excluding 6 digit years
+  String toRecurrenceRulePattern() {
+    assert(
+      0 <= year && year <= iCalMaxYear,
+      'Years with more than four digits are not supported.',
+    );
+
+    final y = _fourDigits(year);
+    final m = _twoDigits(month);
+    final d = _twoDigits(day);
+    final h = _twoDigits(hour);
+    final min = _twoDigits(minute);
+    final sec = _twoDigits(second);
+    return '$y$m${d}T$h$min$sec';
+  }
+
+  static String _twoDigits(int n) {
+    if (n >= 10) return '$n';
+    return '0$n';
+  }
+
+  static String _fourDigits(int n) {
+    final absN = n.abs();
+    final sign = n < 0 ? '-' : '';
+    if (absN >= 1000) return '$n';
+    if (absN >= 100) return '${sign}0$absN';
+    if (absN >= 10) return '${sign}00$absN';
+    return '${sign}000$absN';
+  }
+}
+
 extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
   void writeDateTime(
     DateTime input,
@@ -97,7 +131,7 @@ extension _RecurrenceRuleEncoderStringBuffer on StringBuffer {
       'See https://tools.ietf.org/html/rfc5545#section-3.3.4 for more '
       'information.',
     );
-    write(iCalDateTimePattern.format(input));
+    write(input.toRecurrenceRulePattern());
     if (options.isTimeUtc) write('Z');
   }
 

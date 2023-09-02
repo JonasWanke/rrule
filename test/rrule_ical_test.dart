@@ -18,6 +18,7 @@ void main() {
     required DateTime start,
     required Iterable<DateTime> expected,
     bool isInfinite = false,
+    bool testNonLatin = false,
   }) {
     utils.testRrule(
       description,
@@ -28,8 +29,28 @@ void main() {
       expected: expected,
       isInfinite: isInfinite,
       l10n: () => l10n,
+      testNonLatin: testNonLatin,
     );
   }
+
+  // Non-latin tests
+  testRrule(
+    'Daily until December 24, 1997 - Non-Latin',
+    string: 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z',
+    text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
+    rrule: RecurrenceRule(
+      frequency: Frequency.daily,
+      until: DateTime.utc(1997, 12, 24),
+    ),
+    start: DateTime.utc(1997, 9, 2, 9, 0, 0),
+    expected: [
+      ...2.until(31).map((d) => DateTime.utc(1997, 9, d, 9, 0, 0)),
+      ...1.until(32).map((d) => DateTime.utc(1997, 10, d, 9, 0, 0)),
+      ...1.until(31).map((d) => DateTime.utc(1997, 11, d, 9, 0, 0)),
+      ...1.until(24).map((d) => DateTime.utc(1997, 12, d, 9, 0, 0)),
+    ],
+    testNonLatin: true,
+  );
 
   // All examples taken from https://tools.ietf.org/html/rfc5545#section-3.8.5.3.
   // - Some RRULE-strings had some fields reordered to match the production rule

@@ -1,3 +1,5 @@
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:rrule/rrule.dart';
 import 'package:test/test.dart';
@@ -17,8 +19,23 @@ void testRrule(
   required Iterable<DateTime> expected,
   bool isInfinite = false,
   required RruleL10n Function() l10n,
+  bool testNonLatin = false,
 }) {
   group(description, () {
+    setUp(() async {
+      if (testNonLatin) {
+        Intl.defaultLocale = 'ar';
+        await initializeDateFormatting();
+      }
+    });
+
+    tearDown(() async {
+      if (testNonLatin) {
+        Intl.defaultLocale = 'en';
+        await initializeDateFormatting();
+      }
+    });
+
     testStringCodec(
       'StringCodec',
       codec: const RecurrenceRuleStringCodec(
