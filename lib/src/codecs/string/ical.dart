@@ -1,21 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
-
-/// Pattern corresponding to the `DATE` rule specified in
-/// [RFC 5545 Section 3.3.4: Date](https://tools.ietf.org/html/rfc5545#section-3.3.4).
-final iCalDatePattern = DateFormat('yyyyMMdd');
-
-/// Pattern corresponding to the `TIME` rule specified in
-/// [RFC 5545 Section 3.3.12: Time](https://tools.ietf.org/html/rfc5545#section-3.3.12).
-final iCalTimePattern = DateFormat('HHmmss');
-
-/// Pattern corresponding to the `DATE-TIME` rule specified in
-/// [RFC 5545 Section 3.3.5: Date-Time](https://tools.ietf.org/html/rfc5545#section-3.3.5).
-final iCalDateTimePattern =
-    DateFormat("${iCalDatePattern.pattern}'T'${iCalTimePattern.pattern}");
 
 /// Maximum year number supported by iCalendar.
 const iCalMaxYear = 9999;
