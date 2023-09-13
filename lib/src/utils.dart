@@ -70,10 +70,18 @@ extension InternalDateTimeRrule on DateTime {
   Duration get timeOfDay => difference(atStartOfDay);
 
   DateTime get atStartOfDay => DateTimeRrule(this)
-      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
   bool get isAtStartOfDay => this == atStartOfDay;
-  DateTime get atEndOfDay => DateTimeRrule(this)
-      .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+  DateTime get atEndOfDay {
+    return DateTimeRrule(this).copyWith(
+      hour: 23,
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+      microsecond: 999,
+    );
+  }
+
   bool get isAtEndOfDay => this == atEndOfDay;
 
   static DateTime today() {

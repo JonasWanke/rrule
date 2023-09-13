@@ -249,4 +249,14 @@ void main() {
       );
     },
   );
+  test('#62: Monthly + byWeekDays + getInstances = fails assertion', () {
+    final rrule = RecurrenceRule(
+      frequency: Frequency.monthly,
+      byWeekDays: {ByWeekDayEntry(DateTime.friday, 1)},
+    );
+    final start = DateTime.utc(2023, 03, 20, 00, 00, 00, 0, 123);
+
+    final instances = rrule.getInstances(start: start);
+    expect(instances, isNotEmpty);
+  });
 }
