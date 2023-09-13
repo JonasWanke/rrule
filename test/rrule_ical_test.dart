@@ -37,7 +37,7 @@ void main() {
   testRrule(
     'Daily until December 24, 1997 - Non-Latin',
     string: 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z',
-    text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
+    text: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
     rrule: RecurrenceRule(
       frequency: Frequency.daily,
       until: DateTime.utc(1997, 12, 24),

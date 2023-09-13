@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.14 · 2023-09-13
+
+### 🐛 Bug Fixes
+* fix string serialization with intl set to non-latin locale ([#60](https://github.com/JonasWanke/rrule/pull/60)), closes: [#59](https://github.com/JonasWanke/rrule/issues/59). Thanks to [@absar](https://github.com/absar)!
+
 ## 0.2.13 · 2023-03-22
 
 ### 🐛 Bug Fixes
