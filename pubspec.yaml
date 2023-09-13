@@ -4,7 +4,7 @@ version: 0.2.13
 homepage: https://github.com/JonasWanke/rrule
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   collection: ^1.15.0
