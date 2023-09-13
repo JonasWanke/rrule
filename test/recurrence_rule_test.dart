@@ -1,9 +1,17 @@
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:rrule/rrule.dart';
 import 'package:rrule/src/cache.dart';
 import 'package:rrule/src/utils.dart';
 import 'package:test/test.dart';
 
+import 'codecs/text/utils.dart';
+import 'codecs/utils.dart';
+
 void main() {
+  late final RruleL10n l10n;
+  setUpAll(() async => l10n = await RruleL10nEn.create());
+
   group('copyWith', () {
     test('until can be adjusted', () {
       expect(
@@ -204,4 +212,41 @@ void main() {
       equals(start),
     );
   });
+  group(
+    '#59: It cannot parse its own strings when current locale does not use Latin numbers',
+    () {
+      setUp(() async {
+        Intl.defaultLocale = 'ar';
+        await initializeDateFormatting();
+      });
+
+      tearDown(() async {
+        Intl.defaultLocale = 'en';
+        await initializeDateFormatting();
+      });
+
+      final rrule = RecurrenceRule(
+        frequency: Frequency.daily,
+        until: DateTime.utc(1997, 12, 24),
+      );
+      const string = 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z';
+      const text = 'Daily, until Wednesday, December 24, 1997 12:00:00 AM';
+
+      testStringCodec(
+        'StringCodec',
+        codec: const RecurrenceRuleStringCodec(
+          toStringOptions: RecurrenceRuleToStringOptions(isTimeUtc: true),
+        ),
+        value: rrule,
+        string: string,
+      );
+
+      testText(
+        'TextCodec',
+        text: text,
+        string: string,
+        l10n: () => l10n,
+      );
+    },
+  );
 }
