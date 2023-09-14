@@ -181,4 +181,23 @@ class RruleL10nEn extends RruleL10n {
 
     return number < 0 ? '$string-to-last' : string;
   }
+
+  @override
+  String timeOfDay(int? hour, int? minute, int? second) {
+    final minutesFormat = NumberFormat('00');
+    final secondsFormat = minutesFormat;
+
+    final parts = [
+      if (hour != null) hour.toString(),
+      if (minute != null) ':${minutesFormat.format(minute)}',
+      if (minute == null && second != null) ':',
+      if (second != null) ':${secondsFormat.format(second)}'
+    ];
+    return parts.join();
+  }
+
+  @override
+  String atTimesOfDay(List<String> timesOfDay) {
+    return 'at ${list(timesOfDay, ListCombination.conjunctiveShort)}';
+  }
 }

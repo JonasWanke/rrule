@@ -120,7 +120,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         combination: input.hasByWeekDays
             ? ListCombination.disjunctive
             : ListCombination.conjunctiveShort,
-      ));
+      ))
+      // [at 8:00 & 12:00]
+      ..add(_formatByTime(input));
   }
 
   void _convertWeekly(RecurrenceRule input, StringBuffer output) {
@@ -137,7 +139,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         variant: input.hasBySetPositions
             ? InOnVariant.instanceOf
             : InOnVariant.simple,
-      ));
+      ))
+      // [at 8:00 & 12:00]
+      ..add(_formatByTime(input));
   }
 
   void _convertMonthly(RecurrenceRule input, StringBuffer output) {
@@ -176,7 +180,9 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         combination: input.hasByWeekDays
             ? ListCombination.disjunctive
             : ListCombination.conjunctiveShort,
-      ));
+      ))
+      // [at 8:00 & 12:00]
+      ..add(_formatByTime(input));
   }
 
   void _convertYearly(RecurrenceRule input, StringBuffer output) {
@@ -283,6 +289,8 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     if (limits.isNotEmpty) {
       output.add(l10n.list(limits, ListCombination.conjunctiveLong));
     }
+
+    output.add(_formatByTime(input));
   }
 
   String? _formatBySetPositions(RecurrenceRule input) {
@@ -377,6 +385,22 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
       frequency: frequency,
       variant: variant,
     );
+  }
+
+  String? _formatByTime(RecurrenceRule input) {
+    final byHours = input.hasByHours ? input.byHours : {null};
+    final byMinutes = input.hasByMinutes ? input.byMinutes : {null};
+    final bySeconds = input.hasBySeconds ? input.bySeconds : {null};
+
+    final timesOfDay = [
+      for (var hour in byHours)
+        for (var minute in byMinutes)
+          for (var second in bySeconds)
+            if (!(hour == null && minute == null && second == null))
+              l10n.timeOfDay(hour, minute, second)
+    ];
+
+    return timesOfDay.isEmpty ? null : l10n.atTimesOfDay(timesOfDay);
   }
 }
 
