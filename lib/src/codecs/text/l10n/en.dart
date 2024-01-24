@@ -20,14 +20,11 @@ class RruleL10nEn extends RruleL10n {
   @override
   String frequencyInterval(Frequency frequency, int interval) {
     String plurals({required String one, required String singular}) {
-      switch (interval) {
-        case 1:
-          return one;
-        case 2:
-          return 'Every other $singular';
-        default:
-          return 'Every $interval ${singular}s';
-      }
+      return switch (interval) {
+        1 => one,
+        2 => 'Every other $singular',
+        _ => 'Every $interval ${singular}s',
+      };
     }
 
     return {
@@ -50,14 +47,11 @@ class RruleL10nEn extends RruleL10n {
 
   @override
   String count(int count) {
-    switch (count) {
-      case 1:
-        return ', once';
-      case 2:
-        return ', twice';
-      default:
-        return ', $count times';
-    }
+    return switch (count) {
+      1 => ', once',
+      2 => ', twice',
+      _ => ', $count times',
+    };
   }
 
   @override
@@ -72,14 +66,11 @@ class RruleL10nEn extends RruleL10n {
       '${_inVariant(variant)} the $weeks week of the year';
 
   String _inVariant(InOnVariant variant) {
-    switch (variant) {
-      case InOnVariant.simple:
-        return 'in';
-      case InOnVariant.also:
-        return 'that are also in';
-      case InOnVariant.instanceOf:
-        return 'of';
-    }
+    return switch (variant) {
+      InOnVariant.simple => 'in',
+      InOnVariant.also => 'that are also in',
+      InOnVariant.instanceOf => 'of',
+    };
   }
 
   @override
@@ -134,34 +125,20 @@ class RruleL10nEn extends RruleL10n {
       '${_onVariant(variant)} the $days day of the year';
 
   String _onVariant(InOnVariant variant) {
-    switch (variant) {
-      case InOnVariant.simple:
-        return 'on';
-      case InOnVariant.also:
-        return 'that are also';
-      case InOnVariant.instanceOf:
-        return 'of';
-    }
+    return switch (variant) {
+      InOnVariant.simple => 'on',
+      InOnVariant.also => 'that are also',
+      InOnVariant.instanceOf => 'of',
+    };
   }
 
   @override
   String list(List<String> items, ListCombination combination) {
-    String two;
-    String end;
-    switch (combination) {
-      case ListCombination.conjunctiveShort:
-        two = ' & ';
-        end = ' & ';
-        break;
-      case ListCombination.conjunctiveLong:
-        two = ' and ';
-        end = ', and ';
-        break;
-      case ListCombination.disjunctive:
-        two = ' or ';
-        end = ', or ';
-        break;
-    }
+    final (two, end) = switch (combination) {
+      ListCombination.conjunctiveShort => (' & ', ' & '),
+      ListCombination.conjunctiveLong => (' and ', ', and '),
+      ListCombination.disjunctive => (' or ', ', or '),
+    };
     return RruleL10n.defaultList(items, two: two, end: end);
   }
 

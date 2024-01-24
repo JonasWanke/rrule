@@ -569,14 +569,11 @@ extension on List<String> {
     switch (endIndex - startIndex) {
       case 0:
         add(map(source[startIndex]));
-        return;
       case 1:
         add(map(source[startIndex]));
         add(map(source[endIndex]));
-        return;
       default:
         add(l10n.range(map(source[startIndex]), map(source[endIndex])));
-        return;
     }
   }
 }

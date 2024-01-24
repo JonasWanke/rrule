@@ -85,7 +85,6 @@ class RecurrenceRuleFromStringDecoder
             oldValue: frequency,
             parse: () => frequencyFromString(value),
           );
-          break;
         case recurRulePartUntil:
           untilOrCount = _parseSimplePart(
             name,
@@ -111,7 +110,6 @@ class RecurrenceRuleFromStringDecoder
               );
             },
           );
-          break;
         case recurRulePartCount:
           untilOrCount = _parseSimplePart(
             name,
@@ -119,7 +117,6 @@ class RecurrenceRuleFromStringDecoder
             oldValue: untilOrCount,
             parse: () => _UntilOrCount(count: int.parse(value)),
           );
-          break;
         case recurRulePartInterval:
           interval = _parseSimplePart(
             name,
@@ -127,7 +124,6 @@ class RecurrenceRuleFromStringDecoder
             oldValue: interval,
             parse: () => int.parse(value),
           );
-          break;
         case recurRulePartBySecond:
           bySeconds = _parseIntListPart(
             name,
@@ -138,7 +134,6 @@ class RecurrenceRuleFromStringDecoder
             max: Duration.secondsPerMinute - 1,
             allowNegative: false,
           );
-          break;
         case recurRulePartByMinute:
           byMinutes = _parseIntListPart(
             name,
@@ -148,7 +143,6 @@ class RecurrenceRuleFromStringDecoder
             max: Duration.minutesPerHour - 1,
             allowNegative: false,
           );
-          break;
         case recurRulePartByHour:
           byHours = _parseIntListPart(
             name,
@@ -158,7 +152,6 @@ class RecurrenceRuleFromStringDecoder
             max: Duration.hoursPerDay - 1,
             allowNegative: false,
           );
-          break;
         case recurRulePartByDay:
           byWeekDays = _parseListPart(
             name,
@@ -166,7 +159,6 @@ class RecurrenceRuleFromStringDecoder
             oldValue: byWeekDays,
             parse: _byWeekDayEntryDecoder.convert,
           );
-          break;
         case recurRulePartByMonthDay:
           byMonthDays = _parseIntListPart(
             name,
@@ -175,7 +167,6 @@ class RecurrenceRuleFromStringDecoder
             min: 1,
             max: 31,
           );
-          break;
         case recurRulePartByYearDay:
           byYearDays = _parseIntListPart(
             name,
@@ -184,7 +175,6 @@ class RecurrenceRuleFromStringDecoder
             min: 1,
             max: 366,
           );
-          break;
         case recurRulePartByWeekNo:
           byWeeks = _parseIntListPart(
             name,
@@ -193,7 +183,6 @@ class RecurrenceRuleFromStringDecoder
             min: 1,
             max: 53,
           );
-          break;
         case recurRulePartByMonth:
           byMonths = _parseIntListPart(
             name,
@@ -203,7 +192,6 @@ class RecurrenceRuleFromStringDecoder
             max: 12,
             allowNegative: false,
           );
-          break;
         case recurRulePartBySetPos:
           bySetPositions = _parseIntListPart(
             name,
@@ -212,7 +200,6 @@ class RecurrenceRuleFromStringDecoder
             min: 1,
             max: 366,
           );
-          break;
         case recurRulePartWkSt:
           weekStart = _parseSimplePart(
             name,
@@ -226,7 +213,6 @@ class RecurrenceRuleFromStringDecoder
               'supported.)',
             );
           }
-          break;
       }
     }
 
@@ -272,10 +258,8 @@ class RecurrenceRuleFromStringDecoder
       switch (options.duplicatePartBehavior) {
         case RecurrenceRuleDuplicatePartBehavior.exception:
           assert(false, 'This case is already handled above.');
-          break;
         case RecurrenceRuleDuplicatePartBehavior.takeFirst:
           newValue = oldValue;
-          break;
         case RecurrenceRuleDuplicatePartBehavior.takeLast:
           // We already prefer the new value.
           break;
@@ -335,16 +319,13 @@ class RecurrenceRuleFromStringDecoder
       switch (options.duplicatePartBehavior) {
         case RecurrenceRuleDuplicatePartBehavior.exception:
           assert(false, 'This case is already handled above.');
-          break;
         case RecurrenceRuleDuplicatePartBehavior.takeFirst:
           newValue = oldValue;
-          break;
         case RecurrenceRuleDuplicatePartBehavior.takeLast:
           // We already prefer the new value.
           break;
         case RecurrenceRuleDuplicatePartBehavior.mergePreferLast:
           newValue.addAll(oldValue);
-          break;
       }
     }
     return newValue;
