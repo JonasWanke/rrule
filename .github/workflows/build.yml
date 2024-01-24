@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [stable, beta, dev]
+        sdk: [stable, beta, dev, "2.18.0"]
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [stable, beta, dev]
+        sdk: [stable, beta, dev, "2.18.0"]
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
