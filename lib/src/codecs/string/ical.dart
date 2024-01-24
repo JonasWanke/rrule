@@ -104,8 +104,10 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
   // https://tools.ietf.org/html/rfc3629#section-4
   static const _utf82 = '(?:[\xC2-\xDF]$_utf8Tail)';
   static const _utf83 =
+      // ignore: lines_longer_than_80_chars
       '(?:\xE0[\xA0-\xBF]$_utf8Tail|[\xE1-\xEC]$_utf8Tail{2}|\xED[\x80-\x9F]$_utf8Tail|[\xEE-\xEF]$_utf8Tail{2})';
   static const _utf84 =
+      // ignore: lines_longer_than_80_chars
       '(?:\xF0[\x90-\xBF]$_utf8Tail{2}|[\xF1-\xF3]$_utf8Tail{3}|\xF4[\x80-\x8F]$_utf8Tail{2})';
   static const _utf8Tail = '[\x80-\xBF]';
 
@@ -209,7 +211,9 @@ class _ICalPropertyFromStringDecoder extends Converter<String, ICalProperty> {
   /// See [RFC 5545 Section 3.1](https://tools.ietf.org/html/rfc5545#section-3.1)
   /// for more information.
   String _unfold(String input) {
-    // TODO(JonasWanke): RFC 5545 Section 3.1. allows line breaks within a UTF-8 multi-octet sequence. That should not be allowed inside a String, so maybe support raw byte sequences?
+    // TODO(JonasWanke): RFC 5545 Section 3.1. allows line breaks within a UTF-8
+    // multi-octet sequence. That should not be allowed inside a String, so
+    // maybe support raw byte sequences?
     return input.replaceAll(RegExp('\r\n[ \t]+'), '');
   }
 }

@@ -222,7 +222,8 @@ class RecurrenceRuleFromStringDecoder
           );
           if (weekStart != null && weekStart != DateTime.monday) {
             throw FormatException(
-              'Unsupported value for RRULE part $name: "$value" (Only MO is supported.)',
+              'Unsupported value for RRULE part $name: "$value" (Only MO is '
+              'supported.)',
             );
           }
           break;
@@ -405,7 +406,7 @@ class ByWeekDayEntryFromStringDecoder
   @override
   ByWeekDayEntry convert(String input) {
     final match =
-        RegExp('(?:(\\+|-)?([0-9]{1,2}))?([A-Za-z]{2})\$').matchAsPrefix(input);
+        RegExp(r'(?:(\+|-)?([0-9]{1,2}))?([A-Za-z]{2})$').matchAsPrefix(input);
     if (match == null) {
       throw FormatException('Cannot parse $input');
     }

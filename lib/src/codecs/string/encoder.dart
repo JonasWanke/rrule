@@ -64,10 +64,8 @@ class RecurrenceRuleToStringEncoder extends Converter<RecurrenceRule, String> {
       value.writeSingle(recurRulePartWkSt, weekDayToString(input.weekStart!));
     }
 
-    return const ICalPropertyStringCodec().encode(ICalProperty(
-      name: rruleName,
-      value: value.toString(),
-    ));
+    return const ICalPropertyStringCodec()
+        .encode(ICalProperty(name: rruleName, value: value.toString()));
   }
 }
 

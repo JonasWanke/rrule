@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values, lines_longer_than_80_chars
+
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:rrule/rrule.dart';
