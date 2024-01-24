@@ -261,4 +261,27 @@ void main() {
     final instances = rrule.getInstances(start: start);
     expect(instances, isNotEmpty);
   });
+  test('#68: bySetPositions is behaving correctly', () {
+    final rrule = RecurrenceRule(
+      frequency: Frequency.weekly,
+      byWeekDays: [
+        ByWeekDayEntry(DateTime.monday),
+        ByWeekDayEntry(DateTime.wednesday),
+      ],
+      bySetPositions: const [2, 3],
+    );
+    final start = DateTime.utc(2024, 02, 01);
+
+    final instances = rrule.getInstances(start: start).take(5);
+    expect(
+      instances,
+      equals([
+        DateTime.utc(2024, 02, 07),
+        DateTime.utc(2024, 02, 14),
+        DateTime.utc(2024, 02, 21),
+        DateTime.utc(2024, 02, 28),
+        DateTime.utc(2024, 03, 06),
+      ]),
+    );
+  });
 }
