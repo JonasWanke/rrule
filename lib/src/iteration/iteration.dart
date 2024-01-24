@@ -33,10 +33,8 @@ Iterable<DateTime> getRecurrenceRuleInstances(
   var currentStart = start;
 
   if (count == null && after != null) {
-    /// Shortcut for not calculating unnecessary recurrences.
-    final skippableDifference = after.difference(start);
-
-    currentStart = currentStart.add(skippableDifference);
+    // Shortcut for not calculating unnecessary recurrences.
+    currentStart = after;
   }
 
   var timeSet = makeTimeSet(rrule, start.timeOfDay);
