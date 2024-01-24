@@ -186,6 +186,32 @@ void main() {
       expect(instances.length, 4);
     },
   );
+  test('#44: prevent IntegerDivisionByZeroException with SETPOS', () {
+    final rrule = RecurrenceRule(
+      frequency: Frequency.monthly,
+      interval: 1,
+      byWeekDays: [
+        ByWeekDayEntry(DateTime.wednesday),
+        ByWeekDayEntry(DateTime.saturday),
+      ],
+      byMonths: const [10, 12],
+      bySetPositions: const [2, 4],
+      until: DateTime.utc(2023, 01, 06, 14, 15),
+    );
+    final start = DateTime.utc(2022);
+
+    final instances = rrule.getInstances(start: start).take(5);
+
+    expect(
+      instances,
+      equals([
+        DateTime.utc(2022, 10, 05),
+        DateTime.utc(2022, 10, 12),
+        DateTime.utc(2022, 12, 07),
+        DateTime.utc(2022, 12, 14),
+      ]),
+    );
+  });
   test(
     '#46: Start DateTime with microseconds should not skip first instance',
     () {
