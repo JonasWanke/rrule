@@ -19,17 +19,10 @@ Iterable<DateTime> buildSetPositionsList(
 
   final timeList = timeSet.toList(growable: false);
   for (final setPosition in rrule.bySetPositions) {
-    int datePosition;
-    int timePosition;
-
-    if (setPosition < 0) {
-      datePosition = (setPosition / timeList.length).floor();
-      timePosition = setPosition % timeList.length;
-    } else {
-      assert(setPosition > 0);
-      datePosition = ((setPosition - 1) / timeList.length).floor();
-      timePosition = (setPosition - 1) % timeList.length;
-    }
+    final correctedSetPosition =
+        setPosition < 0 ? setPosition : setPosition - 1;
+    final datePosition = correctedSetPosition ~/ timeList.length;
+    final timePosition = correctedSetPosition % timeList.length;
 
     if (datePosition >= dateIndices.length ||
         -datePosition > dateIndices.length) {
