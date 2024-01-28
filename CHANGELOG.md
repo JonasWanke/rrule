@@ -5,16 +5,30 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2023-xx-xx
+## NEW · 2024-xx-xx
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
 ### 🐛 Bug Fixes
+### ⏩ Performance Improvements
 ### 📜 Documentation updates
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.15 · 2024-01-28
+
+### 🐛 Bug Fixes
+* prevent `IntegerDivisionByZeroException` with `bySetPositions` ([#67](https://github.com/JonasWanke/rrule/pull/67)), closes: [#44](https://github.com/JonasWanke/rrule/issues/44). Thanks to [@DrBu7cher](https://github.com/DrBu7cher)!
+* out-of-range `bySetPositions` not handled correctly ([#69](https://github.com/JonasWanke/rrule/pull/69)), closes: [#68](https://github.com/JonasWanke/rrule/issues/68). Thanks to [@DrBu7cher](https://github.com/DrBu7cher)!
+
+### ⏩ Performance Improvements
+* when calculating instances for recurrence rules without a count, skip directly to `after` (if set) instead of calculating all instances until then ([#66](https://github.com/JonasWanke/rrule/pull/66)). Thanks to [@DrBu7cher](https://github.com/DrBu7cher)!
+* when applying `bySetPositions`, reuse date lists ([`e47a0a8`](https://github.com/JonasWanke/rrule/commit/e47a0a8569547d0e0aeace8450ab4cf51254a181))
+
+### 📦 Build & CI
+* upgrade to Dart 3.0.0 ([`ce0678e`](https://github.com/JonasWanke/rrule/commit/ce0678ef5da34ed5bb041f6b77b2bf7d1b24d601))
 
 ## 0.2.14 · 2023-09-13
 
