@@ -11,6 +11,12 @@ Iterable<DateTime> buildSetPositionsList(
 ) sync* {
   assert(timeSet.every((it) => it.isValidRruleTimeOfDay));
 
+  final dateIndices = dateSet.start
+      .until(dateSet.end)
+      .where((it) => dateSet.isIncluded[it])
+      .toList();
+  if (dateIndices.isEmpty) return;
+
   final timeList = timeSet.toList(growable: false);
   for (final setPosition in rrule.bySetPositions) {
     int datePosition;
@@ -25,13 +31,7 @@ Iterable<DateTime> buildSetPositionsList(
       timePosition = (setPosition - 1) % timeList.length;
     }
 
-    final dateIndices = <int>[];
-    for (final k in dateSet.start.until(dateSet.end)) {
-      if (dateSet.isIncluded[k]) dateIndices.add(k);
-    }
-
-    if (dateIndices.isEmpty ||
-        datePosition >= dateIndices.length ||
+    if (datePosition >= dateIndices.length ||
         -datePosition > dateIndices.length) {
       continue;
     }
