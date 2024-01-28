@@ -30,7 +30,11 @@ Iterable<DateTime> buildSetPositionsList(
       if (dateSet.isIncluded[k]) dateIndices.add(k);
     }
 
-    if (dateIndices.isEmpty) continue;
+    if (dateIndices.isEmpty ||
+        datePosition >= dateIndices.length ||
+        -datePosition > dateIndices.length) {
+      continue;
+    }
 
     final dateIndex = dateIndices[datePosition % dateIndices.length];
     final date = dateSet.firstDayOfYear.add(dateIndex.days);
