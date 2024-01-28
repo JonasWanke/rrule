@@ -39,7 +39,6 @@ Iterable<DateTime> getRecurrenceRuleInstances(
 
   var timeSet = makeTimeSet(rrule, start.timeOfDay);
 
-  // ignore: literal_only_boolean_expressions
   while (true) {
     final dateSet = makeDateSet(rrule, currentStart.atStartOfDay);
     final isFiltered = removeFilteredDates(rrule, dateSet);

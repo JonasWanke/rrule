@@ -67,7 +67,6 @@ extension _FrequencyIntervalCalculation on DateTime {
       newValue.add(hoursToLastIterationOfDay.hours);
     }
 
-    // ignore: literal_only_boolean_expressions
     while (true) {
       newValue = newValue.add(hours.hours);
 
@@ -94,7 +93,6 @@ extension _FrequencyIntervalCalculation on DateTime {
       newValue = newValue.add(minutesToLastIterationOfDay.minutes);
     }
 
-    // ignore: literal_only_boolean_expressions
     while (true) {
       final hours = minutes ~/ Duration.minutesPerHour;
       final minutesWithoutHours = minutes % Duration.minutesPerHour;
@@ -131,7 +129,6 @@ extension _FrequencyIntervalCalculation on DateTime {
       newValue += secondsToLastIterationOfDay.seconds;
     }
 
-    // ignore: literal_only_boolean_expressions
     while (true) {
       final minutes = seconds ~/ Duration.secondsPerMinute;
       final secondsWithoutMinutes = minutes % Duration.secondsPerMinute;
