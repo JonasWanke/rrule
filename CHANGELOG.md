@@ -17,6 +17,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.16 · 2024-02-07
+
+### 🐛 Bug Fixes
+* fix instance calculation with `after` and `interval > 1` ([`902b071`](https://github.com/JonasWanke/rrule/commit/902b0716086e7cf7bc4fea2f25c55ea8af41e340)), closes: [#71](https://github.com/JonasWanke/rrule/issues/71)
+
+### 📦 Build & CI
+* widen intl dependency to >=0.17.0 <0.20.0 ([`28b09bc`](https://github.com/JonasWanke/rrule/commit/28b09bc00c6c6d219a067625149882aedb0e207c))
+
+
 ## 0.2.15 · 2024-01-28
 
 ### 🐛 Bug Fixes
