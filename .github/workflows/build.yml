@@ -34,7 +34,9 @@ jobs:
       - run: dart pub global activate coverage ^1.0.0
       - run: dart pub global run coverage:test_with_coverage
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     name: Lint
