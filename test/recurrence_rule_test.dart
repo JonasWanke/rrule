@@ -310,4 +310,17 @@ void main() {
       ]),
     );
   });
+  test("#71: Counting of interval starts from 'after', not from 'start'", () {
+    final rule =
+        RecurrenceRule.fromString('RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=SU');
+    final start = DateTime.utc(2024, 2, 7);
+    expect(
+      rule.getInstances(start: start).take(2),
+      equals([DateTime.utc(2024, 2, 11), DateTime.utc(2024, 2, 25)]),
+    );
+    expect(
+      rule.getInstances(start: start, after: DateTime.utc(2024, 2, 12)).take(2),
+      equals([DateTime.utc(2024, 2, 25), DateTime.utc(2024, 3, 10)]),
+    );
+  });
 }
