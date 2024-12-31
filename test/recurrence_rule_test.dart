@@ -7,8 +7,8 @@ import 'package:rrule/src/cache.dart';
 import 'package:rrule/src/utils.dart';
 import 'package:test/test.dart';
 
-import 'codecs/text/utils.dart';
 import 'codecs/utils.dart';
+import 'utils.dart';
 
 void main() {
   late final RruleL10n l10n;
@@ -258,7 +258,6 @@ void main() {
         until: DateTime.utc(1997, 12, 24),
       );
       const string = 'RRULE:FREQ=DAILY;UNTIL=19971224T000000Z';
-      const text = 'Daily, until Wednesday, December 24, 1997 12:00:00 AM';
 
       testStringCodec(
         'StringCodec',
@@ -269,9 +268,9 @@ void main() {
         string: string,
       );
 
-      testText(
+      testTextEn(
         'TextCodec',
-        text: text,
+        textEn: 'Daily, until Wednesday, December 24, 1997 12:00:00 AM',
         string: string,
         l10n: () => l10n,
       );
