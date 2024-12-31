@@ -253,19 +253,11 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
         input.hasByMonths;
 
     if (appendByWeeksDirectly) {
-      output.add(
-        _formatByWeeks(
-          input,
-        ),
-      );
+      output.add(_formatByWeeks(input));
     }
     if (appendByMonthsDirectly) {
       assert(!appendByWeeksDirectly);
-      output.add(
-        _formatByMonths(
-          input,
-        ),
-      );
+      output.add(_formatByMonths(input));
     }
 
     final limits = [
