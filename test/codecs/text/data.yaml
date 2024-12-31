@@ -1,0 +1,408 @@
+RRULE:FREQ=WEEKLY;BYMONTH=1,2,3,8,9;BYDAY=MO,WE,TH,FR,SU:
+  en: "Weekly in January – March, August & September on Monday, Wednesday – Friday & Sunday"
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYMONTH=1,2,3;BYDAY=MO,TU,WE,TH,FR,SU:
+  en: Every other week in January – March on weekdays & Sunday
+RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,1TH,1FR,2TH,2FR,2SA,-2TH,-2FR,-2SU,-1TH,-1FR,-1SU;BYMONTHDAY=1,2,3,4,5,26,-3,-2,-1:
+  en: "Monthly on every Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st – 5th, 26th, or 3rd-to-last – last day of the month"
+
+# Daily
+
+RRULE:FREQ=DAILY;BYDAY=MO:
+  en: Daily on Monday
+RRULE:FREQ=DAILY;INTERVAL=2;BYDAY=MO:
+  en: Every other day on Monday
+RRULE:FREQ=DAILY;INTERVAL=4;BYDAY=MO:
+  en: Every 4 days on Monday
+
+# 0/1 digits in the comment before a text function mean whether each of
+# bySetPositions, byMonths, byMonthDays & byWeekDays (in that order) is
+# included.
+
+# 0000
+RRULE:FREQ=DAILY:
+  en: Daily
+# 0001
+RRULE:FREQ=DAILY;BYDAY=MO,TH:
+  en: Daily on Monday & Thursday
+# 0010
+RRULE:FREQ=DAILY;BYMONTHDAY=1,-1:
+  en: Daily on the 1st & last day of the month
+# 0011
+RRULE:FREQ=DAILY;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  en: Daily on Monday & Thursday that are also the 1st or last day of the month
+# 0100
+RRULE:FREQ=DAILY;BYMONTH=1,12:
+  en: Daily in January & December
+# 0101
+RRULE:FREQ=DAILY;BYMONTH=1,12;BYDAY=MO,TH:
+  en: Daily in January & December on Monday & Thursday
+# 0110
+RRULE:FREQ=DAILY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Daily in January & December on the 1st & last day of the month
+# 0111
+RRULE:FREQ=DAILY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  en: Daily in January & December on Monday & Thursday that are also the 1st or last day of the month
+# 1000: invalid
+# 1001
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYDAY=MO,TH:
+  en: Daily on the 1st & 2nd-to-last instance of Monday & Thursday
+# 1010
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  en: Daily on the 1st & 2nd-to-last instance of the 1st & last day of the month
+# 1011
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  en: Daily on the 1st & 2nd-to-last instance of Monday & Thursday that are also the 1st or last day of the month
+# 1100
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12:
+  en: Daily in January & December on the 1st & 2nd-to-last instance
+# 1101
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,TH:
+  en: Daily in January & December on the 1st & 2nd-to-last instance of Monday & Thursday
+# 1110
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
+# 1111
+RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  en: Daily in January & December on the 1st & 2nd-to-last instance of Monday & Thursday that are also the 1st or last day of the month
+
+# Weekly
+
+RRULE:FREQ=WEEKLY;BYDAY=MO:
+  en: Weekly on Monday
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO:
+  en: Every other week on Monday
+RRULE:FREQ=WEEKLY;INTERVAL=4;BYDAY=MO:
+  en: Every 4 weeks on Monday
+
+# 0/1 digits in the comment before a text function mean whether each of
+# bySetPositions, byMonths & byWeekDays (in that order) is included.
+
+# 000
+RRULE:FREQ=WEEKLY:
+  en: Weekly
+# 001
+RRULE:FREQ=WEEKLY;BYDAY=MO,TH:
+  en: Weekly on Monday & Thursday
+# 010
+RRULE:FREQ=WEEKLY;BYMONTH=1,12:
+  en: Weekly in January & December
+# 011
+RRULE:FREQ=WEEKLY;BYMONTH=1,12;BYDAY=MO,TH:
+  en: Weekly in January & December on Monday & Thursday
+# 100: invalid
+# 101
+RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYDAY=MO,TH:
+  en: Weekly on the 1st & 2nd-to-last instance of Monday & Thursday
+# 110
+RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  en: Weekly in January & December on the 1st & 2nd-to-last instance
+# 111
+RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,TH:
+  en: Weekly in January & December on the 1st & 2nd-to-last instance of Monday & Thursday
+
+# Monthly
+
+RRULE:FREQ=MONTHLY;BYDAY=MO:
+  en: Monthly on every Monday
+RRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=MO:
+  en: Every other month on every Monday
+RRULE:FREQ=MONTHLY;INTERVAL=4;BYDAY=MO:
+  en: Every 4 months on every Monday
+
+# https://github.com/JonasWanke/rrule/issues/13
+RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU:
+  en: Monthly on the last day
+
+# 0/1 digits in the comment before a text function mean whether each of
+# bySetPositions, byMonths, byMonthDays & byWeekDays (in that order) is
+# included.
+
+# 0000
+RRULE:FREQ=MONTHLY:
+  en: Monthly
+# 0001
+RRULE:FREQ=MONTHLY;BYDAY=MO,-1TH:
+  en: Monthly on every Monday & the last Thursday
+# 0010
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1,-1:
+  en: Monthly on the 1st & last day
+# 0011
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Monthly on every Monday & the last Thursday that are also the 1st or last day of the month
+# 0100
+RRULE:FREQ=MONTHLY;BYMONTH=1,12:
+  en: Monthly in January & December
+# 0101
+RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYDAY=MO,-1TH:
+  en: Monthly in January & December on every Monday & the last Thursday
+# 0110
+RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Monthly in January & December on the 1st & last day
+# 0111
+RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Monthly in January & December on every Monday & the last Thursday that are also the 1st or last day of the month
+# 1000: invalid
+# 1001
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYDAY=MO,-1TH:
+  en: Monthly on the 1st & 2nd-to-last instance of every Monday & the last Thursday
+# 1010
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  en: Monthly on the 1st & 2nd-to-last instance of the 1st & last day
+# 1011
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Monthly on the 1st & 2nd-to-last instance of every Monday & the last Thursday that are also the 1st or last day of the month
+# 1100
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  en: Monthly in January & December on the 1st & 2nd-to-last instance
+# 1101
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,-1TH:
+  en: Monthly in January & December on the 1st & 2nd-to-last instance of every Monday & the last Thursday
+# 1110
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Monthly in January & December on the 1st & 2nd-to-last instance of the 1st & last day
+# 1111
+RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Monthly in January & December on the 1st & 2nd-to-last instance of every Monday & the last Thursday that are also the 1st or last day of the month
+
+# Yearly
+
+RRULE:FREQ=YEARLY;BYDAY=MO:
+  en: Annually on every Monday
+RRULE:FREQ=YEARLY;INTERVAL=2;BYDAY=MO:
+  en: Every other year on every Monday
+RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=MO:
+  en: Every 4 years on every Monday
+
+# 0/1 digits in the comment before a text function mean whether each of
+# bySetPositions, byMonths, byWeeks, byYearDays, byMonthDays & byWeekDays
+# (in that order) is included.
+
+# 000000
+RRULE:FREQ=YEARLY:
+  en: Annually
+# 000001
+RRULE:FREQ=YEARLY;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year
+# 000010
+RRULE:FREQ=YEARLY;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month
+# 000011
+RRULE:FREQ=YEARLY;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month
+# 000100
+RRULE:FREQ=YEARLY;BYYEARDAY=1,-1:
+  en: Annually on the 1st & last day of the year
+# 000101
+RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year
+# 000110
+RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month that are also the 1st or last day of the year
+# 000111
+RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year
+# 001000
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1:
+  en: Annually in the 1st & last week of the year
+# 001001
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  en: Annually on every Monday & Wednesday in the 1st & last week of the year
+# 001010
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month that are also in the 1st or last week of the year
+# 001011
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: Annually on every Monday & Wednesday that are also the 1st or last day of the month and that are also in the 1st or last week of the year
+# 001100
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  en: Annually on the 1st & last day of the year that are also in the 1st or last week of the year
+# 001101
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  en: Annually on every Monday & Wednesday that are also the 1st or last day of the year and that are also in the 1st or last week of the year
+# 001110
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month that are also the 1st or last day of the year and that are also in the 1st or last week of the year
+# 001111
+RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in the 1st or last week of the year"
+# 010000
+RRULE:FREQ=YEARLY;BYMONTH=1,12:
+  en: Annually in January & December
+# 010001
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the month in January & December
+# 010010
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month in January & December
+# 010011
+# TODO(JonasWanke): the 1st or last day in January or December
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December
+# 010100
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1:
+  en: Annually on the 1st & last day of the year that are also in January or December
+# 010101
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December
+# 010110
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month that are also the 1st or last day of the year and that are also in January or December
+# 010111
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: "Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December"
+# 011000
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1:
+  en: Annually in the 1st & last week of the year that are also in January or December
+# 011001
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  en: Annually on every Monday & Wednesday in the 1st & last week of the year that are also in January or December
+# 011010
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & last day of the month that are also in the 1st or last week of the year and that are also in January or December
+# 011011
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also in the 1st or last week of the year, and that are also in January or December"
+# 011100
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  en: Annually on the 1st & last day of the year that are also in the 1st or last week of the year and that are also in January or December
+# 011101
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on every Monday & Wednesday that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+# 011110
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: "Annually on the 1st & last day of the month that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+# 011111
+RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+# 100000: invalid
+# 100001
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year
+# 100010
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month
+# 100011
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month
+# 100100
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year
+# 100101
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the year
+# 100110
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year
+# 100111
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year
+# 101000
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last week of the year
+# 101001
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday in the 1st & last week of the year
+# 101010
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also in the 1st or last week of the year
+# 101011
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month and that are also in the 1st or last week of the year
+# 101100
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in the 1st or last week of the year
+# 101101
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the year and that are also in the 1st or last week of the year
+# 101110
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year and that are also in the 1st or last week of the year
+# 101111
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in the 1st or last week of the year"
+# 110000
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  en: Annually on the 1st & 2nd-to-last instance of January & December
+# 110001
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the month in January & December
+# 110010
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month in January & December
+# 110011
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December
+# 110100
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in January or December
+# 110101
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December
+# 110110
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year and that are also in January or December
+# 110111
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  en: "Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December"
+# 111000
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last week of the year that are also in January or December
+# 111001
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday in the 1st & last week of the year that are also in January or December
+# 111010
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also in the 1st or last week of the year and that are also in January or December
+# 111011
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also in the 1st or last week of the year, and that are also in January or December"
+# 111100
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in the 1st or last week of the year and that are also in January or December
+# 111101
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+# 111110
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  en: "Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+# 111111
+RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
+
+# All remaining examples taken from https://github.com/jakubroztocil/rrule/blob/3dc698300e5861311249e85e0e237708702b055d/test/nlp.test.ts,
+# though with modified texts.
+RRULE:FREQ=HOURLY:
+  en: Hourly
+RRULE:INTERVAL=4;FREQ=HOURLY:
+  en: Every 4 hours
+RRULE:FREQ=WEEKLY;COUNT=20:
+  en: "Weekly, 20 times"
+RRULE:FREQ=WEEKLY;UNTIL=20070101T080000Z:
+  en: "Weekly, until Monday, January 1, 2007 8:00:00 AM"
+RRULE:FREQ=WEEKLY;BYDAY=TU:
+  en: Weekly on Tuesday
+RRULE:FREQ=WEEKLY;BYDAY=MO,WE:
+  en: Weekly on Monday & Wednesday
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR:
+  en: Weekly on weekdays
+RRULE:INTERVAL=2;FREQ=WEEKLY:
+  en: Every other week
+RRULE:FREQ=MONTHLY;BYMONTHDAY=4:
+  en: Monthly on the 4th
+RRULE:FREQ=MONTHLY;BYMONTHDAY=-4:
+  en: Monthly on the 4th-to-last day
+RRULE:FREQ=MONTHLY;BYDAY=+3TU:
+  en: Monthly on the 3rd Tuesday
+RRULE:FREQ=MONTHLY;BYDAY=-3TU:
+  en: Monthly on the 3rd-to-last Tuesday
+RRULE:FREQ=MONTHLY;BYDAY=-1MO:
+  en: Monthly on the last Monday
+RRULE:FREQ=MONTHLY;BYDAY=-2FR:
+  en: Monthly on the 2nd-to-last Friday
+RRULE:INTERVAL=6;FREQ=MONTHLY:
+  en: Every 6 months
+RRULE:FREQ=YEARLY;BYDAY=+1FR:
+  en: Annually on the 1st Friday of the year
+RRULE:FREQ=YEARLY;BYDAY=+13FR:
+  en: Annually on the 13th Friday of the year
+

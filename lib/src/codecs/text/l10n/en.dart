@@ -10,6 +10,8 @@ class RruleL10nEn extends RruleL10n {
   const RruleL10nEn._();
 
   static Future<RruleL10nEn> create() async {
+    // TODO(JonasWanke): Move `initializeDateFormatting(…)` call to the
+    // library's user
     await initializeDateFormatting('en');
     return const RruleL10nEn._();
   }
