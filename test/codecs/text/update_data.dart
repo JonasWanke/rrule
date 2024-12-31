@@ -23,7 +23,7 @@ Future<void> main() async {
       // TODO(JonasWanke): use codec directly when supporting fromText()
       final textEncoder = RecurrenceRuleToTextEncoder(l10n);
 
-      if (l10ns.length > 1 && text.containsKey(locale)) {
+      if (text.containsKey(locale)) {
         // Remove and re-add the entry to ensure they are ordered
         // alphabetically.
         dataEditor.remove([rruleString, locale]);
