@@ -9,7 +9,6 @@ import 'l10n.dart';
 class RruleL10nNl extends RruleL10n {
   const RruleL10nNl._();
 
-
   static Future<RruleL10nNl> create() async {
     await initializeDateFormatting('nl');
     return const RruleL10nNl._();
@@ -20,29 +19,29 @@ class RruleL10nNl extends RruleL10n {
 
   @override
   String frequencyInterval(Frequency frequency, int interval) {
-    String plurals({required String one, required String singular}) {
+    String plurals({required String one, required String singular,required String plural}) {
       return switch (interval) {
         1 => one,
         2 => 'Om de twee $singular',
-        _ => 'Om de $interval ${singular}s',
+        _ => 'Om de $interval $plural',
       };
     }
 
     return {
-      Frequency.secondly: plurals(one: 'Secondelijks', singular: 'seconde'),
-      Frequency.minutely: plurals(one: 'Minuutlijks', singular: 'minuut'),
-      Frequency.hourly: plurals(one: 'Uurlijks', singular: 'uur'),
-      Frequency.daily: plurals(one: 'Dagelijks', singular: 'dag'),
-      Frequency.weekly: plurals(one: 'Wekelijks', singular: 'week'),
-      Frequency.monthly: plurals(one: 'Maandelijks', singular: 'maand'),
-      Frequency.yearly: plurals(one: 'Jaarlijks', singular: 'jaar'),
+      Frequency.secondly: plurals(one: 'Secondelijks', singular: 'seconde',plural: 'seconden'),
+      Frequency.minutely: plurals(one: 'Minuutlijks', singular: 'minuut', plural: 'minuten'),
+      Frequency.hourly: plurals(one: 'Uurlijks', singular: 'uur', plural: 'uren'),
+      Frequency.daily: plurals(one: 'Dagelijks', singular: 'dag', plural: 'dagen'),
+      Frequency.weekly: plurals(one: 'Wekelijks', singular: 'week', plural: 'weken'),
+      Frequency.monthly: plurals(one: 'Maandelijks', singular: 'maand', plural: 'maanden'),
+      Frequency.yearly: plurals(one: 'Jaarlijks', singular: 'jaar', plural: 'jaren'),
     }[frequency]!;
   }
 
   @override
   String until(DateTime until, Frequency frequency) {
     final untilString = formatWithIntl(
-      () => DateFormat('EEEE d MMMM yyyy \'om\' H:i \'uur\'', 'nl').format(until),
+      () => DateFormat('EEEE d MMMM yyyy om H:i uur', 'nl').format(until),
     );
     return ', tot $untilString';
   }
@@ -149,17 +148,7 @@ class RruleL10nNl extends RruleL10n {
     assert(number != 0);
     if (number == -1) return 'laatste';
 
-    final n = number.abs();
-    String string;
-    if (n % 10 == 1 && n % 100 != 11) {
-      string = '${n}ste';
-    } else if (n % 10 == 2 && n % 100 != 12) {
-      string = '${n}de';
-    } else if (n % 10 == 3 && n % 100 != 13) {
-      string = '${n}de';
-    } else {
-      string = '${n}de';
-    }
+    final string = '${number.abs()}e';
 
     return number < 0 ? '$string tot laatste' : string;
   }
