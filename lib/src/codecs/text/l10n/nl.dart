@@ -19,7 +19,7 @@ class RruleL10nNl extends RruleL10n {
 
   @override
   String frequencyInterval(Frequency frequency, int interval) {
-    String plurals({required String one, required String singular,required String plural}) {
+    String plurals({required String one, required String singular, required String plural}) {
       return switch (interval) {
         1 => one,
         2 => 'Om de twee $singular',
@@ -28,13 +28,13 @@ class RruleL10nNl extends RruleL10n {
     }
 
     return {
-      Frequency.secondly: plurals(one: 'Secondelijks', singular: 'seconde',plural: 'seconden'),
+      Frequency.secondly: plurals(one: 'Secondelijks', singular: 'seconde', plural: 'seconden'),
       Frequency.minutely: plurals(one: 'Minuutlijks', singular: 'minuut', plural: 'minuten'),
       Frequency.hourly: plurals(one: 'Uurlijks', singular: 'uur', plural: 'uren'),
       Frequency.daily: plurals(one: 'Dagelijks', singular: 'dag', plural: 'dagen'),
       Frequency.weekly: plurals(one: 'Wekelijks', singular: 'week', plural: 'weken'),
       Frequency.monthly: plurals(one: 'Maandelijks', singular: 'maand', plural: 'maanden'),
-      Frequency.yearly: plurals(one: 'Jaarlijks', singular: 'jaar', plural: 'jaren'),
+      Frequency.yearly: plurals(one: 'Jaarlijks', singular: 'jaar', plural: 'jaar'),
     }[frequency]!;
   }
 
@@ -59,12 +59,10 @@ class RruleL10nNl extends RruleL10n {
   String onInstances(String instances) => 'op de $instances';
 
   @override
-  String inMonths(String months, {InOnVariant variant = InOnVariant.simple}) =>
-      '${_inVariant(variant)} $months';
+  String inMonths(String months, {InOnVariant variant = InOnVariant.simple}) => '${_inVariant(variant)} $months';
 
   @override
-  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple}) =>
-      '${_inVariant(variant)} week $weeks';
+  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple}) => '${_inVariant(variant)} week $weeks';
 
   String _inVariant(InOnVariant variant) {
     return switch (variant) {
@@ -84,8 +82,8 @@ class RruleL10nNl extends RruleL10n {
     assert(variant != InOnVariant.also);
 
     final frequencyString =
-        frequency == DaysOfWeekFrequency.monthly ? 'maand' : 'jaar';
-    final suffix = indicateFrequency ? ' van de $frequencyString' : '';
+        frequency == DaysOfWeekFrequency.monthly ? 'de maand' : 'het jaar';
+    final suffix = indicateFrequency ? ' van $frequencyString' : '';
     return '${_onVariant(variant)} $days$suffix';
   }
 
