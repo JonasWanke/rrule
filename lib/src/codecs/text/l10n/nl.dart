@@ -22,15 +22,15 @@ class RruleL10nNl extends RruleL10n {
     String plurals({required String one, required String singular, required String plural}) {
       return switch (interval) {
         1 => one,
-        2 => 'Om de twee $singular',
+        2 => 'Om de twee $plural',
         _ => 'Om de $interval $plural',
       };
     }
 
     return {
-      Frequency.secondly: plurals(one: 'Secondelijks', singular: 'seconde', plural: 'seconden'),
-      Frequency.minutely: plurals(one: 'Minuutlijks', singular: 'minuut', plural: 'minuten'),
-      Frequency.hourly: plurals(one: 'Uurlijks', singular: 'uur', plural: 'uren'),
+      Frequency.secondly: plurals(one: 'Elke seconde', singular: 'seconde', plural: 'seconden'),
+      Frequency.minutely: plurals(one: 'Elke minuut', singular: 'minuut', plural: 'minuten'),
+      Frequency.hourly: plurals(one: 'Elk uur', singular: 'uur', plural: 'uren'),
       Frequency.daily: plurals(one: 'Dagelijks', singular: 'dag', plural: 'dagen'),
       Frequency.weekly: plurals(one: 'Wekelijks', singular: 'week', plural: 'weken'),
       Frequency.monthly: plurals(one: 'Maandelijks', singular: 'maand', plural: 'maanden'),
@@ -41,7 +41,7 @@ class RruleL10nNl extends RruleL10n {
   @override
   String until(DateTime until, Frequency frequency) {
     final untilString = formatWithIntl(
-      () => DateFormat('EEEE d MMMM yyyy om H:i uur', 'nl').format(until),
+      () => DateFormat('EEEE d MMMM yyyy \'om\' H:mm \'uur\'', 'nl').format(until),
     );
     return ', tot $untilString';
   }
@@ -59,15 +59,21 @@ class RruleL10nNl extends RruleL10n {
   String onInstances(String instances) => 'op de $instances';
 
   @override
-  String inMonths(String months, {InOnVariant variant = InOnVariant.simple}) => '${_inVariant(variant)} $months';
+  String inMonths(String months, {InOnVariant variant = InOnVariant.simple}) {
+    final suffix = variant == InOnVariant.also ? ' vallen' : '';
+    return '${_inVariant(variant)} $months$suffix';
+  }
 
   @override
-  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple}) => '${_inVariant(variant)} week $weeks';
+  String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple}) {
+    final suffix = variant == InOnVariant.also ? ' vallen' : '';
+    return '${_inVariant(variant)} de $weeks week$suffix';
+  }
 
   String _inVariant(InOnVariant variant) {
     return switch (variant) {
       InOnVariant.simple => 'in',
-      InOnVariant.also => 'die ook in',
+      InOnVariant.also => 'die tevens in',
       InOnVariant.instanceOf => 'van',
     };
   }
@@ -81,8 +87,7 @@ class RruleL10nNl extends RruleL10n {
   }) {
     assert(variant != InOnVariant.also);
 
-    final frequencyString =
-        frequency == DaysOfWeekFrequency.monthly ? 'de maand' : 'het jaar';
+    final frequencyString = frequency == DaysOfWeekFrequency.monthly ? 'de maand' : 'het jaar';
     final suffix = indicateFrequency ? ' van $frequencyString' : '';
     return '${_onVariant(variant)} $days$suffix';
   }
@@ -113,41 +118,46 @@ class RruleL10nNl extends RruleL10n {
       DaysOfVariant.day: ' dag',
       DaysOfVariant.dayAndFrequency: ' dag van de maand',
     }[daysOfVariant];
-    return '${_onVariant(variant)} de $days$suffix';
+    final suffix2 = variant == InOnVariant.also ? ' zijn' : '';
+    return '${_onVariant(variant)} de $days$suffix$suffix2';
   }
 
   @override
   String onDaysOfYear(
     String days, {
     InOnVariant variant = InOnVariant.simple,
-  }) =>
-      '${_onVariant(variant)} de $days dag van het jaar';
+  }) {
+    final suffix = variant == InOnVariant.also ? ' zijn' : '';
+    return '${_onVariant(variant)} de $days dag van het jaar$suffix';
+  }
 
   String _onVariant(InOnVariant variant) {
     return switch (variant) {
       InOnVariant.simple => 'op',
-      InOnVariant.also => 'die ook op',
+      InOnVariant.also => 'die tevens',
       InOnVariant.instanceOf => 'van',
     };
   }
 
   @override
   String list(List<String> items, ListCombination combination) {
-    final (two, end) = switch (combination) {
-      ListCombination.conjunctiveShort => (' & ', ' & '),
-      ListCombination.conjunctiveLong => (' en ', ', en '),
-      ListCombination.disjunctive => (' of ', ', of '),
-    };
+    final two = combination == ListCombination.disjunctive ? ' of ' : ' en ';
+    final end = combination == ListCombination.conjunctiveLong ? ', en ' : two;
     return RruleL10n.defaultList(items, two: two, end: end);
   }
 
   @override
   String ordinal(int number) {
     assert(number != 0);
-    if (number == -1) return 'laatste';
 
-    final string = '${number.abs()}e';
+    const special = {1: 'eerste', -1: 'laatste', -2: 'voorlaatste'};
+    final result = special[number];
+    if (result != null) return result;
 
-    return number < 0 ? '$string tot laatste' : string;
+    final n = number.abs();
+    final remain = n % 100;
+    final string = (remain <= 1 || remain == 8 || remain >= 20) ? '${n}ste' : '${n}de';
+
+    return number < 0 ? '$n-na-laatste' : string;
   }
 }
