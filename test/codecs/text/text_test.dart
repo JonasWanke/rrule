@@ -19,7 +19,7 @@ Future<void> main() async {
       .mapValues((it) => it.value.cast<String, String>());
 
   for (final MapEntry(key: locale, value: l10n) in l10n.entries) {
-    group('locale: $locale', () {
+    group(locale, () {
       for (final MapEntry(key: rruleString, value: text) in data.entries) {
         test(rruleString, () {
           final rrule = RecurrenceRule.fromString(rruleString);
@@ -43,5 +43,6 @@ Future<void> main() async {
 Future<Map<String, RruleL10n>> createL10n() async {
   return {
     'en': await RruleL10nEn.create(),
+    'nl': await RruleL10nNl.create(),
   };
 }
