@@ -7,6 +7,7 @@ import '../../../utils.dart';
 import 'en.dart';
 
 export 'en.dart';
+export 'nl.dart';
 
 /// Contains localized strings used by [RecurrenceRule.toText].
 ///
