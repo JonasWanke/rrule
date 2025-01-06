@@ -19,7 +19,7 @@ class RruleL10nNl extends RruleL10n {
 
   @override
   String frequencyInterval(Frequency frequency, int interval) {
-    String plurals({required String one, required String singular, required String plural}) {
+    String plurals({required String one, required String plural}) {
       return switch (interval) {
         1 => one,
         2 => 'Om de twee $plural',
@@ -28,20 +28,20 @@ class RruleL10nNl extends RruleL10n {
     }
 
     return {
-      Frequency.secondly: plurals(one: 'Elke seconde', singular: 'seconde', plural: 'seconden'),
-      Frequency.minutely: plurals(one: 'Elke minuut', singular: 'minuut', plural: 'minuten'),
-      Frequency.hourly: plurals(one: 'Elk uur', singular: 'uur', plural: 'uren'),
-      Frequency.daily: plurals(one: 'Dagelijks', singular: 'dag', plural: 'dagen'),
-      Frequency.weekly: plurals(one: 'Wekelijks', singular: 'week', plural: 'weken'),
-      Frequency.monthly: plurals(one: 'Maandelijks', singular: 'maand', plural: 'maanden'),
-      Frequency.yearly: plurals(one: 'Jaarlijks', singular: 'jaar', plural: 'jaar'),
+      Frequency.secondly: plurals(one: 'Elke seconde', plural: 'seconden'),
+      Frequency.minutely: plurals(one: 'Elke minuut', plural: 'minuten'),
+      Frequency.hourly: plurals(one: 'Elk uur', plural: 'uren'),
+      Frequency.daily: plurals(one: 'Dagelijks', plural: 'dagen'),
+      Frequency.weekly: plurals(one: 'Wekelijks', plural: 'weken'),
+      Frequency.monthly: plurals(one: 'Maandelijks', plural: 'maanden'),
+      Frequency.yearly: plurals(one: 'Jaarlijks', plural: 'jaar'),
     }[frequency]!;
   }
 
   @override
   String until(DateTime until, Frequency frequency) {
     final untilString = formatWithIntl(
-      () => DateFormat('EEEE d MMMM yyyy \'om\' H:mm \'uur\'', 'nl').format(until),
+      () => DateFormat("EEEE d MMMM yyyy 'om' H:mm 'uur'", 'nl').format(until),
     );
     return ', tot $untilString';
   }
@@ -87,7 +87,8 @@ class RruleL10nNl extends RruleL10n {
   }) {
     assert(variant != InOnVariant.also);
 
-    final frequencyString = frequency == DaysOfWeekFrequency.monthly ? 'de maand' : 'het jaar';
+    final frequencyString =
+        frequency == DaysOfWeekFrequency.monthly ? 'de maand' : 'het jaar';
     final suffix = indicateFrequency ? ' van $frequencyString' : '';
     return '${_onVariant(variant)} $days$suffix';
   }
@@ -156,7 +157,8 @@ class RruleL10nNl extends RruleL10n {
 
     final n = number.abs();
     final remain = n % 100;
-    final string = (remain <= 1 || remain == 8 || remain >= 20) ? '${n}ste' : '${n}de';
+    final string =
+        (remain <= 1 || remain == 8 || remain >= 20) ? '${n}ste' : '${n}de';
 
     return number < 0 ? '$n-na-laatste' : string;
   }
