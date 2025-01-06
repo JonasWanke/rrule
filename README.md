@@ -81,13 +81,13 @@ assert(rrule.toText(l10n: l10n) == string); // true
 
 A few more examples:
 
-* `RRULE:INTERVAL=4;FREQ=HOURLY`: Every 4 hours
-* `RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1`: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
-* `RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR`: Weekly on weekdays
-* `RRULE:INTERVAL=2;FREQ=WEEKLY`: Every other week
-* `RRULE:FREQ=MONTHLY;BYDAY=-3TU`: Monthly on the 3rd-to-last Tuesday
-* `RRULE:FREQ=YEARLY;BYDAY=+13FR`: Annually on the 13th Friday of the year
-* `RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE`: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December
+- `RRULE:INTERVAL=4;FREQ=HOURLY`: Every 4 hours
+- `RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1`: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
+- `RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR`: Weekly on weekdays
+- `RRULE:INTERVAL=2;FREQ=WEEKLY`: Every other week
+- `RRULE:FREQ=MONTHLY;BYDAY=-3TU`: Monthly on the 3rd-to-last Tuesday
+- `RRULE:FREQ=YEARLY;BYDAY=+13FR`: Annually on the 13th Friday of the year
+- `RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE`: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December
 
 While this already supports really complex RRULEs, some of them are not (yet) supported. See [`RecurrenceRule.canFullyConvertToText`] for more information.
 
@@ -111,9 +111,9 @@ expect(rrule.toJson(), json);
 
 ## Limitations
 
-* custom week starts are not supported (`WKST` in the specification) – Monday is the only valid value (encoded as `MO`)
-* leap seconds are not supported (limitation of Dart's `DateTime`)
-* only years 0–9999 in the Common Era are supported (limitation of the iCalendar RFC, but if you have a use case, this should be easy to extend)
+- custom week starts are not supported (`WKST` in the specification) – Monday is the only valid value (encoded as `MO`)
+- leap seconds are not supported (limitation of Dart's `DateTime`)
+- only years 0–9999 in the Common Era are supported (limitation of the iCalendar RFC, but if you have a use case, this should be easy to extend)
 
 ## Thanks
 
