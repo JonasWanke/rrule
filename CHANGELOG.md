@@ -17,6 +17,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.17 · 2025-01-06
+
+### 🎉 New Features
+
+- add Dutch localizations (`RruleL10nNl`) ([#77](https://github.com/JonasWanke/rrule/pull/77)). Thanks to [@simonverzelen](https://github.com/simonverzelen)!
+
+### 📦 Build & CI
+
+- widen intl dependency to >=0.17.0 <0.21.0 ([`4740e29`](https://github.com/JonasWanke/rrule/commit/4740e29687a3e088964024f709a7977e554d06ab))
+
 ## 0.2.16 · 2024-02-07
 
 ### 🐛 Bug Fixes
