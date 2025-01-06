@@ -285,7 +285,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
           variant: InOnVariant.also,
           combination: ListCombination.disjunctive,
         ),
-    ].whereNotNull().toList();
+    ].nonNulls.toList();
     if (limits.isNotEmpty) {
       output.add(l10n.list(limits, ListCombination.conjunctiveLong));
     }

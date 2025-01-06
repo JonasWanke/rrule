@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:time/time.dart';
 
@@ -57,7 +56,7 @@ class DateSet {
   }
 
   Iterable<DateTime> get includedDates =>
-      start.until(end).map((i) => this[i]).whereNotNull();
+      start.until(end).map((i) => this[i]).nonNulls;
 }
 
 DateSet makeDateSet(RecurrenceRule rrule, DateTime base) {
