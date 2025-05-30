@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../../by_week_day_entry.dart';
@@ -11,9 +12,10 @@ import 'l10n/l10n.dart';
 
 @immutable
 class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
-  const RecurrenceRuleToTextEncoder(this.l10n);
+  const RecurrenceRuleToTextEncoder(this.l10n, {this.untilDateFormat});
 
   final RruleL10n l10n;
+  final DateFormat? untilDateFormat;
 
   @override
   String convert(RecurrenceRule input) {
@@ -52,7 +54,7 @@ class RecurrenceRuleToTextEncoder extends Converter<RecurrenceRule, String> {
     }
 
     if (input.until != null) {
-      output.write(l10n.until(input.until!, input.frequency));
+      output.write(l10n.until(input.until!, input.frequency, dateFormat: untilDateFormat));
     } else if (input.count != null) {
       output.write(l10n.count(input.count!));
     }
