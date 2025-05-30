@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import 'by_week_day_entry.dart';
@@ -334,14 +335,14 @@ class RecurrenceRule {
   /// Converts this rule to a human-readable string.
   ///
   /// This may only be called on rules that are fully convertable to text.
-  String toText({required RruleL10n l10n}) {
+  String toText({required RruleL10n l10n, DateFormat? untilDateFormat}) {
     assert(
       canFullyConvertToText,
       "This recurrence rule can't fully be converted to text. See "
       '[RecurrenceRule.canFullyConvertToText] for more information.',
     );
 
-    return RecurrenceRuleToTextEncoder(l10n).convert(this);
+    return RecurrenceRuleToTextEncoder(l10n, untilDateFormat: untilDateFormat).convert(this);
   }
 
   /// Converts this rule to a machine-readable, RFC-7265-compliant string.

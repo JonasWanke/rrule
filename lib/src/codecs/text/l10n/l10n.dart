@@ -21,7 +21,7 @@ abstract class RruleL10n {
       Intl.withLocale(locale, formatter) as String;
 
   String frequencyInterval(Frequency frequency, int interval);
-  String until(DateTime until, Frequency frequency);
+  String until(DateTime until, Frequency frequency, {DateFormat? dateFormat});
   String count(int count);
   String range(String start, String end) => '$start – $end';
 
