@@ -8,6 +8,7 @@ import 'en.dart';
 
 export 'en.dart';
 export 'nl.dart';
+export 'pt_BR.dart';
 
 /// Contains localized strings used by [RecurrenceRule.toText].
 ///
@@ -48,7 +49,6 @@ abstract class RruleL10n {
   });
   String? get weekdaysString;
   String get everyXDaysOfWeekPrefix;
-  String everyXDaysOfWeekPrefixForDay(int day);
   String dayOfWeek(int dayOfWeek) {
     assert(dayOfWeek.isValidRruleDayOfWeek);
 

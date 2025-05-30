@@ -488,7 +488,7 @@ extension on Iterable<ByWeekDayEntry> {
         (day) {
           var string = l10n.dayOfWeek(day);
           if (addEveryPrefix && !addedEveryPrefix && day == startValue) {
-            string = '${l10n.everyXDaysOfWeekPrefixForDay(day)}$string';
+            string = '${l10n.everyXDaysOfWeekPrefix}$string';
             addedEveryPrefix = true;
           }
           return string;
