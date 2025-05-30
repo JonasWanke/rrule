@@ -98,6 +98,8 @@ class RruleL10nNl extends RruleL10n {
   @override
   String get everyXDaysOfWeekPrefix => 'elke ';
   @override
+  String everyXDaysOfWeekPrefixForDay(int day) => 'elke ';
+  @override
   String nthDaysOfWeek(Iterable<int> occurrences, String daysOfWeek) {
     if (occurrences.isEmpty) return daysOfWeek;
 

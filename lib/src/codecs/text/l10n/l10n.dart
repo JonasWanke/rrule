@@ -48,6 +48,7 @@ abstract class RruleL10n {
   });
   String? get weekdaysString;
   String get everyXDaysOfWeekPrefix;
+  String everyXDaysOfWeekPrefixForDay(int day);
   String dayOfWeek(int dayOfWeek) {
     assert(dayOfWeek.isValidRruleDayOfWeek);
 
