@@ -42,7 +42,6 @@ Future<void> main() async {
 // ignore: avoid-top-level-members-in-tests
 Future<Map<String, RruleL10n>> createL10n() async {
   return {
-    'en': await RruleL10nEn.create(),
-    'nl': await RruleL10nNl.create(),
+    'de': await RruleL10nDe.create(),
   };
 }
