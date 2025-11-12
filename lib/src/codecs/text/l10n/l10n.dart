@@ -6,6 +6,7 @@ import '../../../recurrence_rule.dart';
 import '../../../utils.dart';
 import 'en.dart';
 
+export 'de.dart';
 export 'en.dart';
 export 'nl.dart';
 
