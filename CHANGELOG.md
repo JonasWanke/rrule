@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2025-xx-xx
+## NEW · 2026-xx-xx
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
@@ -16,6 +16,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.18 · 2026-01-06
+
+### 🐛 Bug Fixes
+
+- avoid skipping occurrence when using `after` with `frequency` higher than `DAILY` ([`9722842`](https://github.com/JonasWanke/rrule/commit/97228425c3f7dc9021d51b08846d9aab7a3825e9)), closes: [#81](https://github.com/JonasWanke/rrule/issues/81)
 
 ## 0.2.17 · 2025-01-06
 
