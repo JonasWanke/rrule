@@ -31,7 +31,10 @@ Iterable<DateTime> getRecurrenceRuleInstances(
   var count = rrule.count;
 
   var currentStart = start;
-  if (rrule.actualInterval == 1 && count == null && after != null) {
+  if (rrule.actualInterval == 1 &&
+      count == null &&
+      after != null &&
+      rrule.frequency <= Frequency.daily) {
     // Shortcut for not calculating unnecessary recurrences.
     currentStart = after;
   }

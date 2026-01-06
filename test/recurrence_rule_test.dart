@@ -322,4 +322,13 @@ void main() {
       equals([DateTime.utc(2024, 2, 25), DateTime.utc(2024, 3, 10)]),
     );
   });
+  test('#81: Occurrence skipped when using after with frequency > daily', () {
+    final rule = RecurrenceRule.fromString('RRULE:FREQ=HOURLY;INTERVAL=1');
+    final start = DateTime.utc(2026, 01, 05, 18, 50, 00);
+    final after = DateTime.utc(2026, 01, 05, 19, 24, 54, 548180);
+    expect(
+      rule.getInstances(start: start, after: after).first,
+      equals(DateTime.utc(2026, 01, 05, 19, 50, 00)),
+    );
+  });
 }
