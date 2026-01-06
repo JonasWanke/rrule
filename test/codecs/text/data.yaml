@@ -1,22 +1,28 @@
 RRULE:FREQ=WEEKLY;BYMONTH=1,2,3,8,9;BYDAY=MO,WE,TH,FR,SU:
+  de: "Wöchentlich in Januar – März, August & September an Montag, Mittwoch – Freitag & Sonntag"
   en: "Weekly in January – March, August & September on Monday, Wednesday – Friday & Sunday"
   nl: "Wekelijks in januari – maart, augustus en september op maandag, woensdag – vrijdag en zondag"
 RRULE:FREQ=WEEKLY;INTERVAL=2;BYMONTH=1,2,3;BYDAY=MO,TU,WE,TH,FR,SU:
+  de: Jede andere Woche in Januar – März an Wochentage & Sonntag
   en: Every other week in January – March on weekdays & Sunday
   nl: Om de twee weken in januari – maart op weekdagen en zondag
 RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,1TH,1FR,2TH,2FR,2SA,-2TH,-2FR,-2SU,-1TH,-1FR,-1SU;BYMONTHDAY=1,2,3,4,5,26,-3,-2,-1:
+  de: "Monatlich an jedem Montag – Mittwoch, dem ersten Donnerstag & Freitag, dem zweiten Donnerstag – Samstag, dem zweiten vorherigen Donnerstag, Freitag & Sonntag, und dem letzten Donnerstag, Freitag & Sonntag sowie auch dem ersten – 5., 26., oder vierten vorherigen – letzten Tag des Monats"
   en: "Monthly on every Monday – Wednesday, the 1st Thursday & Friday, the 2nd Thursday – Saturday, the 2nd-to-last Thursday, Friday & Sunday, and the last Thursday, Friday & Sunday that are also the 1st – 5th, 26th, or 3rd-to-last – last day of the month"
   nl: "Maandelijks op elke maandag – woensdag, de eerste donderdag en vrijdag, de 2de donderdag – zaterdag, de voorlaatste donderdag, vrijdag en zondag, en de laatste donderdag, vrijdag en zondag die tevens de eerste – 5de, 26ste of 3-na-laatste – laatste dag van de maand zijn"
 
 # Daily
 
 RRULE:FREQ=DAILY;BYDAY=MO:
+  de: Täglich an Montag
   en: Daily on Monday
   nl: Dagelijks op maandag
 RRULE:FREQ=DAILY;INTERVAL=2;BYDAY=MO:
+  de: Jeden anderen Tag an Montag
   en: Every other day on Monday
   nl: Om de twee dagen op maandag
 RRULE:FREQ=DAILY;INTERVAL=4;BYDAY=MO:
+  de: Alle 4 Tage an Montag
   en: Every 4 days on Monday
   nl: Om de 4 dagen op maandag
 
@@ -26,75 +32,93 @@ RRULE:FREQ=DAILY;INTERVAL=4;BYDAY=MO:
 
 # 0000
 RRULE:FREQ=DAILY:
+  de: Täglich
   en: Daily
   nl: Dagelijks
 # 0001
 RRULE:FREQ=DAILY;BYDAY=MO,TH:
+  de: Täglich an Montag & Donnerstag
   en: Daily on Monday & Thursday
   nl: Dagelijks op maandag en donderdag
 # 0010
 RRULE:FREQ=DAILY;BYMONTHDAY=1,-1:
+  de: Täglich an dem ersten & letzten Tag des Monats
   en: Daily on the 1st & last day of the month
   nl: Dagelijks op de eerste en laatste dag van de maand
 # 0011
 RRULE:FREQ=DAILY;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  de: Täglich an Montag & Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Daily on Monday & Thursday that are also the 1st or last day of the month
   nl: Dagelijks op maandag en donderdag die tevens de eerste of laatste dag van de maand zijn
 # 0100
 RRULE:FREQ=DAILY;BYMONTH=1,12:
+  de: Täglich in Januar & Dezember
   en: Daily in January & December
   nl: Dagelijks in januari en december
 # 0101
 RRULE:FREQ=DAILY;BYMONTH=1,12;BYDAY=MO,TH:
+  de: Täglich in Januar & Dezember an Montag & Donnerstag
   en: Daily in January & December on Monday & Thursday
   nl: Dagelijks in januari en december op maandag en donderdag
 # 0110
 RRULE:FREQ=DAILY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Täglich in Januar & Dezember an dem ersten & letzten Tag des Monats
   en: Daily in January & December on the 1st & last day of the month
   nl: Dagelijks in januari en december op de eerste en laatste dag van de maand
 # 0111
 RRULE:FREQ=DAILY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  de: Täglich in Januar & Dezember an Montag & Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Daily in January & December on Monday & Thursday that are also the 1st or last day of the month
   nl: Dagelijks in januari en december op maandag en donderdag die tevens de eerste of laatste dag van de maand zijn
 # 1000: invalid
 # 1001
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYDAY=MO,TH:
+  de: Täglich an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag
   en: Daily on the 1st & 2nd-to-last instance of Monday & Thursday
   nl: Dagelijks op de eerste en voorlaatste van maandag en donderdag
 # 1010
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  de: Täglich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats
   en: Daily on the 1st & 2nd-to-last instance of the 1st & last day of the month
   nl: Dagelijks op de eerste en voorlaatste van de eerste en laatste dag van de maand
 # 1011
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  de: Täglich an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Daily on the 1st & 2nd-to-last instance of Monday & Thursday that are also the 1st or last day of the month
   nl: Dagelijks op de eerste en voorlaatste van maandag en donderdag die tevens de eerste of laatste dag van de maand zijn
 # 1100
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12:
+  de: Täglich in Januar & Dezember an der ersten & zweiten vorherigen Instanz
   en: Daily in January & December on the 1st & 2nd-to-last instance
   nl: Dagelijks in januari en december op de eerste en voorlaatste
 # 1101
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,TH:
+  de: Täglich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag
   en: Daily in January & December on the 1st & 2nd-to-last instance of Monday & Thursday
   nl: Dagelijks in januari en december op de eerste en voorlaatste van maandag en donderdag
 # 1110
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Täglich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats
   en: Daily in January & December on the 1st & 2nd-to-last instance of the 1st & last day of the month
   nl: Dagelijks in januari en december op de eerste en voorlaatste van de eerste en laatste dag van de maand
 # 1111
 RRULE:FREQ=DAILY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,TH:
+  de: Täglich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Daily in January & December on the 1st & 2nd-to-last instance of Monday & Thursday that are also the 1st or last day of the month
   nl: Dagelijks in januari en december op de eerste en voorlaatste van maandag en donderdag die tevens de eerste of laatste dag van de maand zijn
 
 # Weekly
 
 RRULE:FREQ=WEEKLY;BYDAY=MO:
+  de: Wöchentlich an Montag
   en: Weekly on Monday
   nl: Wekelijks op maandag
 RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO:
+  de: Jede andere Woche an Montag
   en: Every other week on Monday
   nl: Om de twee weken op maandag
 RRULE:FREQ=WEEKLY;INTERVAL=4;BYDAY=MO:
+  de: Alle 4 Wochen an Montag
   en: Every 4 weeks on Monday
   nl: Om de 4 weken op maandag
 
@@ -103,48 +127,59 @@ RRULE:FREQ=WEEKLY;INTERVAL=4;BYDAY=MO:
 
 # 000
 RRULE:FREQ=WEEKLY:
+  de: Wöchentlich
   en: Weekly
   nl: Wekelijks
 # 001
 RRULE:FREQ=WEEKLY;BYDAY=MO,TH:
+  de: Wöchentlich an Montag & Donnerstag
   en: Weekly on Monday & Thursday
   nl: Wekelijks op maandag en donderdag
 # 010
 RRULE:FREQ=WEEKLY;BYMONTH=1,12:
+  de: Wöchentlich in Januar & Dezember
   en: Weekly in January & December
   nl: Wekelijks in januari en december
 # 011
 RRULE:FREQ=WEEKLY;BYMONTH=1,12;BYDAY=MO,TH:
+  de: Wöchentlich in Januar & Dezember an Montag & Donnerstag
   en: Weekly in January & December on Monday & Thursday
   nl: Wekelijks in januari en december op maandag en donderdag
 # 100: invalid
 # 101
 RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYDAY=MO,TH:
+  de: Wöchentlich an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag
   en: Weekly on the 1st & 2nd-to-last instance of Monday & Thursday
   nl: Wekelijks op de eerste en voorlaatste van maandag en donderdag
 # 110
 RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  de: Wöchentlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz
   en: Weekly in January & December on the 1st & 2nd-to-last instance
   nl: Wekelijks in januari en december op de eerste en voorlaatste
 # 111
 RRULE:FREQ=WEEKLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,TH:
+  de: Wöchentlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von Montag & Donnerstag
   en: Weekly in January & December on the 1st & 2nd-to-last instance of Monday & Thursday
   nl: Wekelijks in januari en december op de eerste en voorlaatste van maandag en donderdag
 
 # Monthly
 
 RRULE:FREQ=MONTHLY;BYDAY=MO:
+  de: Monatlich an jedem Montag
   en: Monthly on every Monday
   nl: Maandelijks op elke maandag
 RRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=MO:
+  de: Jeden anderen Monat an jedem Montag
   en: Every other month on every Monday
   nl: Om de twee maanden op elke maandag
 RRULE:FREQ=MONTHLY;INTERVAL=4;BYDAY=MO:
+  de: Alle 4 Monate an jedem Montag
   en: Every 4 months on every Monday
   nl: Om de 4 maanden op elke maandag
 
 # https://github.com/JonasWanke/rrule/issues/13
 RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU:
+  de: Monatlich an dem letzten Tag
   en: Monthly on the last day
   nl: Maandelijks op de laatste dag
 
@@ -154,75 +189,93 @@ RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU:
 
 # 0000
 RRULE:FREQ=MONTHLY:
+  de: Monatlich
   en: Monthly
   nl: Maandelijks
 # 0001
 RRULE:FREQ=MONTHLY;BYDAY=MO,-1TH:
+  de: Monatlich an jedem Montag & dem letzten Donnerstag
   en: Monthly on every Monday & the last Thursday
   nl: Maandelijks op elke maandag en de laatste donderdag
 # 0010
 RRULE:FREQ=MONTHLY;BYMONTHDAY=1,-1:
+  de: Monatlich an dem ersten & letzten Tag
   en: Monthly on the 1st & last day
   nl: Maandelijks op de eerste en laatste dag
 # 0011
 RRULE:FREQ=MONTHLY;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Monatlich an jedem Montag & dem letzten Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Monthly on every Monday & the last Thursday that are also the 1st or last day of the month
   nl: Maandelijks op elke maandag en de laatste donderdag die tevens de eerste of laatste dag van de maand zijn
 # 0100
 RRULE:FREQ=MONTHLY;BYMONTH=1,12:
+  de: Monatlich in Januar & Dezember
   en: Monthly in January & December
   nl: Maandelijks in januari en december
 # 0101
 RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYDAY=MO,-1TH:
+  de: Monatlich in Januar & Dezember an jedem Montag & dem letzten Donnerstag
   en: Monthly in January & December on every Monday & the last Thursday
   nl: Maandelijks in januari en december op elke maandag en de laatste donderdag
 # 0110
 RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Monatlich in Januar & Dezember an dem ersten & letzten Tag
   en: Monthly in January & December on the 1st & last day
   nl: Maandelijks in januari en december op de eerste en laatste dag
 # 0111
 RRULE:FREQ=MONTHLY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Monatlich in Januar & Dezember an jedem Montag & dem letzten Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Monthly in January & December on every Monday & the last Thursday that are also the 1st or last day of the month
   nl: Maandelijks in januari en december op elke maandag en de laatste donderdag die tevens de eerste of laatste dag van de maand zijn
 # 1000: invalid
 # 1001
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYDAY=MO,-1TH:
+  de: Monatlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag
   en: Monthly on the 1st & 2nd-to-last instance of every Monday & the last Thursday
   nl: Maandelijks op de eerste en voorlaatste van elke maandag en de laatste donderdag
 # 1010
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  de: Monatlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag
   en: Monthly on the 1st & 2nd-to-last instance of the 1st & last day
   nl: Maandelijks op de eerste en voorlaatste van de eerste en laatste dag
 # 1011
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Monatlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Monthly on the 1st & 2nd-to-last instance of every Monday & the last Thursday that are also the 1st or last day of the month
   nl: Maandelijks op de eerste en voorlaatste van elke maandag en de laatste donderdag die tevens de eerste of laatste dag van de maand zijn
 # 1100
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  de: Monatlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz
   en: Monthly in January & December on the 1st & 2nd-to-last instance
   nl: Maandelijks in januari en december op de eerste en voorlaatste
 # 1101
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,-1TH:
+  de: Monatlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag
   en: Monthly in January & December on the 1st & 2nd-to-last instance of every Monday & the last Thursday
   nl: Maandelijks in januari en december op de eerste en voorlaatste van elke maandag en de laatste donderdag
 # 1110
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Monatlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag
   en: Monthly in January & December on the 1st & 2nd-to-last instance of the 1st & last day
   nl: Maandelijks in januari en december op de eerste en voorlaatste van de eerste en laatste dag
 # 1111
 RRULE:FREQ=MONTHLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Monatlich in Januar & Dezember an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag sowie auch dem ersten oder letzten Tag des Monats
   en: Monthly in January & December on the 1st & 2nd-to-last instance of every Monday & the last Thursday that are also the 1st or last day of the month
   nl: Maandelijks in januari en december op de eerste en voorlaatste van elke maandag en de laatste donderdag die tevens de eerste of laatste dag van de maand zijn
 
 # Yearly
 
 RRULE:FREQ=YEARLY;BYDAY=MO:
+  de: Jährlich an jedem Montag
   en: Annually on every Monday
   nl: Jaarlijks op elke maandag
 RRULE:FREQ=YEARLY;INTERVAL=2;BYDAY=MO:
+  de: Jedes andere Jahr an jedem Montag
   en: Every other year on every Monday
   nl: Om de twee jaar op elke maandag
 RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=MO:
+  de: Alle 4 Jahre an jedem Montag
   en: Every 4 years on every Monday
   nl: Om de 4 jaar op elke maandag
 
@@ -232,310 +285,390 @@ RRULE:FREQ=YEARLY;INTERVAL=4;BYDAY=MO:
 
 # 000000
 RRULE:FREQ=YEARLY:
+  de: Jährlich
   en: Annually
   nl: Jaarlijks
 # 000001
 RRULE:FREQ=YEARLY;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr
   en: Annually on every Monday & the last Thursday of the year
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar
 # 000010
 RRULE:FREQ=YEARLY;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats
   en: Annually on the 1st & last day of the month
   nl: Jaarlijks op de eerste en laatste dag van de maand
 # 000011
 RRULE:FREQ=YEARLY;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats
   en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn
 # 000100
 RRULE:FREQ=YEARLY;BYYEARDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Jahres
   en: Annually on the 1st & last day of the year
   nl: Jaarlijks op de eerste en laatste dag van het jaar
 # 000101
 RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van het jaar zijn
 # 000110
 RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on the 1st & last day of the month that are also the 1st or last day of the year
   nl: Jaarlijks op de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn
 # 000111
 RRULE:FREQ=YEARLY;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats und sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn en die tevens de eerste of laatste dag van het jaar zijn
 # 001000
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1:
+  de: Jährlich in der ersten & letzten Woche des Jahres
   en: Annually in the 1st & last week of the year
   nl: Jaarlijks in de eerste en laatste week
 # 001001
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  de: Jährlich an jedem Montag & Mittwoch in der ersten & letzten Woche des Jahres
   en: Annually on every Monday & Wednesday in the 1st & last week of the year
   nl: Jaarlijks op elke maandag en woensdag in de eerste en laatste week
 # 001010
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & last day of the month that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en laatste dag van de maand die tevens in de eerste of laatste week vallen
 # 001011
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats und auch in der ersten oder letzten Woche des Jahres
   en: Annually on every Monday & Wednesday that are also the 1st or last day of the month and that are also in the 1st or last week of the year
   nl: Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn en die tevens in de eerste of laatste week vallen
 # 001100
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Jahres auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & last day of the year that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en laatste dag van het jaar die tevens in de eerste of laatste week vallen
 # 001101
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  de: Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Jahres und auch in der ersten oder letzten Woche des Jahres
   en: Annually on every Monday & Wednesday that are also the 1st or last day of the year and that are also in the 1st or last week of the year
   nl: Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van het jaar zijn en die tevens in de eerste of laatste week vallen
 # 001110
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres und auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & last day of the month that are also the 1st or last day of the year and that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn en die tevens in de eerste of laatste week vallen
 # 001111
 RRULE:FREQ=YEARLY;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, und auch in der ersten oder letzten Woche des Jahres"
   en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in the 1st or last week of the year"
   nl: "Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, en die tevens in de eerste of laatste week vallen"
 # 010000
 RRULE:FREQ=YEARLY;BYMONTH=1,12:
+  de: Jährlich in Januar & Dezember
   en: Annually in January & December
   nl: Jaarlijks in januari en december
 # 010001
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Monat in Januar & Dezember
   en: Annually on every Monday & the last Thursday of the month in January & December
   nl: Jaarlijks op elke maandag en de laatste donderdag van de maand in januari en december
 # 010010
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats in Januar & Dezember
   en: Annually on the 1st & last day of the month in January & December
   nl: Jaarlijks op de eerste en laatste dag van de maand in januari en december
 # 010011
 # TODO(JonasWanke): the 1st or last day in January or December
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats und auch in Januar oder Dezember
   en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn en die tevens in januari of december vallen
 # 010100
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Jahres auch in Januar oder Dezember
   en: Annually on the 1st & last day of the year that are also in January or December
   nl: Jaarlijks op de eerste en laatste dag van het jaar die tevens in januari of december vallen
 # 010101
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Jahres und auch in Januar oder Dezember
   en: Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December
   nl: Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van het jaar zijn en die tevens in januari of december vallen
 # 010110
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & last day of the month that are also the 1st or last day of the year and that are also in January or December
   nl: Jaarlijks op de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn en die tevens in januari of december vallen
 # 010111
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: "Jährlich an jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, und auch in Januar oder Dezember"
   en: "Annually on every Monday & the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December"
   nl: "Jaarlijks op elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, en die tevens in januari of december vallen"
 # 011000
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1:
+  de: Jährlich in der ersten & letzten Woche des Jahres auch in Januar oder Dezember
   en: Annually in the 1st & last week of the year that are also in January or December
   nl: Jaarlijks in de eerste en laatste week die tevens in januari of december vallen
 # 011001
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  de: Jährlich an jedem Montag & Mittwoch in der ersten & letzten Woche des Jahres auch in Januar oder Dezember
   en: Annually on every Monday & Wednesday in the 1st & last week of the year that are also in January or December
   nl: Jaarlijks op elke maandag en woensdag in de eerste en laatste week die tevens in januari of december vallen
 # 011010
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Monats auch in der ersten oder letzten Woche des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & last day of the month that are also in the 1st or last week of the year and that are also in January or December
   nl: Jaarlijks op de eerste en laatste dag van de maand die tevens in de eerste of laatste week vallen en die tevens in januari of december vallen
 # 011011
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 011100
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  de: Jährlich an dem ersten & letzten Tag des Jahres auch in der ersten oder letzten Woche des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & last day of the year that are also in the 1st or last week of the year and that are also in January or December
   nl: Jaarlijks op de eerste en laatste dag van het jaar die tevens in de eerste of laatste week vallen en die tevens in januari of december vallen
 # 011101
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on every Monday & Wednesday that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 011110
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: "Jährlich an dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & last day of the month that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 011111
 RRULE:FREQ=YEARLY;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 100000: invalid
 # 100001
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar
 # 100010
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand
 # 100011
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn
 # 100100
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van het jaar
 # 100101
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van het jaar zijn
 # 100110
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn
 # 100111
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats und sowie auch dem ersten oder letzten Tag des Jahres
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also the 1st or last day of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn en die tevens de eerste of laatste dag van het jaar zijn
 # 101000
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von der ersten & letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste week
 # 101001
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch in der ersten & letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday in the 1st & last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag in de eerste en laatste week
 # 101010
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens in de eerste of laatste week vallen
 # 101011
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats und auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month and that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn en die tevens in de eerste of laatste week vallen
 # 101100
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Jahres auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van het jaar die tevens in de eerste of laatste week vallen
 # 101101
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Jahres und auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the year and that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van het jaar zijn en die tevens in de eerste of laatste week vallen
 # 101110
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres und auch in der ersten oder letzten Woche des Jahres
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year and that are also in the 1st or last week of the year
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn en die tevens in de eerste of laatste week vallen
 # 101111
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, und auch in der ersten oder letzten Woche des Jahres"
   en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in the 1st or last week of the year"
   nl: "Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, en die tevens in de eerste of laatste week vallen"
 # 110000
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von Januar & Dezember
   en: Annually on the 1st & 2nd-to-last instance of January & December
   nl: Jaarlijks op de eerste en voorlaatste van januari en december
 # 110001
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Monat in Januar & Dezember
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the month in January & December
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van de maand in januari en december
 # 110010
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats in Januar & Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month in January & December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand in januari en december
 # 110011
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats und auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month and that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn en die tevens in januari of december vallen
 # 110100
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Jahres auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van het jaar die tevens in januari of december vallen
 # 110101
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYDAY=MO,-1TH:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the year and that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van het jaar zijn en die tevens in januari of december vallen
 # 110110
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year and that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn en die tevens in januari of december vallen
 # 110111
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,-1TH:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & dem letzten Donnerstag von dem Jahr sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & 2nd-to-last instance of every Monday & the last Thursday of the year that are also the 1st or last day of the month, that are also the 1st or last day of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en voorlaatste van elke maandag en de laatste donderdag van het jaar die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, en die tevens in januari of december vallen"
 # 111000
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von der ersten & letzten Woche des Jahres auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last week of the year that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste week die tevens in januari of december vallen
 # 111001
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYDAY=MO,WE:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch in der ersten & letzten Woche des Jahres auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday in the 1st & last week of the year that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag in de eerste en laatste week die tevens in januari of december vallen
 # 111010
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats auch in der ersten oder letzten Woche des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also in the 1st or last week of the year and that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens in de eerste of laatste week vallen en die tevens in januari of december vallen
 # 111011
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 111100
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1:
+  de: Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Jahres auch in der ersten oder letzten Woche des Jahres und auch in Januar oder Dezember
   en: Annually on the 1st & 2nd-to-last instance of the 1st & last day of the year that are also in the 1st or last week of the year and that are also in January or December
   nl: Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van het jaar die tevens in de eerste of laatste week vallen en die tevens in januari of december vallen
 # 111101
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 111110
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von dem ersten & letzten Tag des Monats sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & 2nd-to-last instance of the 1st & last day of the month that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en voorlaatste van de eerste en laatste dag van de maand die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 # 111111
 RRULE:FREQ=YEARLY;BYSETPOS=1,-2;BYMONTH=1,12;BYWEEKNO=1,-1;BYYEARDAY=1,-1;BYMONTHDAY=1,-1;BYDAY=MO,WE:
+  de: "Jährlich an der ersten & zweiten vorherigen Instanz von jedem Montag & Mittwoch sowie auch dem ersten oder letzten Tag des Monats, sowie auch dem ersten oder letzten Tag des Jahres, auch in der ersten oder letzten Woche des Jahres, und auch in Januar oder Dezember"
   en: "Annually on the 1st & 2nd-to-last instance of every Monday & Wednesday that are also the 1st or last day of the month, that are also the 1st or last day of the year, that are also in the 1st or last week of the year, and that are also in January or December"
   nl: "Jaarlijks op de eerste en voorlaatste van elke maandag en woensdag die tevens de eerste of laatste dag van de maand zijn, die tevens de eerste of laatste dag van het jaar zijn, die tevens in de eerste of laatste week vallen, en die tevens in januari of december vallen"
 
 # All remaining examples taken from https://github.com/jakubroztocil/rrule/blob/3dc698300e5861311249e85e0e237708702b055d/test/nlp.test.ts,
 # though with modified texts.
 RRULE:FREQ=HOURLY:
+  de: Stündlich
   en: Hourly
   nl: Elk uur
 RRULE:INTERVAL=4;FREQ=HOURLY:
+  de: Alle 4 Stunden
   en: Every 4 hours
   nl: Om de 4 uren
 RRULE:FREQ=WEEKLY;COUNT=20:
+  de: "Wöchentlich, 20 Mal"
   en: "Weekly, 20 times"
   nl: "Wekelijks, 20 keer"
 RRULE:FREQ=WEEKLY;UNTIL=20070101T080000Z:
+  de: "Wöchentlich, bis Montag, 1. Januar 2007 08:00:00"
   en: "Weekly, until Monday, January 1, 2007 8:00:00 AM"
   nl: "Wekelijks, tot maandag 1 januari 2007 om 8:00 uur"
 RRULE:FREQ=WEEKLY;BYDAY=TU:
+  de: Wöchentlich an Dienstag
   en: Weekly on Tuesday
   nl: Wekelijks op dinsdag
 RRULE:FREQ=WEEKLY;BYDAY=MO,WE:
+  de: Wöchentlich an Montag & Mittwoch
   en: Weekly on Monday & Wednesday
   nl: Wekelijks op maandag en woensdag
 RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR:
+  de: Wöchentlich an Wochentage
   en: Weekly on weekdays
   nl: Wekelijks op weekdagen
 RRULE:INTERVAL=2;FREQ=WEEKLY:
+  de: Jede andere Woche
   en: Every other week
   nl: Om de twee weken
 RRULE:FREQ=MONTHLY;BYMONTHDAY=4:
+  de: Monatlich an dem 4.
   en: Monthly on the 4th
   nl: Maandelijks op de 4de
 RRULE:FREQ=MONTHLY;BYMONTHDAY=-4:
+  de: Monatlich an dem 4. vorherigen Tag
   en: Monthly on the 4th-to-last day
   nl: Maandelijks op de 4-na-laatste dag
 RRULE:FREQ=MONTHLY;BYDAY=+3TU:
+  de: Monatlich an dem vierten Dienstag
   en: Monthly on the 3rd Tuesday
   nl: Maandelijks op de 3de dinsdag
 RRULE:FREQ=MONTHLY;BYDAY=-3TU:
+  de: Monatlich an dem vierten vorherigen Dienstag
   en: Monthly on the 3rd-to-last Tuesday
   nl: Maandelijks op de 3-na-laatste dinsdag
 RRULE:FREQ=MONTHLY;BYDAY=-1MO:
+  de: Monatlich an dem letzten Montag
   en: Monthly on the last Monday
   nl: Maandelijks op de laatste maandag
 RRULE:FREQ=MONTHLY;BYDAY=-2FR:
+  de: Monatlich an dem zweiten vorherigen Freitag
   en: Monthly on the 2nd-to-last Friday
   nl: Maandelijks op de voorlaatste vrijdag
 RRULE:INTERVAL=6;FREQ=MONTHLY:
+  de: Alle 6 Monate
   en: Every 6 months
   nl: Om de 6 maanden
 RRULE:FREQ=YEARLY;BYDAY=+1FR:
+  de: Jährlich an dem ersten Freitag von dem Jahr
   en: Annually on the 1st Friday of the year
   nl: Jaarlijks op de eerste vrijdag van het jaar
 RRULE:FREQ=YEARLY;BYDAY=+13FR:
+  de: Jährlich an dem 13. Freitag von dem Jahr
   en: Annually on the 13th Friday of the year
   nl: Jaarlijks op de 13de vrijdag van het jaar
 

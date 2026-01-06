@@ -8,6 +8,7 @@ import 'en.dart';
 
 export 'en.dart';
 export 'nl.dart';
+export 'de.dart';
 
 /// Contains localized strings used by [RecurrenceRule.toText].
 ///
@@ -34,12 +35,12 @@ abstract class RruleL10n {
   String inWeeks(String weeks, {InOnVariant variant = InOnVariant.simple});
 
   Set<int> get weekdays => {
-        DateTime.monday,
-        DateTime.tuesday,
-        DateTime.wednesday,
-        DateTime.thursday,
-        DateTime.friday,
-      };
+    DateTime.monday,
+    DateTime.tuesday,
+    DateTime.wednesday,
+    DateTime.thursday,
+    DateTime.friday,
+  };
   String onDaysOfWeek(
     String days, {
     bool indicateFrequency = false,
